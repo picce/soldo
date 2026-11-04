@@ -11,5 +11,8 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  // Richiesto da `wrangler preview` (anteprime per branch). Vuoto: nessun binding né var da separare
+  // dalla produzione. Quando arrivano (es. secret OAuth in Fase 3) vanno ripetuti qui.
+  "previews": {}
 }
