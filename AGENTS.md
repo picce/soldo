@@ -20,6 +20,7 @@ PWA mobile-first per le spese quotidiane, **local-first**: i dati vivono in Inde
 | `pnpm typecheck` | `vue-tsc -b` su app, config Node e Worker |
 | `pnpm test` | Vitest (happy-dom + `fake-indexeddb`) |
 | `pnpm test:e2e` | Playwright su Chromium mobile, contro `pnpm preview` (fa la build da solo, tranne in CI) |
+| `E2E_BASE_URL=<url> pnpm test:e2e` | Gli stessi test contro un sito pubblicato: produzione `https://soldo.nridolfi.workers.dev`, anteprima di `develop` `https://develop-soldo.nridolfi.workers.dev` |
 | `pnpm check` | lint + typecheck + test + build |
 | `pnpm cf-typegen` | Rigenera `worker-configuration.d.ts` dopo aver cambiato `wrangler.jsonc` |
 
