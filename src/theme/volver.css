@@ -1,0 +1,18 @@
+/*
+ * Volver design system, caricato dentro cascade layer con un ordine fisso:
+ * base → componenti → utility → tema scuro. Il CSS dell'app (non in layer) vince sempre.
+ *
+ * Quando usi per la prima volta un componente Vv*, aggiungi qui l'import del suo CSS
+ * (il resolver in vite.config.ts importa solo il JavaScript).
+ * Il tema definitivo arriverà con lo studio grafico (Fase 1).
+ */
+@layer volver.base, volver.components, volver.utilities, volver.theme;
+
+@import '@volverjs/style/base' layer(volver.base);
+
+@import '@volverjs/style/components/vv-button' layer(volver.components);
+@import '@volverjs/style/components/vv-alert' layer(volver.components);
+
+@import '@volverjs/style/utilities' layer(volver.utilities);
+
+@import '@volverjs/style/themes/dark' layer(volver.theme);
