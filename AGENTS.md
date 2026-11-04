@@ -25,6 +25,8 @@ PWA mobile-first per le spese quotidiane, **local-first**: i dati vivono in Inde
 
 Prima di chiudere un lavoro: `pnpm check` e `pnpm test:e2e` verdi.
 
+La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `develop` e su tutte le pull request, dentro l'immagine Docker ufficiale di Playwright. `@playwright/test` è fissato a una versione esatta: quando lo aggiorni, aggiorna anche il tag dell'immagine nel workflow. Su `main` si arriva solo con una pull request da `develop`.
+
 ## Struttura
 
 ```
