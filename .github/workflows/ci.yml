@@ -1,8 +1,15 @@
 name: CI
 
+# Push su develop + tutte le pull request. Niente run al push su main: con la protezione del
+# branch ci si arriva solo da una PR, che ha già controllato lo stesso codice.
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
+    # Solo sui push: sulle PR il controllo è obbligatorio per il merge su main, quindi deve
+    # girare sempre (un controllo saltato resterebbe "in attesa" e bloccherebbe la PR).
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
   pull_request:
 
 concurrency:
@@ -14,6 +21,8 @@ jobs:
     name: Lint, typecheck, test, build, e2e
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Niente container Playwright: misurato il 2026-11-04, l'immagine costa ~33 s
+    # contro i ~15 s dell'installazione di Chromium.
     steps:
       - uses: actions/checkout@v5
 
