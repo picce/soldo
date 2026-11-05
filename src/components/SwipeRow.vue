@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, useTemplateRef } from 'vue'
+import { prefersReducedMotion } from '@/app/motion'
 import AppIcon from '@/components/AppIcon.vue'
 
 /**
  * A row that can be swiped sideways (docs/specs/released/movimenti.md, mockup "Riga scorsa").
  * Under the row appears the action of that side; past 40% of the width it turns solid,
  * with a short vibration, and on release `swipe` is emitted with the direction. Below the
- * threshold the row goes back. A gesture counts only if it is more horizontal than
+ * threshold the row goes back; past it to the left (delete) the row stays out, on its
+ * action, while the list closes it. A gesture counts only if it is more horizontal than
  * vertical, so the list keeps scrolling; a swipe never turns into a tap on the row.
  */
 export interface SwipeAction {
@@ -30,6 +32,8 @@ const emit = defineEmits<{
 const THRESHOLD = 0.4
 /** Movement before deciding whether the gesture is a swipe or a scroll. */
 const SLOP = 8
+/** After a swipe to the left the row waits this long, in ms, for the list to remove it. */
+const STAY_TIMEOUT = 1000
 
 const root = useTemplateRef<HTMLElement>('root')
 const offset = ref(0)
@@ -53,10 +57,6 @@ const action = computed(() => direction.value === 'left'
     ? props.rightAction
     : undefined)
 const past = computed(() => offset.value !== 0 && Math.abs(offset.value) >= width.value * THRESHOLD)
-
-function reducedMotion() {
-  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
-}
 
 function onPointerDown(event: PointerEvent) {
   if (!event.isPrimary || event.button !== 0 || settling.value)
@@ -89,15 +89,30 @@ function onPointerMove(event: PointerEvent) {
     navigator.vibrate(10)
 }
 
-function settle(to: number, then?: () => void) {
+function reset() {
+  settling.value = false
+  offset.value = 0
+}
+
+/**
+ * Slides the row to `to`, then runs `then`. With `stay`, the row stays there: it is about
+ * to leave the list (the parent closes it on its action) and comes back only if it is
+ * still here a second later.
+ */
+function settle(to: number, then?: () => void, stay = false) {
   settling.value = true
   offset.value = to
   const finish = () => {
-    settling.value = false
-    offset.value = 0
-    then?.()
+    if (stay) {
+      then?.()
+      timer = setTimeout(reset, STAY_TIMEOUT)
+    }
+    else {
+      reset()
+      then?.()
+    }
   }
-  if (reducedMotion())
+  if (prefersReducedMotion())
     finish()
   else
     timer = setTimeout(finish, 180)
@@ -114,7 +129,7 @@ function onPointerUp(event: PointerEvent) {
   mode = 'undecided'
   dragging.value = false
   if (triggered === 'left')
-    settle(-width.value, () => emit('swipe', 'left'))
+    settle(-width.value, () => emit('swipe', 'left'), true)
   else if (triggered === 'right')
     settle(0, () => emit('swipe', 'right'))
   else if (offset.value)

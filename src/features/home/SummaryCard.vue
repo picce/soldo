@@ -2,7 +2,10 @@
 import { useI18n } from 'vue-i18n'
 import AmountText from '@/components/AmountText.vue'
 
-/** Statement of the period (mockup "Home"): income, expenses, a rule in ink, then the balance. */
+/**
+ * Statement of the period (mockup "Home"): income, expenses, a rule in ink, then the
+ * balance. Changing period, the figures run to their new values.
+ */
 defineProps<{
   incomeCents: number
   expenseCents: number
@@ -19,19 +22,19 @@ const { t } = useI18n()
         <dt class="summary-card__label type-body">
           {{ t('home.income') }}<span class="dot-leader" aria-hidden="true" />
         </dt>
-        <dd><AmountText :cents="incomeCents" class="summary-card__income" /></dd>
+        <dd><AmountText :cents="incomeCents" animated class="summary-card__income" /></dd>
       </div>
       <div class="summary-card__line">
         <dt class="summary-card__label type-body">
           {{ t('home.expenses') }}<span class="dot-leader" aria-hidden="true" />
         </dt>
-        <dd><AmountText :cents="-expenseCents" /></dd>
+        <dd><AmountText :cents="-expenseCents" animated /></dd>
       </div>
       <div class="summary-card__line summary-card__line--balance">
         <dt class="type-body-strong">
           {{ t('home.balance') }}
         </dt>
-        <dd><AmountText :cents="balanceCents" sign="always" currency large /></dd>
+        <dd><AmountText :cents="balanceCents" sign="always" currency large animated /></dd>
       </div>
     </dl>
   </section>

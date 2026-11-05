@@ -59,6 +59,19 @@ const model = defineModel<T>({ required: true })
   --vv-button-font-weight: 600;
 }
 
+/* The segment's own colors override Volver's states: hover and press are set here. */
+@media (hover: hover) {
+  .segmented-control__segment:not([aria-pressed='true']):hover {
+    --vv-button-background: var(--color-hover);
+    --vv-button-color: var(--color-ink);
+  }
+}
+
+.segmented-control__segment:not([aria-pressed='true']):active {
+  --vv-button-background: var(--color-pressed);
+  --vv-button-color: var(--color-ink);
+}
+
 .segmented-control__segment:focus-visible {
   outline: 2px solid var(--color-pen);
   outline-offset: 2px;

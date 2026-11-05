@@ -227,8 +227,25 @@ const newCategory = computed(() => ({
   }
 }
 
-.categories__list--archived .category-row {
+.categories__list--archived .category-link {
   padding-inline-start: 1rem;
+}
+
+/* The pressed background of a link follows the rounded corners of the card. */
+.category-row:first-child > .category-link {
+  border-start-end-radius: calc(var(--rounded) - 1px);
+}
+
+.category-row:last-child > .category-link {
+  border-end-end-radius: calc(var(--rounded) - 1px);
+}
+
+.categories__list--archived .category-row:first-child > .category-link {
+  border-start-start-radius: calc(var(--rounded) - 1px);
+}
+
+.categories__list--archived .category-row:last-child > .category-link {
+  border-end-start-radius: calc(var(--rounded) - 1px);
 }
 
 /* Handle for the finger; the two buttons show up in its place when they have the focus. */
@@ -314,6 +331,18 @@ const newCategory = computed(() => ({
   color: var(--color-ink-2);
   cursor: pointer;
   list-style: none;
+  transition: color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .categories__archived-summary:hover {
+    color: var(--color-ink);
+  }
+}
+
+.categories__archived-summary:active {
+  color: var(--color-ink);
+  transition-duration: 0s;
 }
 
 .categories__archived-summary::-webkit-details-marker {

@@ -63,6 +63,19 @@ const name = useId()
   border: 1px solid var(--color-line);
   border-radius: var(--rounded);
   color: var(--color-ink);
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .icon-picker__option:hover .icon-picker__face {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.icon-picker__option:active .icon-picker__face {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .icon-picker__face .app-icon {

@@ -41,6 +41,9 @@ withDefaults(defineProps<{
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    background-color var(--motion-press) var(--motion-ease),
+    border-color var(--motion-press) var(--motion-ease);
 }
 
 .filter-chip::after {
@@ -53,6 +56,28 @@ withDefaults(defineProps<{
   background: var(--color-pen);
   border-color: var(--color-pen);
   color: var(--color-on-pen);
+}
+
+@media (hover: hover) {
+  .filter-chip:hover {
+    background: var(--color-hover);
+  }
+
+  .filter-chip[aria-pressed='true']:hover {
+    background: var(--color-pen-hover);
+    border-color: var(--color-pen-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.filter-chip:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
+}
+
+.filter-chip[aria-pressed='true']:active {
+  background: var(--color-pen-pressed);
+  border-color: var(--color-pen-pressed);
 }
 
 .filter-chip:focus-visible {

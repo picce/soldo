@@ -106,6 +106,7 @@ function confirm() {
 .date-sheet__list {
   margin: 0;
   padding: 0;
+  overflow: hidden;
   list-style: none;
   background: var(--color-card);
   border: 1px solid var(--color-line);
@@ -128,6 +129,19 @@ function confirm() {
   color: var(--color-ink);
   text-align: start;
   cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .date-sheet__option:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.date-sheet__option:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .date-sheet__option:focus-visible {

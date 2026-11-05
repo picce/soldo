@@ -37,12 +37,25 @@ withDefaults(defineProps<{
   border-radius: 0.375rem;
   color: var(--color-ink);
   cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
 }
 
 .icon-button::after {
   content: '';
   position: absolute;
   inset: -0.3125rem;
+}
+
+@media (hover: hover) {
+  .icon-button:not(:disabled):hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.icon-button:not(:disabled):active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .icon-button:focus-visible {

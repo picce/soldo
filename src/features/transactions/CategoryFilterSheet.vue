@@ -114,6 +114,7 @@ function apply(ids: string[]) {
 .category-filter__list {
   margin: 0;
   padding: 0;
+  overflow: hidden;
   list-style: none;
   background: var(--color-card);
   border: 1px solid var(--color-line);
@@ -126,6 +127,19 @@ function apply(ids: string[]) {
 
 .category-filter__row {
   padding: 0.25rem 1rem;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .category-filter__row:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.category-filter__row:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 /* The real checkbox stays in the page for keyboard and screen readers; the box draws it. */

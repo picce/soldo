@@ -71,8 +71,22 @@ const { toast } = useToast()
   padding-inline: 0.5rem;
   border: 0;
   background: none;
+  border-radius: var(--rounded);
   color: var(--color-pen);
   cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .app-toast__action:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.app-toast__action:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .app-toast__action:focus-visible {
