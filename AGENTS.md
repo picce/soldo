@@ -43,7 +43,8 @@ src/
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
   domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice, ricerca, giorni
   test/         supporto ai test unitari (plugins.ts: i18n e Volver con le icone locali)
-  backup/ import/   arrivano nelle fasi successive (vedi roadmap)
+  backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti
+  import/       arriva in Fase 6 (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
 design/         file di design FigCraft (soldo.figcraft): fondamenta, schermate, identità

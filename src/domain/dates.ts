@@ -37,3 +37,22 @@ export function addDays(value: IsoDate, days: number): IsoDate {
 export function formatDate(value: IsoDate, intlLocale: string, options: Intl.DateTimeFormatOptions): string {
   return new Intl.DateTimeFormat(intlLocale, options).format(fromIsoDate(value))
 }
+
+const TIME_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ['year', 365 * 24 * 3600],
+  ['month', 30 * 24 * 3600],
+  ['day', 24 * 3600],
+  ['hour', 3600],
+  ['minute', 60],
+]
+
+/** How long ago a timestamp was, in the largest whole unit: «3 giorni fa», «ieri», «ora». */
+export function timeAgo(timestamp: string, intlLocale: string, now: Date = new Date()): string {
+  const seconds = Math.max(0, Math.floor((now.getTime() - new Date(timestamp).getTime()) / 1000))
+  const format = new Intl.RelativeTimeFormat(intlLocale, { numeric: 'auto' })
+  for (const [unit, size] of TIME_UNITS) {
+    if (seconds >= size)
+      return format.format(-Math.floor(seconds / size), unit)
+  }
+  return format.format(0, 'second')
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, formatDate, fromIsoDate, isIsoDate, today, toIsoDate } from './dates'
+import { addDays, formatDate, fromIsoDate, isIsoDate, timeAgo, today, toIsoDate } from './dates'
 
 describe('calendar dates', () => {
   it('validates YYYY-MM-DD strings that are real dates', () => {
@@ -35,5 +35,22 @@ describe('calendar dates', () => {
     const long = { weekday: 'long', day: 'numeric', month: 'long' } as const
     expect(formatDate('2026-11-05', 'it-IT', long)).toBe('giovedì 5 novembre')
     expect(formatDate('2026-11-05', 'en-GB', long)).toBe('Thursday 5 November')
+  })
+})
+
+describe('timeAgo', () => {
+  const now = new Date('2026-11-05T12:00:00.000Z')
+
+  it('says how long ago, in the largest whole unit', () => {
+    expect(timeAgo('2026-11-05T11:59:30.000Z', 'it-IT', now)).toBe('ora')
+    expect(timeAgo('2026-11-05T11:58:00.000Z', 'it-IT', now)).toBe('2 minuti fa')
+    expect(timeAgo('2026-11-05T07:00:00.000Z', 'it-IT', now)).toBe('5 ore fa')
+    expect(timeAgo('2026-11-04T10:00:00.000Z', 'it-IT', now)).toBe('ieri')
+    expect(timeAgo('2026-11-02T10:00:00.000Z', 'it-IT', now)).toBe('3 giorni fa')
+    expect(timeAgo('2026-08-01T10:00:00.000Z', 'en-GB', now)).toBe('3 months ago')
+  })
+
+  it('treats a time in the future as now', () => {
+    expect(timeAgo('2026-11-05T13:00:00.000Z', 'en-GB', now)).toBe('now')
   })
 })

@@ -6,7 +6,8 @@
     "close": "Chiudi",
     "undo": "Annulla",
     "back": "Indietro",
-    "saveError": "Non è stato possibile salvare. Riprova."
+    "saveError": "Non è stato possibile salvare. Riprova.",
+    "cancel": "Annulla"
   },
   "nav": {
     "label": "Navigazione principale",
@@ -95,6 +96,17 @@
       "expenses": "nessuna uscita | {n} uscita | {n} uscite",
       "income": "nessuna entrata | {n} entrata | {n} entrate"
     },
+    "backup": {
+      "label": "Backup",
+      "last": "ultimo: {when}",
+      "never": "mai",
+      "export": "Esporta backup",
+      "exportDetail": "File JSON con tutti i dati",
+      "csv": "Esporta movimenti",
+      "csvDetail": "File CSV per un foglio di calcolo",
+      "import": "Importa backup",
+      "importDetail": "Sostituisce i dati di questo telefono"
+    },
     "about": {
       "label": "Informazioni",
       "version": "Versione {version}"
@@ -175,6 +187,37 @@
     "green": "Verde",
     "purple": "Viola",
     "red": "Rosso"
+  },
+  "backup": {
+    "exported": "Backup esportato.",
+    "csvExported": "Movimenti esportati.",
+    "exportError": "Non è stato possibile esportare. Riprova.",
+    "errors": {
+      "notSoldo": "Questo file non è un backup di Soldo.",
+      "newerFormat": "Questo backup viene da una versione più recente di Soldo: aggiorna l'app e riprova.",
+      "invalid": "Il backup è danneggiato: i dati di questo telefono non sono stati toccati."
+    },
+    "restoreTitle": "Ripristinare questo backup?",
+    "file": "File",
+    "created": "Creato",
+    "transactions": "Movimenti",
+    "categoriesAccounts": "Categorie e conti",
+    "warning": "I dati attuali di questo telefono verranno sostituiti. Se ti servono, esporta prima un backup.",
+    "restore": "Ripristina",
+    "restored": "Backup ripristinato.",
+    "restoreError": "Non è stato possibile ripristinare il backup: i dati di questo telefono non sono stati toccati."
+  },
+  "csv": {
+    "fileName": "soldo-movimenti-{date}.csv",
+    "date": "Data",
+    "kind": "Tipo",
+    "amount": "Importo",
+    "category": "Categoria",
+    "account": "Conto",
+    "note": "Nota",
+    "expense": "Uscita",
+    "income": "Entrata",
+    "transfer": "Trasferimento"
   },
   "pwa": {
     "updateTitle": "Nuova versione disponibile",

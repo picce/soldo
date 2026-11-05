@@ -1,28 +1,29 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import AppIcon from '@/components/AppIcon.vue'
 
 /**
- * Row of a settings card (mockup "Impostazioni"): icon, title, a line of detail and the
- * arrow of a link to another page.
+ * Row of a settings card (mockup "Impostazioni"): icon, title, a line of detail and an
+ * arrow. With `to` it is a link to another page, otherwise a button (listen to `click`).
  */
 defineProps<{
   icon: string
   title: string
   detail?: string
-  to: RouteLocationRaw
+  to?: RouteLocationRaw
 }>()
 </script>
 
 <template>
-  <RouterLink :to="to" class="settings-row">
+  <component :is="to ? RouterLink : 'button'" :to="to" :type="to ? undefined : 'button'" class="settings-row">
     <AppIcon :name="icon" class="settings-row__icon" />
     <span class="settings-row__text">
       <span class="type-body">{{ title }}</span>
       <span v-if="detail" class="settings-row__detail type-small">{{ detail }}</span>
     </span>
     <AppIcon name="caret-right" class="settings-row__caret" />
-  </RouterLink>
+  </component>
 </template>
 
 <style scoped>
@@ -30,10 +31,21 @@ defineProps<{
   display: flex;
   align-items: center;
   gap: 1rem;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 2.75rem;
   padding: 0.75rem 1rem;
+  border: 0;
+  background: none;
   color: var(--color-ink);
+  font: inherit;
+  text-align: start;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.settings-row:disabled {
+  cursor: progress;
 }
 
 .settings-row:focus-visible {

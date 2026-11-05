@@ -44,6 +44,11 @@ const LIGHT = [
   // Movimenti
   'magnifying-glass',
   'caret-down',
+  // Settings: backup
+  'export',
+  'file-csv',
+  'file-arrow-up',
+  'warning',
   // Categories: drag handle, move buttons, archive
   'dots-six-vertical',
   'caret-up',

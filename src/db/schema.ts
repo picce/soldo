@@ -21,9 +21,13 @@ export interface BaseRecord {
 /** One of the eight category colors, in the fixed order of the palette (docs/design). */
 export type PaletteColor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
-export type AccountType = 'cash' | 'card' | 'bank' | 'other'
+// Value lists are arrays too, so a backup file can be checked against them (src/backup/format.ts).
 
-export type AccountPreset = 'cash'
+export const ACCOUNT_TYPES = ['cash', 'card', 'bank', 'other'] as const
+export type AccountType = typeof ACCOUNT_TYPES[number]
+
+export const ACCOUNT_PRESETS = ['cash'] as const
+export type AccountPreset = typeof ACCOUNT_PRESETS[number]
 
 export interface Account extends BaseRecord {
   /** Name chosen by the user. Without it, the name is the translation of `preset`. */
@@ -38,23 +42,32 @@ export interface Account extends BaseRecord {
   order: number
 }
 
-export type CategoryKind = 'expense' | 'income'
+export const CATEGORY_KINDS = ['expense', 'income'] as const
+export type CategoryKind = typeof CATEGORY_KINDS[number]
 
-export type ExpensePreset
-  = | 'groceries'
-    | 'home'
-    | 'restaurants'
-    | 'transport'
-    | 'leisure'
-    | 'bills'
-    | 'health'
-    | 'clothes'
-    | 'gifts'
-    | 'travel'
-    | 'pets'
-    | 'other'
+export const EXPENSE_PRESETS = [
+  'groceries',
+  'home',
+  'restaurants',
+  'transport',
+  'leisure',
+  'bills',
+  'health',
+  'clothes',
+  'gifts',
+  'travel',
+  'pets',
+  'other',
+] as const
+export type ExpensePreset = typeof EXPENSE_PRESETS[number]
 
-export type IncomePreset = 'salary' | 'refunds' | 'giftsReceived' | 'otherIncome'
+export const INCOME_PRESETS = [
+  'salary',
+  'refunds',
+  'giftsReceived',
+  'otherIncome',
+] as const
+export type IncomePreset = typeof INCOME_PRESETS[number]
 
 export type CategoryPreset = ExpensePreset | IncomePreset
 
@@ -70,9 +83,16 @@ export interface Category extends BaseRecord {
   archived: boolean
 }
 
-export type TransactionKind = 'expense' | 'income' | 'transfer'
+export const TRANSACTION_KINDS = ['expense', 'income', 'transfer'] as const
+export type TransactionKind = typeof TRANSACTION_KINDS[number]
 
-export type TransactionSource = 'manual' | 'recurring' | 'import' | 'bank'
+export const TRANSACTION_SOURCES = [
+  'manual',
+  'recurring',
+  'import',
+  'bank',
+] as const
+export type TransactionSource = typeof TRANSACTION_SOURCES[number]
 
 export interface Transaction extends BaseRecord {
   kind: TransactionKind
@@ -103,7 +123,8 @@ export interface Budget extends BaseRecord {
   repeat: boolean
 }
 
-export type RecurrenceFrequency = 'daily' | 'weekly' | 'monthly' | 'yearly'
+export const RECURRENCE_FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'] as const
+export type RecurrenceFrequency = typeof RECURRENCE_FREQUENCIES[number]
 
 /** Rule that generates transactions. Used from Phase 4. */
 export interface Recurrence extends BaseRecord {

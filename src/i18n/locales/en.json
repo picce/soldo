@@ -6,7 +6,8 @@
     "close": "Close",
     "undo": "Undo",
     "back": "Back",
-    "saveError": "Could not save. Please try again."
+    "saveError": "Could not save. Please try again.",
+    "cancel": "Cancel"
   },
   "nav": {
     "label": "Main navigation",
@@ -95,6 +96,17 @@
       "expenses": "none for expenses | {n} for expenses | {n} for expenses",
       "income": "none for income | {n} for income | {n} for income"
     },
+    "backup": {
+      "label": "Backup",
+      "last": "last: {when}",
+      "never": "never",
+      "export": "Export backup",
+      "exportDetail": "JSON file with all your data",
+      "csv": "Export transactions",
+      "csvDetail": "CSV file for a spreadsheet",
+      "import": "Import backup",
+      "importDetail": "Replaces the data on this phone"
+    },
     "about": {
       "label": "About",
       "version": "Version {version}"
@@ -175,6 +187,37 @@
     "green": "Green",
     "purple": "Purple",
     "red": "Red"
+  },
+  "backup": {
+    "exported": "Backup exported.",
+    "csvExported": "Transactions exported.",
+    "exportError": "Could not export. Please try again.",
+    "errors": {
+      "notSoldo": "This file is not a Soldo backup.",
+      "newerFormat": "This backup comes from a newer version of Soldo: update the app and try again.",
+      "invalid": "The backup is damaged: the data on this phone was not touched."
+    },
+    "restoreTitle": "Restore this backup?",
+    "file": "File",
+    "created": "Created",
+    "transactions": "Transactions",
+    "categoriesAccounts": "Categories and accounts",
+    "warning": "The current data on this phone will be replaced. If you need it, export a backup first.",
+    "restore": "Restore",
+    "restored": "Backup restored.",
+    "restoreError": "Could not restore the backup: the data on this phone was not touched."
+  },
+  "csv": {
+    "fileName": "soldo-transactions-{date}.csv",
+    "date": "Date",
+    "kind": "Type",
+    "amount": "Amount",
+    "category": "Category",
+    "account": "Account",
+    "note": "Note",
+    "expense": "Expense",
+    "income": "Income",
+    "transfer": "Transfer"
   },
   "pwa": {
     "updateTitle": "New version available",
