@@ -73,4 +73,37 @@ describe('useLiveQuery', () => {
     await until(() => data.value?.[0]?.amountCents === 100)
     scope.stop()
   })
+
+  it('pauses while the page is hidden and catches up when it shows', async () => {
+    function setVisibility(state: 'hidden' | 'visible') {
+      Object.defineProperty(document, 'visibilityState', { value: state, configurable: true })
+      document.dispatchEvent(new Event('visibilitychange'))
+    }
+    const expense = {
+      kind: 'expense' as const,
+      amountCents: 100,
+      date: '2026-11-05',
+      accountId: 'a',
+      categoryId: 'c',
+      note: '',
+    }
+    const scope = effectScope()
+    const { data } = scope.run(() => useLiveQuery(() => listTransactions()))!
+    await until(() => data.value?.length === 0)
+
+    try {
+      // Another copy of the app writes while this one is in the background.
+      setVisibility('hidden')
+      await addTransaction(expense)
+      await new Promise(resolve => setTimeout(resolve, 50))
+      expect(data.value).toHaveLength(0)
+
+      setVisibility('visible')
+      await until(() => data.value?.length === 1)
+    }
+    finally {
+      setVisibility('visible')
+      scope.stop()
+    }
+  })
 })
