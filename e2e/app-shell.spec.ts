@@ -1,4 +1,7 @@
+import { readFileSync } from 'node:fs'
 import { expect, test } from '@playwright/test'
+
+const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string }
 
 test('shows the navigation and switches section', async ({ page }) => {
   await page.goto('/')
@@ -14,6 +17,11 @@ test('shows the navigation and switches section', async ({ page }) => {
 test('shows the logo as the home heading', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1, name: 'Soldo' })).toBeVisible()
+})
+
+test('shows the app version in Settings', async ({ page }) => {
+  await page.goto('/impostazioni')
+  await expect(page.getByText(`Versione ${version}`)).toBeVisible()
 })
 
 test('exposes the manifest for installation', async ({ page, request }) => {

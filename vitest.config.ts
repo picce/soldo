@@ -4,8 +4,10 @@ import vue from '@vitejs/plugin-vue'
 import { VolverResolver } from '@volverjs/ui-vue/resolvers/unplugin'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vitest/config'
+import { appDefines } from './build-info'
 
 export default defineConfig({
+  define: appDefines(),
   plugins: [
     vue(),
     VueI18nPlugin({

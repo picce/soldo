@@ -6,8 +6,10 @@ import { VolverResolver } from '@volverjs/ui-vue/resolvers/unplugin'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { appDefines } from './build-info'
 
 export default defineConfig({
+  define: appDefines(),
   plugins: [
     vue(),
     // Precompiles the messages in src/i18n/locales and aliases vue-i18n to its runtime build

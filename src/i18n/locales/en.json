@@ -34,6 +34,10 @@
       "it": "Italiano",
       "en": "English",
       "hint": "Automatic uses the language of your device."
+    },
+    "about": {
+      "label": "About",
+      "version": "Version {version}"
     }
   },
   "pwa": {

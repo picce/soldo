@@ -31,6 +31,12 @@ describe('settingsView', () => {
     expect(pressedLabel(wrapper)).toEqual(['Automatica'])
   })
 
+  it('shows the app version', () => {
+    const wrapper = mountSettings()
+    const about = wrapper.get('[aria-labelledby="settings-about"]')
+    expect(about.text()).toContain(`Versione ${__APP_VERSION__}`)
+  })
+
   it('switches the language and remembers it', async () => {
     const wrapper = mountSettings()
     const english = wrapper.findAll('button').find(button => button.text() === 'English')

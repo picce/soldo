@@ -25,6 +25,15 @@ const localeOptions = computed<{ value: LocalePreference, label: string }[]>(() 
     label: t('settings.language.en'),
   },
 ])
+
+// Version and commit are fixed at build time (build-info.ts); the commit tells apart two
+// builds with the same version, e.g. the develop preview and production.
+const versionLine = computed(() =>
+  [
+    t('settings.about.version', { version: __APP_VERSION__ }),
+    __APP_COMMIT__,
+  ].filter(Boolean).join(' · '),
+)
 </script>
 
 <template>
@@ -43,6 +52,14 @@ const localeOptions = computed<{ value: LocalePreference, label: string }[]>(() 
         {{ t('settings.language.hint') }}
       </p>
     </section>
+    <section class="settings-section" aria-labelledby="settings-about">
+      <h2 id="settings-about" class="settings-section__title type-label">
+        {{ t('settings.about.label') }}
+      </h2>
+      <p class="settings-section__value type-note">
+        {{ versionLine }}
+      </p>
+    </section>
   </AppPage>
 </template>
 
@@ -56,7 +73,8 @@ const localeOptions = computed<{ value: LocalePreference, label: string }[]>(() 
 }
 
 .settings-section__title,
-.settings-section__hint {
+.settings-section__hint,
+.settings-section__value {
   margin: 0;
 }
 
