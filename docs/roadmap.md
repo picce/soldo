@@ -5,7 +5,7 @@
 | Fase | Stato |
 |---|---|
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
-| 1 — Studio grafico | In corso: direzione **C · Taccuino** scelta il 2026-11-05 ([docs/design](design/README.md)); file FigCraft con fondamenta e Home; mancano le altre schermate del nucleo, logo e tema nel codice |
+| 1 — Studio grafico | In corso: direzione **C · Taccuino** scelta il 2026-11-05 ([docs/design](design/README.md)); nel file FigCraft ci sono fondamenta, le schermate del nucleo (Home, Home vuota, Nuova uscita, Movimenti, ricerca senza risultati, Onboarding) e tre proposte di icona. Mancano l'approvazione dei mockup, la scelta dell'icona e il tema nel codice |
 | 2–7 | Da iniziare |
 
 ## Contesto
@@ -107,7 +107,8 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - **Identità**: logo e icona dell'app (anche maskable e per iOS), tono di voce dei testi.
 - **Linguaggio visivo**: palette chiara e scura, tipografia (font self-hosted, così funziona offline), griglia e spaziature, raggi e ombre, un unico set di icone per le categorie, colori delle categorie distinguibili e accessibili in entrambi i temi (validati con il metodo della skill `dataviz`).
 - **Direzione visiva**: tre direzioni esplorate, scelta **C · Taccuino** (2026-11-05). Specifiche e immagini in [docs/design](design/README.md).
-- **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si disegnano in FigCraft nel file `design/soldo.figcraft`, versionato nel repository, con le stesse variabili (chiaro/scuro) e gli stessi stili di testo. Gli screenshot vanno in `docs/design/render/`.
+- **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si disegnano in FigCraft nel file `design/soldo.figcraft`, versionato nel repository, con le stesse variabili (chiaro/scuro) e gli stessi stili di testo. Gli screenshot vanno in `docs/design/render/`. Disegnati il 2026-11-05, da approvare.
+- **Aggiunta rapida**: importo, poi un tocco sulla categoria salva il movimento. Il tastierino fa anche i conti (+ − × ÷); data, conto e nota sono facoltativi (di base: oggi, il conto predefinito, nessuna nota).
 - **Microinterazioni**: transizioni tra periodi, feedback del tastierino (vibrazione su Android), animazione della barra per categoria.
 - **Traduzione in codice**: token e contesto SCSS di `@volverjs/style`, tema Volver personalizzato, pagina interna `/dev/ui` con tutti i componenti per verificarli.
 - **Peso iniziale**: a fine Fase 0 la shell pesa ~112 kB di JS e ~68 kB di CSS (gzip). Obiettivo: dimezzarlo compilando via SCSS solo le utility e i componenti usati, con una collezione di icone che contenga solo quelle usate, e con i messaggi i18n precompilati.

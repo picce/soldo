@@ -6,22 +6,39 @@ Direzione scelta il 2026-11-05: **C · Taccuino**. Questo documento spiega le re
 |---|---|
 | ![Home in chiaro](render/home-chiaro.png) | ![Home in scuro](render/home-scuro.png) |
 
+## Schermate
+
+Le schermate del nucleo, disegnate il 2026-11-05 e da approvare. Ogni immagine apre la versione a grandezza piena.
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Home | <img src="render/home-chiaro.png" width="220" alt="Home in chiaro"> | <img src="render/home-scuro.png" width="220" alt="Home in scuro"> |
+| Home senza movimenti | <img src="render/home-vuota-chiaro.png" width="220" alt="Home vuota in chiaro"> | <img src="render/home-vuota-scuro.png" width="220" alt="Home vuota in scuro"> |
+| Nuova uscita | <img src="render/nuova-uscita-chiaro.png" width="220" alt="Nuova uscita in chiaro"> | <img src="render/nuova-uscita-scuro.png" width="220" alt="Nuova uscita in scuro"> |
+| Movimenti | <img src="render/movimenti-chiaro.png" width="220" alt="Movimenti in chiaro"> | <img src="render/movimenti-scuro.png" width="220" alt="Movimenti in scuro"> |
+| Ricerca senza risultati | <img src="render/movimenti-nessun-risultato-chiaro.png" width="220" alt="Ricerca senza risultati in chiaro"> | <img src="render/movimenti-nessun-risultato-scuro.png" width="220" alt="Ricerca senza risultati in scuro"> |
+| Onboarding | <img src="render/onboarding-chiaro.png" width="220" alt="Onboarding in chiaro"> | <img src="render/onboarding-scuro.png" width="220" alt="Onboarding in scuro"> |
+
+Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
+
 ## File di design
 
 Il file si apre con [FigCraft](https://github.com/storytold/figcraft), un editor open source che gira in locale (versione usata: 0.15.1). È un archivio binario versionato in git; gli screenshot aggiornati sono in [render/](render/).
 
-- **Pagina Fondamenta**: colori e categorie nei due temi, stili di testo, icone.
-- **Pagina Schermate**: la Home è un componente. La versione scura ne è un'istanza dentro una cornice con il modo «Scuro».
-- **Variabili**: la collezione «Soldo» ha due modi, Chiaro e Scuro. Contiene `colore/*` (i token della tabella qui sotto) e `categoria/1…8`. I riempimenti sono legati alle variabili: per vedere una schermata al buio basta cambiare il modo della cornice che la contiene.
-- **Stili di testo**: sono 17, uno per ogni riga della tabella Tipografia.
-- **Font**: il file usa IBM Plex Sans e IBM Plex Mono, che FigCraft non include. Nell'app si scaricano da *Testo ▸ Font mancanti* (bisogna abilitare il download); in alternativa si installano dai file TTF di Google Fonts.
+- **Pagina Fondamenta**: colori e categorie nei due temi, stili di testo, icone usate divise per gruppo.
+- **Pagina Schermate**: ogni schermata è un componente, nella riga in alto. Sotto c'è la versione scura: un'istanza dentro una cornice con il modo «Scuro» e lo stesso nome più « · scuro». Se modifichi il componente, cambia anche la versione scura.
+- **Pagina Identità**: logo nei due temi e tre proposte di icona dell'app, con le anteprime alle misure reali.
+- **Variabili**: la collezione «Soldo» ha due modi, Chiaro e Scuro. Contiene `colore/*` (i token della tabella qui sotto) e `categoria/1…8`. I riempimenti sono legati alle variabili: per vedere una schermata al buio basta cambiare il modo della cornice che la contiene. Fa eccezione l'icona dell'app, che ha colori fissi.
+- **Stili di testo**: sono 22, uno per ogni riga della tabella Tipografia.
+- **Font**: il file usa IBM Plex Sans e IBM Plex Mono, che FigCraft non include. Nell'app si scaricano da *Testo ▸ Font mancanti* (bisogna abilitare il download). Una volta scaricati li usa anche `figcraft-cli`.
 
-Per rigenerare gli screenshot (con IBM Plex installato):
+Per rigenerare uno screenshot si usa il nome della cornice:
 
 ```sh
-figcraft-cli export design/soldo.figcraft --page Schermate --node "Home" -o docs/design/render/home-chiaro.png --scale 2
-figcraft-cli export design/soldo.figcraft --page Schermate --node "Home · scuro" -o docs/design/render/home-scuro.png --scale 2
+figcraft-cli export design/soldo.figcraft --page Schermate --node "Nuova uscita" -o docs/design/render/nuova-uscita-chiaro.png --scale 2
+figcraft-cli export design/soldo.figcraft --page Schermate --node "Nuova uscita · scuro" -o docs/design/render/nuova-uscita-scuro.png --scale 2
 figcraft-cli export design/soldo.figcraft --page Fondamenta --node "Fondamenta" -o docs/design/render/fondamenta.png
+figcraft-cli export design/soldo.figcraft --page Identità --node "Identità" -o docs/design/render/identita.png
 ```
 
 Se cambia un valore, va aggiornato sia nel file sia qui.
@@ -38,8 +55,8 @@ Se cambia un valore, va aggiornato sia nel file sia qui.
 
 | Token | Uso | Chiaro | Scuro |
 |---|---|---|---|
-| `carta` | Sfondo della pagina | `#F5F4EF` | `#141414` |
-| `superficie` | Schede, barra di navigazione, pulsanti secondari | `#FFFFFF` | `#1C1C1C` |
+| `carta` | Sfondo della pagina, colonna degli operatori nel tastierino | `#F5F4EF` | `#141414` |
+| `superficie` | Schede, barra di navigazione, pulsanti secondari, tasti | `#FFFFFF` | `#1C1C1C` |
 | `quadretti` | Griglia di sfondo, passo 20 px | `#E4E6EC` | `#1F2128` |
 | `linea` | Divisori e bordi decorativi | `#D9D7CF` | `#34342F` |
 | `inchiostro` | Testo principale, uscite, bordo dei pulsanti secondari | `#161616` | `#ECEBE6` |
@@ -82,34 +99,62 @@ node scripts/validate_palette.js "#3A66C4,#D9663B,#1F9A86,#A97E10,#C2588A,#5B8C2
 node scripts/validate_palette.js "#5C86E0,#D8653F,#28A08A,#B98A1A,#CC6494,#6A9A3C,#8F7BE0,#E06464" --mode dark --surface "#141414"
 ```
 
-Da decidere in Fase 2: le categorie predefinite saranno più di otto. Proposta: nei grafici si vedono le prime 7 più «Altre» in `testo-2`; le categorie oltre l'ottava riusano i colori, ma si distinguono sempre per nome e icona.
+### Categorie predefinite (proposta per la Fase 2)
+
+Dodici categorie di uscita, nell'ordine della griglia dell'aggiunta rapida. Le prime otto prendono gli otto colori; Vestiti, Regali, Viaggi e Animali li riusano, ma si distinguono sempre per nome e icona. Nei grafici si vedono le prime 7 più «Altre» in `testo-2`.
+
+| Categoria | Icona | Colore |
+|---|---|---|
+| Spesa | `shopping-cart` | 1 |
+| Casa | `house` | 2 |
+| Ristoranti | `fork-knife` | 3 |
+| Trasporti | `bus` | 4 |
+| Svago | `popcorn` | 5 |
+| Bollette | `lightning` | 7 |
+| Salute | `first-aid` | 8 |
+| Vestiti | `t-shirt` | 1 |
+| Regali | `gift` | 2 |
+| Viaggi | `airplane-tilt` | 3 |
+| Animali | `paw-print` | 4 |
+| Altro | `dots-three-outline` | 6 |
+
+Per le entrate ci sarà una lista a parte; nei mockup compare Stipendio (`hand-coins`, colore 7).
 
 ## Tipografia
 
 IBM Plex Sans per l'interfaccia, IBM Plex Mono per le cifre. Sono self-hosted (`@fontsource`, solo il sottoinsieme latino), così l'app funziona offline.
 
-| Uso | Font | Peso | Corpo | Note |
-|---|---|---|---|---|
-| Saldo | Mono | 600 | 32 | spaziatura −3% |
-| Titolo di pagina (es. «Novembre 2026») | Sans | 600 | 24 | −1% |
-| Logo «soldo.» | Mono | 600 | 24 | −4%, il punto in `biro` |
-| Pulsanti | Sans | 600 | 16 | |
-| Testo e voci delle righe | Sans | 400 | 15 | |
-| Importi nelle righe | Mono | 500 | 15 | allineati a destra |
-| Schede del periodo | Sans | 400, attiva 600 | 14 | |
-| Percentuali e note | Mono | 400 | 13 | `testo-2` |
-| Etichette di sezione | Mono | 500 | 12 | maiuscolo, +2% |
-| Barra di navigazione | Sans | 400, attiva 600 | 11 | |
+| Stile | Uso | Font | Peso | Corpo | Note |
+|---|---|---|---|---|---|
+| Logo grande | Logo nell'onboarding | Mono | 600 | 48 | −4%, il punto in `biro` |
+| Importo grande | Importo nell'aggiunta rapida | Mono | 600 | 40 | −3% |
+| Saldo | Saldo del rendiconto, simbolo € dell'importo grande | Mono | 600 | 32 | −3% |
+| Titolo | Titolo di pagina (es. «Novembre 2026») | Sans | 600 | 24 | −1% |
+| Logo | Logo nell'intestazione | Mono | 600 | 24 | −4%, il punto in `biro` |
+| Tasto | Cifre e operatori del tastierino | Mono | 400 | 24 | |
+| Descrizione | Motto e testi lunghi | Sans | 400 | 16 | interlinea 24 |
+| Pulsante | Pulsanti | Sans | 600 | 16 | |
+| Testo forte | Totali, titoli delle righe, «Annulla» | Sans | 600 | 15 | |
+| Testo | Testo e voci delle righe | Sans | 400 | 15 | |
+| Importo | Importi nelle righe | Mono | 500 | 15 | allineati a destra |
+| Stato | Ora nella barra di stato (solo mockup) | Sans | 600 | 15 | |
+| Comando | Selettore del conto, filtri, data/conto/nota | Sans | 500 | 14 | |
+| Scheda / Scheda attiva | Schede del periodo, selettore Uscita/Entrata | Sans | 400 / 600 | 14 | |
+| Testo piccolo | Seconda riga dei movimenti, spiegazioni | Sans | 400 | 13 | interlinea 18 |
+| Nota | Percentuali, totali del giorno, calcolo in corso | Mono | 400 | 13 | `testo-2` |
+| Etichetta | Etichette di sezione e dei giorni | Mono | 500 | 12 | maiuscolo, +2% |
+| Didascalia | Nomi nella griglia delle categorie | Sans | 400 | 12 | |
+| Navigazione / Navigazione attiva | Barra di navigazione | Sans | 400 / 600 | 11 | |
 
-Gli importi si formattano con `Intl.NumberFormat('it-IT')`, quindi `1.284,30 €`. Nelle colonne di cifre il simbolo `€` si omette. Il segno meno è quello tipografico (`−`). Il saldo ha sempre il segno, anche quando è positivo.
+Gli importi si formattano con `Intl.NumberFormat('it-IT')`, quindi `1.284,30 €`. Nelle colonne di cifre il simbolo `€` si omette. Il segno meno è quello tipografico (`−`). Il saldo ha sempre il segno, anche quando è positivo; lo zero non ne ha.
 
 ## Forme e spaziature
 
 - Margine laterale della pagina: 20 px.
 - Lo sfondo della pagina è una griglia di quadretti da 20 px, sfasata di 10 px dal bordo.
-- Raggi: 8 px per schede e pulsanti, 6 px per i pulsanti con sola icona, 2–3 px per quadratini e barre.
-- Bordi da 1 px, nessuna ombra.
-- Target tattili di almeno 44 px. Le frecce del mese misurano 34 px a vista, ma hanno un'area tattile di 44 px.
+- Raggi: 8 px per schede e pulsanti, 6 px per i pulsanti con sola icona e i filtri, 2–3 px per quadratini e barre.
+- Bordi da 1 px, nessuna ombra. Anche il pulsante primario ha il bordo (nel suo stesso colore), così primario e secondario sono alti uguali.
+- Target tattili di almeno 44 px. Le frecce del mese e il pulsante Chiudi misurano 34 px a vista, ma hanno un'area tattile di 44 px.
 
 ## Icone
 
@@ -117,12 +162,16 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 
 | Dove | Icona |
 |---|---|
-| Spesa, Casa, Ristoranti, Trasporti, Svago | `shopping-cart`, `house`, `fork-knife`, `bus`, `popcorn` |
-| Bollette, Salute, Abbigliamento, Regali, Viaggi, Animali, Altro | `lightning`, `first-aid`, `t-shirt`, `gift`, `airplane-tilt`, `paw-print`, `dots-three-outline` |
+| Categorie | vedi la tabella delle categorie predefinite; entrate: `hand-coins` |
 | Navigazione: Home, Movimenti, Budget, Statistiche, Impostazioni | `house`, `receipt`, `piggy-bank`, `chart-pie-slice`, `gear-six` |
-| Interfaccia | `minus`, `plus`, `caret-left`, `caret-right`, `caret-down`, `magnifying-glass`, `wallet`, `cloud-check` |
+| Home | `wallet`, `caret-down`, `caret-left`, `caret-right`, `minus`, `plus` |
+| Aggiunta rapida | `x`, `calendar-blank`, `wallet`, `note-pencil`, `backspace` |
+| Movimenti | `magnifying-glass`, `x` |
+| Onboarding | `receipt`, `device-mobile`, `cloud-check`, `export` (il Condividi di iOS) |
 
-## Componenti della Home
+## Componenti
+
+### Home
 
 - **Schede del periodo** (Giorno, Settimana, Mese, Anno): solo testo. La scheda attiva è in `inchiostro`, peso 600, sottolineata in `biro` da 2 px. Sotto la riga c'è una linea.
 - **Rendiconto**: scheda su `superficie`. Contiene le righe «Entrate ····· 2.450,00» e «Uscite ····· −1.284,30», con i puntini tratteggiati 1/3 px in `linea`. Sotto c'è una riga piena in `inchiostro`, poi il saldo in Mono 32.
@@ -132,6 +181,40 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 - **Barra delle azioni**: fissa in basso, sopra la navigazione, con «− Uscita» e «+ Entrata».
 - **Navigazione**: cinque voci, ciascuna con icona ed etichetta. La voce attiva è in `inchiostro`, con una barretta `biro` da 28×2 px in alto.
 
+### Aggiunta rapida
+
+Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocchi possibile: si scrive l'importo, poi si tocca la categoria e il movimento è salvato. Non c'è un pulsante Salva.
+
+- **In alto**: Chiudi a sinistra e il selettore Uscita/Entrata al centro, con il segmento attivo pieno in `biro`.
+- **Importo**: in Mono 40, allineato a destra, con il segno; il simbolo € è in Mono 32 `testo-2`. Sopra c'è il calcolo in corso in Nota (es. «8,90 + 3,50»), sotto una riga in `inchiostro`.
+- **Data, conto e nota**: pulsanti piccoli alti 36 px su `superficie`, da toccare solo se servono. Di base: oggi, il conto predefinito, nessuna nota.
+- **Categorie**: griglia di 4 colonne. Ogni casella ha l'icona da 26 px nel colore della categoria e il nome in Didascalia. Sopra la griglia c'è l'indicazione «tocca per salvare».
+- **Tastierino**: una tabella a righe sottili, come un foglio di calcolo. Tasti alti 58 px, cifre in Mono 24 su `superficie`, operatori (÷ × − +) su `carta` in `testo-2`, `backspace` per cancellare l'ultima cifra. Il risultato si calcola mentre si scrive, quindi non serve il tasto =.
+- Dopo il salvataggio si torna alla Home con l'avviso «Salvato: −12,40 € · Spesa».
+
+### Movimenti
+
+- **In alto**: titolo «Movimenti» e selettore del conto, come nella Home.
+- **Ricerca**: campo alto 44 px su `superficie`, con bordo `linea`; mentre si scrive il bordo è `biro` e compare `x` per svuotarlo.
+- **Filtri**: Tutti, Uscite, Entrate, Categoria. Alti 32 px; il filtro attivo è pieno in `biro`.
+- **Giorni**: etichetta del giorno (es. «OGGI · GIOVEDÌ 5 NOVEMBRE») e totale del giorno in Nota a destra. I movimenti del giorno stanno in una scheda, separati da linee.
+- **Riga**: icona da 22 px nel colore della categoria; la nota (o il nome della categoria, se la nota manca); sotto, in Testo piccolo, categoria e conto; a destra l'importo. Le entrate sono in `entrate` con il segno +.
+- **Eliminazione**: l'avviso «Eliminato: −1,80 € · Ristoranti» compare sopra la navigazione, su `superficie` con bordo in `inchiostro`, con «Annulla» in `biro`.
+
+### Onboarding
+
+Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da linee (due tocchi, dati sul telefono, backup sul proprio Drive), la scheda «Installa Soldo» e due pulsanti: «Inizia da zero» e «Ripristina un backup». La scheda spiega che su iPhone, se l'app non è installata, Safari può cancellare i dati dopo 7 giorni senza aprirla.
+
+### Stati vuoti
+
+- **Home senza movimenti**: rendiconto a zero, barra tratteggiata in `linea` al posto di quella delle categorie, «Nessun movimento a novembre.» e cosa fare: «Tocca «Uscita» qui sotto per segnare la prima spesa.»
+- **Ricerca senza risultati**: icona `magnifying-glass` in `testo-2`, «Nessun risultato per «pizza».» e dove cerca: «La ricerca include note e categorie di tutti i mesi.»
+
+## Identità
+
+- **Logo**: la parola «soldo» in Mono SemiBold, sempre minuscola, spaziatura −4%, con il punto in `biro`. Il punto è accostato alla parola di 0,18 em, perché nel Mono ogni carattere occupa la stessa larghezza e il punto resterebbe staccato.
+- **Icona dell'app**: tre proposte nella pagina Identità, tutte con la «s» e il punto del logo. A · Quaderno (carta a quadretti, s in inchiostro, punto in biro), B · Biro (fondo blu, segno bianco), C · Inchiostro (fondo scuro, punto in biro chiaro). Le anteprime mostrano iOS, il cerchio della zona sicura di Android e le favicon da 32 e 16 px. Da scegliere prima di aggiornare il manifest.
+
 Sui termini: «Uscita» ed «Entrata» indicano il tipo di movimento; «Spesa» è la categoria della spesa alimentare.
 
 ## Tono di voce
@@ -140,6 +223,8 @@ Sobrio e preciso, prima i fatti. Si usa il tu quando serve un verbo. Niente punt
 
 - «Nessun movimento a novembre.»
 - «Salvato: −12,40 € · Spesa»
+- «Eliminato: −1,80 € · Ristoranti» con «Annulla»
+- «Nessun risultato per «pizza».»
 - «Backup: Google Drive, 2 min fa»
 
 ## Esplorazione (2026-11-05)
