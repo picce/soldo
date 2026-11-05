@@ -5,7 +5,7 @@
 | Fase | Stato |
 |---|---|
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
-| 1 — Studio grafico | In corso: direzione **C · Taccuino** scelta il 2026-11-05 ([docs/design](design/README.md)); mancano le altre schermate del nucleo, logo e tema nel codice |
+| 1 — Studio grafico | In corso: direzione **C · Taccuino** scelta il 2026-11-05 ([docs/design](design/README.md)); file FigCraft con fondamenta e Home; mancano le altre schermate del nucleo, logo e tema nel codice |
 | 2–7 | Da iniziare |
 
 ## Contesto
@@ -36,7 +36,7 @@ Repo: `c:\dev\code\pigeon\soldo` (vuoto, remote `github.com/picce/soldo`). Ambie
 | Backup | Interfaccia `BackupProvider`. **Google Drive** per primo, poi Dropbox e OneDrive | I dati restano nello spazio dell'utente |
 | Hosting | **Cloudflare**: Workers con static assets, che Cloudflare oggi consiglia al posto di Pages per i nuovi progetti (stesso piano gratuito). La PWA e la funzione per il token Google stanno in un unico deploy | Gratis, banda statica illimitata, uso commerciale consentito. Per crescere: Workers Paid 5 $/mese, più D1/R2/KV se servisse |
 | Database server | **Nessuno** per ora: Neon non serve | Lo rivalutiamo solo se arrivano condivisione o account |
-| Design | Studio grafico dedicato (Fase 1), tutto nel repository: specifiche e immagini in `docs/design/`, mockup come prototipi in codice. Niente file Figma. Tradotto in token `@volverjs/style` | Aspetto riconoscibile, non generico; il design è versionato con il codice |
+| Design | Studio grafico dedicato (Fase 1), tutto nel repository: mockup in [FigCraft](https://github.com/storytold/figcraft) (`design/soldo.figcraft`, editor open source in locale), regole e screenshot in `docs/design/`. Niente Figma. Tradotto in token `@volverjs/style` | Aspetto riconoscibile, non generico; il design è versionato con il codice |
 | Repo | Una sola app Vite (niente Nx/monorepo-starter: Fastify e Postgres non servono) + `worker/` per le API | Semplicità |
 | CI/CD | GitHub Actions (lint, typecheck, unit, e2e, build) + Cloudflare Workers Builds con URL di anteprima per branch | Gratis |
 | Grafici | Componenti SVG fatti in casa (barra per categoria, barre/trend), seguendo la skill `dataviz` | Leggeri e coerenti con il tema |
@@ -107,7 +107,7 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - **Identità**: logo e icona dell'app (anche maskable e per iOS), tono di voce dei testi.
 - **Linguaggio visivo**: palette chiara e scura, tipografia (font self-hosted, così funziona offline), griglia e spaziature, raggi e ombre, un unico set di icone per le categorie, colori delle categorie distinguibili e accessibili in entrambi i temi (validati con il metodo della skill `dataviz`).
 - **Direzione visiva**: tre direzioni esplorate, scelta **C · Taccuino** (2026-11-05). Specifiche e immagini in [docs/design](design/README.md).
-- **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si fanno come prototipi in codice, con dati finti e gli stessi token dell'app, così restano versionati nel repository. Gli screenshot di riferimento vanno in `docs/design/`.
+- **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si disegnano in FigCraft nel file `design/soldo.figcraft`, versionato nel repository, con le stesse variabili (chiaro/scuro) e gli stessi stili di testo. Gli screenshot vanno in `docs/design/render/`.
 - **Microinterazioni**: transizioni tra periodi, feedback del tastierino (vibrazione su Android), animazione della barra per categoria.
 - **Traduzione in codice**: token e contesto SCSS di `@volverjs/style`, tema Volver personalizzato, pagina interna `/dev/ui` con tutti i componenti per verificarli.
 - **Peso iniziale**: a fine Fase 0 la shell pesa ~112 kB di JS e ~68 kB di CSS (gzip). Obiettivo: dimezzarlo compilando via SCSS solo le utility e i componenti usati, con una collezione di icone che contenga solo quelle usate, e con i messaggi i18n precompilati.
@@ -191,7 +191,7 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - Account Cloudflare (gratuito); progetto Google Cloud e client OAuth "Web application" (gratuito).
 - **Google in modalità Testing**: massimo 100 utenti di test, login da rifare ogni 7 giorni. Va bene per l'uso personale iniziale.
 - Per aprire l'app ad altri: pubblicazione in Production con verifica del brand (homepage, privacy policy, dominio verificato). Consigliato un dominio proprio (~10–15 €/anno), che è l'unico costo prevedibile ed è rimandabile.
-- Studio grafico: gratuito, perché i mockup sono prototipi in codice nel repository; il costo di un eventuale designer esterno è a parte.
+- Studio grafico: gratuito, perché i mockup sono fatti con FigCraft (open source) e versionati nel repository; il costo di un eventuale designer esterno è a parte.
 - Open Banking: costo da definire nello studio 6b.
 
 ## Rischi

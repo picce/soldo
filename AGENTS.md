@@ -39,13 +39,14 @@ src/
   theme/        volver.css (design system in cascade layer) e app.css
   db/ domain/ backup/ import/   arrivano nelle fasi successive (vedi roadmap)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
+design/         file di design FigCraft (soldo.figcraft): fondamenta e schermate
 e2e/            test Playwright
 ```
 
 ## Convenzioni
 
 - **Volver**: i componenti `Vv*` sono auto-importati (solo JS). Quando usi un componente per la prima volta, aggiungi l'import del suo CSS in `src/theme/volver.css` nel layer `volver.components`. Prima di scrivere props o classi consulta le skill `volverjs-ui-vue` e `volverjs-style`: props e utility inventate falliscono in silenzio.
-- **Design**: la fonte di verità è [docs/design/README.md](docs/design/README.md) (direzione Taccuino: colori, tipografia, icone, componenti, tono di voce). Il design vive nel repository, non in Figma.
+- **Design**: le regole sono in [docs/design/README.md](docs/design/README.md) (direzione Taccuino: colori, tipografia, icone, componenti, tono di voce), i mockup in `design/soldo.figcraft` (FigCraft 0.15.1, editor open source in locale; con `figcraft-cli` si esportano gli screenshot in `docs/design/render/`). Il design vive nel repository, non in Figma.
 - **Icone**: solo nomi del set Volver `normal` già registrato, niente prefissi Iconify remoti (l'app deve funzionare offline). Con la Fase 1 il set diventa Phosphor Light, incluso in una collezione locale (vedi docs/design).
 - **Colori e spaziature**: token del design system (`var(--color-…)`, `var(--spacing-…)`), mai hex nei componenti, così il tema scuro continua a funzionare.
 - **CSS del design system in cascade layer**: il CSS dell'app (scoped o in `app.css`) vince sempre senza `!important`.

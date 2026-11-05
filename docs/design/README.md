@@ -1,8 +1,30 @@
 # Design di Soldo
 
-Direzione scelta il 2026-11-05: **C · Taccuino**. Questo file è la fonte di verità per colori, tipografia e componenti finché non vengono tradotti in codice in `src/theme/`. Le tre direzioni esplorate sono archiviate in [esplorazione/](esplorazione/).
+Direzione scelta il 2026-11-05: **C · Taccuino**. Questo documento spiega le regole del sistema: colori, tipografia, icone, componenti e tono di voce. I mockup stanno nel file di design [design/soldo.figcraft](../../design/soldo.figcraft), che usa gli stessi valori. Le tre direzioni esplorate all'inizio sono archiviate in [esplorazione/](esplorazione/).
 
-![Direzione C · Taccuino: sistema e Home in chiaro e scuro](esplorazione/direzione-c-taccuino.png)
+| Home, tema chiaro | Home, tema scuro |
+|---|---|
+| ![Home in chiaro](render/home-chiaro.png) | ![Home in scuro](render/home-scuro.png) |
+
+## File di design
+
+Il file si apre con [FigCraft](https://github.com/storytold/figcraft), un editor open source che gira in locale (versione usata: 0.15.1). È un archivio binario versionato in git; gli screenshot aggiornati sono in [render/](render/).
+
+- **Pagina Fondamenta**: colori e categorie nei due temi, stili di testo, icone.
+- **Pagina Schermate**: la Home è un componente. La versione scura ne è un'istanza dentro una cornice con il modo «Scuro».
+- **Variabili**: la collezione «Soldo» ha due modi, Chiaro e Scuro. Contiene `colore/*` (i token della tabella qui sotto) e `categoria/1…8`. I riempimenti sono legati alle variabili: per vedere una schermata al buio basta cambiare il modo della cornice che la contiene.
+- **Stili di testo**: sono 17, uno per ogni riga della tabella Tipografia.
+- **Font**: il file usa IBM Plex Sans e IBM Plex Mono, che FigCraft non include. Nell'app si scaricano da *Testo ▸ Font mancanti* (bisogna abilitare il download); in alternativa si installano dai file TTF di Google Fonts.
+
+Per rigenerare gli screenshot (con IBM Plex installato):
+
+```sh
+figcraft-cli export design/soldo.figcraft --page Schermate --node "Home" -o docs/design/render/home-chiaro.png --scale 2
+figcraft-cli export design/soldo.figcraft --page Schermate --node "Home · scuro" -o docs/design/render/home-scuro.png --scale 2
+figcraft-cli export design/soldo.figcraft --page Fondamenta --node "Fondamenta" -o docs/design/render/fondamenta.png
+```
+
+Se cambia un valore, va aggiornato sia nel file sia qui.
 
 ## Principi
 
