@@ -1,6 +1,6 @@
 # Lingua inglese
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; manca la pubblicazione su `main`)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: L'app parla italiano e inglese. La lingua segue quella del dispositivo e si può cambiare nelle Impostazioni; i testi passano in file JSON precompilati in build.
 > **Spec collegate**: [`tema-taccuino.md`](./tema-taccuino.md) (stessa fase: la pagina Impostazioni usa il controllo a segmenti del Taccuino, i messaggi precompilati riducono il peso)

@@ -5,7 +5,7 @@
 | Fase | Stato |
 |---|---|
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
-| 1 — Studio grafico | In chiusura: direzione **C · Taccuino**, mockup del nucleo e icona A · Quaderno approvati il 2026-11-05 ([docs/design](design/README.md)). Tema e lingua inglese implementati su `develop` (vedi le spec attive); manca la pubblicazione su `main` |
+| 1 — Studio grafico | Completata e pubblicata (2026-11-05): direzione **C · Taccuino** ([docs/design](design/README.md)), tema nell'app, icona A · Quaderno e lingua inglese (spec in [docs/specs/released](specs/released/)) |
 | 2–7 | Da iniziare |
 
 ## Spec attive
@@ -14,8 +14,9 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| [Tema Taccuino nell'app](specs/tema-taccuino.md) | Fase 1 | da definire | Nessuna | Parziale |
-| [Lingua inglese](specs/lingua-inglese.md) | Fase 1 | da definire | Nessuna | Parziale |
+| | | | | |
+
+Al momento non ci sono spec attive.
 
 ## Contesto
 
@@ -118,8 +119,8 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - **Direzione visiva**: tre direzioni esplorate, scelta **C · Taccuino** (2026-11-05). Specifiche e immagini in [docs/design](design/README.md).
 - **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si disegnano in FigCraft nel file `design/soldo.figcraft`, versionato nel repository, con le stesse variabili (chiaro/scuro) e gli stessi stili di testo. Gli screenshot vanno in `docs/design/render/`. Approvati il 2026-11-05, con l'icona A · Quaderno.
 - **Aggiunta rapida**: importo, poi un tocco sulla categoria salva il movimento. Il tastierino fa anche i conti (+ − × ÷); data, conto e nota sono facoltativi (di base: oggi, il conto predefinito, nessuna nota).
-- **Traduzione in codice**: token CSS del Taccuino mappati su quelli di Volver, font self-hosted, icone Phosphor locali, app shell e icona nel manifest. Spec: [Tema Taccuino nell'app](specs/tema-taccuino.md).
-- **Lingua inglese** (anticipata dalla Fase 5 il 2026-11-05): lingua dal dispositivo, scelta nelle Impostazioni. Spec: [Lingua inglese](specs/lingua-inglese.md).
+- **Traduzione in codice**: token CSS del Taccuino mappati su quelli di Volver, font self-hosted, icone Phosphor locali, app shell e icona nel manifest. Spec: [Tema Taccuino nell'app](specs/released/tema-taccuino.md).
+- **Lingua inglese** (anticipata dalla Fase 5 il 2026-11-05): lingua dal dispositivo, scelta nelle Impostazioni. Spec: [Lingua inglese](specs/released/lingua-inglese.md).
 - **Peso iniziale**: a fine Fase 0 la shell pesava 113,5 kB di JS e 67,2 kB di CSS (gzip). Senza utility né tema scuro di Volver, con i soli componenti Volver usati, le icone usate e i messaggi precompilati il bundle principale pesa 71,6 kB di JS e 13,2 kB di CSS (misurato il 2026-11-05).
 - **Microinterazioni** e pagina interna `/dev/ui`: spostate in Fase 2, insieme ai componenti a cui servono.
 - Le schermate delle fasi successive (Budget, Conti, Statistiche, Backup, Import) si disegnano **all'inizio di ciascuna fase**, con lo stesso sistema.
