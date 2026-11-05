@@ -72,13 +72,13 @@ describe('transactionsView', () => {
 
   it('groups by day, newest first, with the total of each day', async () => {
     const { wrapper } = await mountList()
-    await vi.waitFor(() => expect(titles(wrapper)).toHaveLength(4))
-    expect(titles(wrapper)).toEqual([
+    // Rows and category names come from two queries: wait for both.
+    await vi.waitFor(() => expect(titles(wrapper)).toEqual([
       'Caffè',
       'Esselunga',
       'Rimborsi',
       'Cinema',
-    ])
+    ]))
     const totals = wrapper.findAll('.day-group__head .type-note').map(total => total.text())
     expect(totals).toEqual(['−14,20', '+50,00', '−9,00'])
   })

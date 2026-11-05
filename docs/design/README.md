@@ -191,7 +191,7 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 | Aggiunta rapida | `x`, `calendar-blank`, `wallet`, `note-pencil`, `backspace` |
 | Movimenti | `magnifying-glass`, `x` |
 | Onboarding | `receipt`, `device-mobile`, `cloud-check`, `export` (il Condividi di iOS) |
-| Fase 2 | `trash`, `copy`, `check`, `caret-right`, `dots-six-vertical` (maniglia), `archive`, `file-csv`, `file-arrow-up`, `warning`; per le categorie nuove una griglia di 24 icone (`coffee`, `car`, `train`, `barbell`, `book-open`, …) |
+| Fase 2 | `trash`, `copy`, `check`, `caret-right`, `dots-six-vertical` (maniglia), `archive`, `file-csv`, `file-arrow-up`, `warning`; `caret-up` (Sposta su); per le categorie una griglia di 30 icone: le 24 del mockup (`coffee`, `car`, `train`, `barbell`, `book-open`, …) più quelle delle categorie predefinite e `briefcase` (elenco in `src/features/categories/icons.ts`) |
 
 ## Componenti
 
@@ -236,6 +236,7 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 - **Finestra di conferma** (importazione): scheda su `superficie` con bordo `inchiostro`, angoli da 12 px, anteprima in una scheda su `carta` con le righe a puntini, avviso in `errore` con l'icona `warning`; l'azione distruttiva è il pulsante pieno in `errore`.
 - **Campi di testo**: alti 44 px, raggio 8, bordo `testo-2` (il contorno è l'unico segno del campo); bordo `biro` quando è attivo.
 - **Elenchi in una scheda** (Impostazioni, Categorie, Data): righe da 12 px di margine verticale separate da `linea`, con la freccia `caret-right` quando aprono un'altra pagina.
+- **Categorie**: maniglia `dots-six-vertical` in `testo-2` a sinistra; la riga trascinata ha il contorno `biro` e le altre scorrono per farle posto. Con la tastiera, al posto della maniglia compaiono le frecce `caret-up` e `caret-down` (Sposta su, Sposta giù). Le righe sono alte almeno 44 px. Il cestino in alto nella modifica c'è solo per le categorie mai usate.
 - **Caselle di spunta**: 22 px, raggio 4; spuntate piene in `biro` con `check` in `su-biro`.
 - **Scelta di icona e colore**: griglia di 6 icone per riga e otto campioni di colore; la scelta ha il bordo `biro` (icona) o `inchiostro` (colore) da 2 px, e il nome del colore compare accanto al titolo.
 

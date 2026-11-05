@@ -5,9 +5,11 @@ import { useEventListener } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { goBack } from '@/app/navigation'
 import ActionChip from '@/components/ActionChip.vue'
 import AppIcon from '@/components/AppIcon.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
+import IconButton from '@/components/IconButton.vue'
 import Keypad from '@/components/Keypad.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import {
@@ -39,16 +41,11 @@ const intlLocale = useIntlLocale()
 
 /** Back to where the screen was opened from, or to a sensible page when opened directly. */
 function close() {
-  if (router.options.history.state.back) {
-    router.back()
-  }
-  else {
-    void router.replace({
-      name: props.target.mode === 'edit'
-        ? 'transactions'
-        : 'home',
-    })
-  }
+  goBack(router, {
+    name: props.target.mode === 'edit'
+      ? 'transactions'
+      : 'home',
+  })
 }
 
 const {
@@ -162,20 +159,17 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
       {{ title }}
     </h1>
     <header class="editor__top">
-      <button type="button" class="editor__icon-button" :aria-label="t('common.close')" @click="close">
-        <AppIcon name="x" />
-      </button>
+      <IconButton icon="x" :label="t('common.close')" @click="close" />
       <SegmentedControl v-model="kind" :options="kindOptions" :aria-label="t('editor.kind')" class="editor__kind" />
-      <button
+      <IconButton
         v-if="isEdit"
-        type="button"
-        class="editor__icon-button editor__icon-button--danger"
-        :aria-label="t('editor.delete')"
+        icon="trash"
+        tone="danger"
+        :label="t('editor.delete')"
         :disabled="!ready"
+        class="editor__delete"
         @click="remove"
-      >
-        <AppIcon name="trash" />
-      </button>
+      />
     </header>
 
     <template v-if="ready">
@@ -285,41 +279,8 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   justify-self: center;
 }
 
-/* 34 px buttons with a 44 px touch area (docs/design/README.md, "Forme e spaziature"). */
-.editor__icon-button {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.125rem;
-  height: 2.125rem;
-  margin: 0.3125rem;
-  padding: 0;
-  background: var(--color-card);
-  border: 1px solid var(--color-line);
-  border-radius: 0.375rem;
-  color: var(--color-ink);
-  cursor: pointer;
-}
-
-.editor__icon-button::after {
-  content: '';
-  position: absolute;
-  inset: -0.3125rem;
-}
-
-.editor__icon-button:focus-visible {
-  outline: 2px solid var(--color-pen);
-  outline-offset: 2px;
-}
-
-.editor__icon-button .app-icon {
-  --app-icon-size: 1.25rem;
-}
-
-.editor__icon-button--danger {
+.editor__delete {
   grid-column: 3;
-  color: var(--color-danger);
 }
 
 .editor__amount {

@@ -4,7 +4,9 @@
   },
   "common": {
     "close": "Close",
-    "undo": "Undo"
+    "undo": "Undo",
+    "back": "Back",
+    "saveError": "Could not save. Please try again."
   },
   "nav": {
     "label": "Main navigation",
@@ -20,9 +22,6 @@
     },
     "stats": {
       "intro": "Here you will see how income and expenses change over time."
-    },
-    "settings": {
-      "intro": "Here you will manage categories, accounts, backup and preferences."
     }
   },
   "period": {
@@ -88,10 +87,92 @@
       "en": "English",
       "hint": "Automatic uses the language of your device."
     },
+    "categories": {
+      "label": "Categories",
+      "title": "Expenses and income",
+      "expenses": "none for expenses | {n} for expenses | {n} for expenses",
+      "income": "none for income | {n} for income | {n} for income"
+    },
     "about": {
       "label": "About",
       "version": "Version {version}"
     }
+  },
+  "categories": {
+    "title": "Categories",
+    "kind": "Category type",
+    "expenses": "Expenses",
+    "income": "Income",
+    "listExpense": "Expense categories",
+    "listIncome": "Income categories",
+    "moveUp": "Move up: {name}",
+    "moveDown": "Move down: {name}",
+    "moved": "{name}: position {position} of {count}",
+    "archived": "Archived ({count})",
+    "empty": "No active categories. Add one below.",
+    "new": "New category"
+  },
+  "categoryEdit": {
+    "new": "New category",
+    "edit": "Edit category",
+    "name": "Name",
+    "defaultName": "Default name: it follows the language until you change it.",
+    "nameRequired": "Write a name.",
+    "nameTaken": "There is already a category with this name.",
+    "icon": "Icon",
+    "color": "Color",
+    "save": "Save",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "delete": "Delete category",
+    "usage": "Used in {n} transaction: archive it to remove it from quick add and keep the history. | Used in {n} transactions: archive it to remove it from quick add and keep the history.",
+    "archivedNote": "Archived: hidden from quick add, still in your transactions.",
+    "added": "Added: {name}",
+    "archivedToast": "Archived: {name}",
+    "unarchivedToast": "Restored: {name}",
+    "deletedToast": "Deleted: {name}"
+  },
+  "categoryIcons": {
+    "shoppingCart": "Shopping cart",
+    "shoppingBag": "Shopping bag",
+    "coffee": "Coffee",
+    "forkKnife": "Fork and knife",
+    "house": "House",
+    "lightning": "Lightning",
+    "car": "Car",
+    "bus": "Bus",
+    "train": "Train",
+    "bicycle": "Bicycle",
+    "gasPump": "Fuel pump",
+    "airplaneTilt": "Airplane",
+    "firstAid": "First aid cross",
+    "pill": "Pill",
+    "barbell": "Barbell",
+    "heart": "Heart",
+    "popcorn": "Popcorn",
+    "television": "Television",
+    "gameController": "Game controller",
+    "musicNotes": "Music notes",
+    "bookOpen": "Open book",
+    "graduationCap": "Graduation cap",
+    "baby": "Baby",
+    "pawPrint": "Paw print",
+    "tShirt": "T-shirt",
+    "gift": "Gift",
+    "handCoins": "Hand with coins",
+    "briefcase": "Briefcase",
+    "arrowCounterClockwise": "Arrow turning back",
+    "dotsThreeOutline": "Three dots"
+  },
+  "palette": {
+    "blue": "Blue",
+    "orange": "Orange",
+    "teal": "Teal",
+    "ochre": "Ochre",
+    "pink": "Pink",
+    "green": "Green",
+    "purple": "Purple",
+    "red": "Red"
   },
   "pwa": {
     "updateTitle": "New version available",
@@ -121,8 +202,7 @@
     "noteChip": "Note: {note}",
     "save": "Save",
     "duplicate": "Duplicate",
-    "delete": "Delete transaction",
-    "saveError": "Could not save. Please try again."
+    "delete": "Delete transaction"
   },
   "dateSheet": {
     "title": "Date",

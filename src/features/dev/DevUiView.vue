@@ -9,13 +9,18 @@ import AmountText from '@/components/AmountText.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
+import ColorPicker from '@/components/ColorPicker.vue'
 import FilterChip from '@/components/FilterChip.vue'
+import IconButton from '@/components/IconButton.vue'
+import IconPicker from '@/components/IconPicker.vue'
 import Keypad from '@/components/Keypad.vue'
 import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
 import SearchField from '@/components/SearchField.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import SwipeRow from '@/components/SwipeRow.vue'
+import TextField from '@/components/TextField.vue'
 import { shiftPeriod } from '@/domain/periods'
+import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
 
 /**
  * Internal page, registered only in development (/dev/ui): every app component, in the
@@ -57,6 +62,13 @@ const lastKey = ref('')
 const search = ref('')
 const lastSwipe = ref('')
 const sheetOpen = ref(false)
+const fieldText = ref('')
+const pickedIcon = ref('shopping-cart')
+const pickedColor = ref<PaletteColor>(1)
+const iconOptions = CATEGORY_ICONS.slice(0, 12).map(value => ({
+  value,
+  label: t(iconNameKey(value)),
+}))
 const period = ref<Period>({ unit: 'month', anchor: '2026-11-05' })
 const segments = categories.slice(0, 6).map((category, index) => ({
   key: category.id,
@@ -128,6 +140,31 @@ function toast() {
         <VvButton :label="t('editor.save')" modifiers="primary" />
         <VvButton :label="t('dateSheet.confirm')" modifiers="primary" disabled />
       </p>
+
+      <h3 class="dev-ui__name type-note">
+        IconButton
+      </h3>
+      <p class="dev-ui__row">
+        <IconButton icon="caret-left" :label="t('common.back')" />
+        <IconButton icon="x" :label="t('common.close')" />
+        <IconButton icon="trash" tone="danger" :label="t('editor.delete')" />
+      </p>
+
+      <h3 class="dev-ui__name type-note">
+        TextField
+      </h3>
+      <TextField v-model="fieldText" :label="t('categoryEdit.name')" :hint="t('categoryEdit.defaultName')" :maxlength="24" />
+      <TextField v-model="fieldText" :label="t('categoryEdit.name')" :error="t('categoryEdit.nameRequired')" />
+
+      <h3 class="dev-ui__name type-note">
+        IconPicker
+      </h3>
+      <IconPicker v-model="pickedIcon" :options="iconOptions" aria-label="IconPicker" />
+
+      <h3 class="dev-ui__name type-note">
+        ColorPicker
+      </h3>
+      <ColorPicker v-model="pickedColor" aria-label="ColorPicker" />
 
       <h3 class="dev-ui__name type-note">
         SearchField

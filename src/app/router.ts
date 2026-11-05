@@ -35,6 +35,31 @@ export const routes: RouteRecordRaw[] = [
     meta: { titleKey: 'nav.settings' },
   },
   {
+    path: '/impostazioni/categorie',
+    name: 'categories',
+    component: () => import('@/features/categories/CategoriesView.vue'),
+    meta: { titleKey: 'categories.title', fullscreen: true },
+  },
+  {
+    path: '/impostazioni/categorie/:id',
+    name: 'category-edit',
+    component: () => import('@/features/categories/CategoryEditView.vue'),
+    props: route => ({
+      id: route.params.id === 'nuova'
+        ? null
+        : route.params.id,
+      kind: route.query.tipo === 'entrate'
+        ? 'income'
+        : 'expense',
+    }),
+    meta: {
+      titleKey: route => route.params.id === 'nuova'
+        ? 'categoryEdit.new'
+        : 'categoryEdit.edit',
+      fullscreen: true,
+    },
+  },
+  {
     path: '/nuovo/:kind(uscita|entrata)',
     name: 'transaction-new',
     component: () => import('@/features/transactions/TransactionEditorView.vue'),

@@ -1,5 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createMemoryHistory } from 'vue-router'
+import { createAppRouter } from '@/app/router'
+import { db } from '@/db/database'
+import { archiveCategory, listCategories } from '@/db/repositories/categories'
+import { seedDefaults } from '@/db/seed'
 import { applyLocale, LOCALE_STORAGE_KEY } from '@/i18n/locale'
 import { testPlugins } from '@/test/plugins'
 import SettingsView from './SettingsView.vue'
@@ -12,10 +17,15 @@ function pressedLabel(wrapper: ReturnType<typeof mountSettings>) {
 function mountSettings() {
   return mount(SettingsView, {
     global: {
-      plugins: testPlugins(),
+      plugins: testPlugins(createAppRouter(createMemoryHistory())),
     },
   })
 }
+
+beforeEach(async () => {
+  await Promise.all(db.tables.map(table => table.clear()))
+  await seedDefaults()
+})
 
 afterEach(() => {
   localStorage.clear()
@@ -28,6 +38,15 @@ describe('settingsView', () => {
     const labels = wrapper.findAll('button').map(button => button.text())
     expect(labels).toEqual(['Automatica', 'Italiano', 'English'])
     expect(pressedLabel(wrapper)).toEqual(['Automatica'])
+  })
+
+  it('opens the categories, counting those in the quick add', async () => {
+    const [groceries] = await listCategories({ kind: 'expense' })
+    await archiveCategory(groceries!.id)
+    const wrapper = mountSettings()
+    const row = wrapper.get('[aria-labelledby="settings-categories"] a')
+    expect(row.attributes('href')).toBe('/impostazioni/categorie')
+    await vi.waitFor(() => expect(row.text()).toContain('11 uscite · 4 entrate'))
   })
 
   it('shows the app version', () => {

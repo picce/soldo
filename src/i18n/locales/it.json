@@ -4,7 +4,9 @@
   },
   "common": {
     "close": "Chiudi",
-    "undo": "Annulla"
+    "undo": "Annulla",
+    "back": "Indietro",
+    "saveError": "Non è stato possibile salvare. Riprova."
   },
   "nav": {
     "label": "Navigazione principale",
@@ -20,9 +22,6 @@
     },
     "stats": {
       "intro": "Qui vedrai come cambiano entrate e uscite nel tempo."
-    },
-    "settings": {
-      "intro": "Qui gestirai categorie, conti, backup e preferenze."
     }
   },
   "period": {
@@ -88,10 +87,92 @@
       "en": "English",
       "hint": "Automatica usa la lingua del dispositivo."
     },
+    "categories": {
+      "label": "Categorie",
+      "title": "Uscite ed entrate",
+      "expenses": "nessuna uscita | {n} uscita | {n} uscite",
+      "income": "nessuna entrata | {n} entrata | {n} entrate"
+    },
     "about": {
       "label": "Informazioni",
       "version": "Versione {version}"
     }
+  },
+  "categories": {
+    "title": "Categorie",
+    "kind": "Tipo di categoria",
+    "expenses": "Uscite",
+    "income": "Entrate",
+    "listExpense": "Categorie di uscita",
+    "listIncome": "Categorie di entrata",
+    "moveUp": "Sposta su: {name}",
+    "moveDown": "Sposta giù: {name}",
+    "moved": "{name}: posizione {position} di {count}",
+    "archived": "Archiviate ({count})",
+    "empty": "Nessuna categoria attiva. Aggiungine una qui sotto.",
+    "new": "Nuova categoria"
+  },
+  "categoryEdit": {
+    "new": "Nuova categoria",
+    "edit": "Modifica categoria",
+    "name": "Nome",
+    "defaultName": "Nome predefinito: cambia con la lingua finché non lo modifichi.",
+    "nameRequired": "Scrivi un nome.",
+    "nameTaken": "C'è già una categoria con questo nome.",
+    "icon": "Icona",
+    "color": "Colore",
+    "save": "Salva",
+    "archive": "Archivia",
+    "unarchive": "Ripristina",
+    "delete": "Elimina categoria",
+    "usage": "Usata in {n} movimento: archiviala per toglierla dall'aggiunta rapida senza perdere lo storico. | Usata in {n} movimenti: archiviala per toglierla dall'aggiunta rapida senza perdere lo storico.",
+    "archivedNote": "Archiviata: non compare nell'aggiunta rapida, ma resta nei movimenti.",
+    "added": "Aggiunta: {name}",
+    "archivedToast": "Archiviata: {name}",
+    "unarchivedToast": "Ripristinata: {name}",
+    "deletedToast": "Eliminata: {name}"
+  },
+  "categoryIcons": {
+    "shoppingCart": "Carrello",
+    "shoppingBag": "Borsa della spesa",
+    "coffee": "Caffè",
+    "forkKnife": "Posate",
+    "house": "Casa",
+    "lightning": "Fulmine",
+    "car": "Auto",
+    "bus": "Autobus",
+    "train": "Treno",
+    "bicycle": "Bicicletta",
+    "gasPump": "Distributore di benzina",
+    "airplaneTilt": "Aereo",
+    "firstAid": "Croce del pronto soccorso",
+    "pill": "Pillola",
+    "barbell": "Bilanciere",
+    "heart": "Cuore",
+    "popcorn": "Popcorn",
+    "television": "Televisore",
+    "gameController": "Controller per videogiochi",
+    "musicNotes": "Note musicali",
+    "bookOpen": "Libro aperto",
+    "graduationCap": "Tocco di laurea",
+    "baby": "Bambino",
+    "pawPrint": "Impronta di zampa",
+    "tShirt": "Maglietta",
+    "gift": "Regalo",
+    "handCoins": "Mano con monete",
+    "briefcase": "Valigetta",
+    "arrowCounterClockwise": "Freccia che torna indietro",
+    "dotsThreeOutline": "Tre puntini"
+  },
+  "palette": {
+    "blue": "Blu",
+    "orange": "Arancio",
+    "teal": "Verde acqua",
+    "ochre": "Ocra",
+    "pink": "Rosa",
+    "green": "Verde",
+    "purple": "Viola",
+    "red": "Rosso"
   },
   "pwa": {
     "updateTitle": "Nuova versione disponibile",
@@ -121,8 +202,7 @@
     "noteChip": "Nota: {note}",
     "save": "Salva",
     "duplicate": "Duplica",
-    "delete": "Elimina movimento",
-    "saveError": "Non è stato possibile salvare. Riprova."
+    "delete": "Elimina movimento"
   },
   "dateSheet": {
     "title": "Data",

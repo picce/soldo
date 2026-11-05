@@ -126,7 +126,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     catch (error) {
       console.error(error)
       showToast({
-        message: t('editor.saveError'),
+        message: t('common.saveError'),
       })
     }
     finally {

@@ -43,6 +43,27 @@ const LIGHT = [
   // Movimenti
   'magnifying-glass',
   'caret-down',
+  // Categories: drag handle, move buttons, archive
+  'dots-six-vertical',
+  'caret-up',
+  'archive',
+  // Icons offered for a category (src/features/categories/icons.ts), besides the defaults
+  'shopping-bag',
+  'coffee',
+  'car',
+  'train',
+  'bicycle',
+  'gas-pump',
+  'pill',
+  'barbell',
+  'heart',
+  'television',
+  'game-controller',
+  'music-notes',
+  'book-open',
+  'graduation-cap',
+  'baby',
+  'briefcase',
 ]
 
 /** Icons also used in the Regular weight (active navigation item, − and + signs, solid states). */
