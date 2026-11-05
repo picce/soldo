@@ -8,7 +8,8 @@
 | 1 — Studio grafico | Completata e pubblicata (2026-11-05): direzione **C · Taccuino** ([docs/design](design/README.md)), tema nell'app, icona A · Quaderno e lingua inglese (spec in [docs/specs/released](specs/released/)) |
 | 2 — Nucleo local-first | Completata e pubblicata con la versione 0.2.0 (2026-11-05): aggiunta rapida, Home, Movimenti, categorie, backup manuale e CSV, onboarding (spec in [docs/specs/released](specs/released/)) |
 | Prima della Fase 3 | Pubblicata con la versione 0.3.0 (2026-11-05): [sensazione da app nativa](specs/released/sensazione-nativa.md), cioè risposta al tocco, transizioni tra le pagine, gesti, liste e cifre animate |
-| 3–7 | Da iniziare |
+| 3 — Backup su Google Drive | Pubblicata con la versione 0.4.0 (2026-11-05), da attivare: serve la configurazione di Google ([docs/google-drive.md](google-drive.md)), poi la prova con un Drive vero chiude la [spec](specs/backup-google-drive.md) |
+| 4–7 | Da iniziare |
 
 ## Spec attive
 
@@ -16,9 +17,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| | | | | |
-
-Al momento non ci sono spec attive.
+| [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
 
 ## Contesto
 

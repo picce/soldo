@@ -1,6 +1,7 @@
 import type { BackupFile } from './format'
 import { db } from '@/db/database'
 import { backupFileSchema } from './format'
+import { gunzip, isGzip, sha256Hex } from './pack'
 import { BACKUP_FORMAT } from './version'
 
 /** Larger files are not Soldo backups (100,000 transactions take about 40 MB). */
@@ -26,23 +27,38 @@ function alive<T extends { deletedAt: string | null }>(rows: T[]): number {
   return rows.filter(row => row.deletedAt === null).length
 }
 
-/** Reads and checks a backup file, without touching the database. */
+const NOT_SOLDO: BackupReading = { ok: false, error: 'notSoldo' }
+
+/** Reads and checks a backup file, plain JSON or compressed, without touching the database. */
 export async function readBackup(file: File): Promise<BackupReading> {
   if (file.size > MAX_FILE_BYTES)
-    return { ok: false, error: 'notSoldo' }
+    return NOT_SOLDO
+  return readBackupBytes(new Uint8Array(await file.arrayBuffer()), file.name)
+}
+
+/**
+ * Reads and checks the bytes of a backup: a file, or a download from Drive. With
+ * `checksum` (Drive keeps it next to the file) data that changed on the way is refused.
+ */
+export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: string, checksum?: string): Promise<BackupReading> {
   let raw: unknown
   try {
-    raw = JSON.parse(await file.text())
+    raw = JSON.parse(isGzip(bytes)
+      ? await gunzip(bytes)
+      : new TextDecoder().decode(bytes))
   }
   catch {
-    return { ok: false, error: 'notSoldo' }
+    return NOT_SOLDO
   }
   if (typeof raw !== 'object' || raw === null || (raw as { app?: unknown }).app !== 'soldo')
-    return { ok: false, error: 'notSoldo' }
+    return NOT_SOLDO
   // Format 1 is the only one so far: older formats would be upgraded here.
   const format = (raw as { format?: unknown }).format
   if (typeof format === 'number' && format > BACKUP_FORMAT)
     return { ok: false, error: 'newerFormat' }
+  // Before Zod, which rewrites the keys in its own order: the checksum is of the text.
+  if (checksum && await sha256Hex(JSON.stringify((raw as { data?: unknown }).data)) !== checksum)
+    return { ok: false, error: 'invalid' }
 
   const parsed = backupFileSchema.safeParse(raw)
   if (!parsed.success)
@@ -52,7 +68,7 @@ export async function readBackup(file: File): Promise<BackupReading> {
     ok: true,
     backup,
     preview: {
-      fileName: file.name,
+      fileName,
       exportedAt: backup.exportedAt,
       transactions: alive(backup.data.transactions),
       categories: alive(backup.data.categories),

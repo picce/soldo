@@ -9,6 +9,7 @@ import { addTransaction, deleteTransaction, listTransactions } from '@/db/reposi
 import { seedDefaults } from '@/db/seed'
 import { createBackup } from './export'
 import { readBackup, restoreBackup } from './import'
+import { gzip } from './pack'
 
 let tick = 0
 
@@ -53,6 +54,13 @@ async function snapshot() {
 }
 
 describe('backup', () => {
+  it('reads a compressed backup too, as downloaded from Google Drive', async () => {
+    await addSome()
+    const bytes = await gzip(JSON.stringify(await createBackup()))
+    const reading = await readBackup(new File([bytes], 'soldo-backup-2026-11-02.json.gz', { type: 'application/gzip' }))
+    expect(reading.ok && reading.preview).toMatchObject({ fileName: 'soldo-backup-2026-11-02.json.gz', transactions: 2 })
+  })
+
   it('reads its own export and previews what it holds', async () => {
     await addSome()
     const backup = await createBackup()

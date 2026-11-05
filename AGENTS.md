@@ -4,7 +4,7 @@ PWA mobile-first per le spese quotidiane, **local-first**: i dati vivono in Inde
 
 ## Vincoli che non si negoziano
 
-- **Nessun dato di spesa sui nostri server.** Niente database lato server per i dati dell'utente. Il Worker in `worker/` è stateless e gestisce solo token OAuth.
+- **Nessun dato di spesa sui nostri server.** Niente database lato server per i dati dell'utente. Il Worker in `worker/` è stateless e gestisce solo token OAuth: i backup vanno dal browser a Google Drive direttamente.
 - **Offline anche in scrittura.** Ogni funzione deve funzionare senza rete; la rete serve solo per il backup.
 - **Importi in centesimi interi** (`amountCents`), mai float. Date di calendario come stringhe `YYYY-MM-DD` locali.
 - **Tutti i testi dell'interfaccia in `src/i18n/locales/it.json` ed `en.json`**, sempre in entrambe le lingue; niente stringhe hardcoded nei componenti. Le chiavi devono coincidere (lo controllano typecheck e `src/i18n/locale.test.ts`).
@@ -18,7 +18,7 @@ PWA mobile-first per le spese quotidiane, **local-first**: i dati vivono in Inde
 | `pnpm preview` | Serve la build con workerd, come in produzione |
 | `pnpm lint` / `pnpm lint:fix` | ESLint (`@antfu/eslint-config`, fa anche da formatter) |
 | `pnpm typecheck` | `vue-tsc -b` su app, config Node e Worker |
-| `pnpm test` | Vitest (happy-dom + `fake-indexeddb`) |
+| `pnpm test` | Vitest (happy-dom + `fake-indexeddb`; il Worker in ambiente Node) |
 | `pnpm test:e2e` | Playwright su Chromium mobile, contro `pnpm preview` (fa la build da solo, tranne in CI) |
 | `E2E_BASE_URL=<url> pnpm test:e2e` | Gli stessi test contro un sito pubblicato: produzione `https://soldo.nridolfi.workers.dev`, anteprima di `develop` `https://develop-soldo.nridolfi.workers.dev` |
 | `pnpm check` | lint + typecheck + test + build |
@@ -42,14 +42,16 @@ src/
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css, motion.css (transizioni tra le pagine)
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
   domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice, ricerca, giorni
-  test/         supporto ai test unitari (plugins.ts: i18n e Volver con le icone locali)
-  backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti
+  test/         supporto ai test: plugins.ts (i18n e Volver con le icone locali), setup.ts (niente rete nei test unitari), fake-drive.ts (Google Drive in memoria, anche per gli e2e)
+  backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti; backup automatico: provider.ts, google/ (accesso tramite il Worker e Drive API), pack.ts (gzip e checksum), retention.ts, state.ts (stato del dispositivo in localStorage), auto.ts (il motore), start.ts (avvio da main.ts)
   import/       arriva in Fase 6 (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)
-worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
+worker/         Worker Cloudflare: /api/* (static assets per tutto il resto); google.ts (accesso a Google Drive) e cookies.ts (cookie cifrati)
 design/         file di design FigCraft (soldo.figcraft): fondamenta, schermate, identità
 docs/specs/     spec dei lavori, attive e in released/ o archived/
-e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il primo avvio)
+docs/google-drive.md  come configurare Google (client OAuth e segreti del Worker)
+public/         file statici: _headers (sicurezza e CSP), privacy.html (pagina /privacy)
+e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il primo avvio; drive.ts: Google e Drive finti)
 ```
 
 ## Convenzioni
@@ -67,10 +69,12 @@ e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il pri
 - **CSS del design system in cascade layer**: il CSS dell'app (scoped o in `app.css`) vince sempre senza `!important`.
 - **Componenti locali** importati esplicitamente; alias `@/` → `src/`. Ogni componente nuovo va anche nella pagina `/dev/ui` (`src/features/dev/DevUiView.vue`), in chiaro e in scuro (tranne le impaginazioni di pagina, AppPage e SubPage).
 - **Pagine secondarie** (aperte da un'altra, come Categorie dalle Impostazioni): `SubPage` e `meta.fullscreen` nel percorso, così la barra di navigazione non c'è e «Indietro» torna da dove si è venuti.
-- **Test dei componenti**: montali con `global: { plugins: testPlugins() }` (`src/test/plugins.ts`), così le icone restano locali.
+- **Test dei componenti**: montali con `global: { plugins: testPlugins() }` (`src/test/plugins.ts`), così le icone restano locali. Nei test unitari `fetch` non va in rete (`src/test/setup.ts`); per Drive, `fakeDriveFetch(createFakeDrive())` di `src/test/fake-drive.ts`.
 - **Accessibilità**: ogni controllo ha un nome accessibile; i test e2e cercano gli elementi per ruolo e nome.
-- **Test e2e**: importano `test` ed `expect` da `e2e/fixtures.ts`, la cui `page` è già passata da «Inizia da zero»; solo `e2e/onboarding.spec.ts` parte dalla schermata di benvenuto. Durante una transizione di pagina il dito (o il mouse) non raggiunge la pagina: prima di un trascinamento subito dopo una navigazione, `pageSettled(page)` di `e2e/fixtures.ts`.
+- **Test e2e**: importano `test` ed `expect` da `e2e/fixtures.ts`, la cui `page` è già passata da «Inizia da zero»; solo `e2e/onboarding.spec.ts` parte dalla schermata di benvenuto. Durante una transizione di pagina il dito (o il mouse) non raggiunge la pagina: prima di un trascinamento subito dopo una navigazione, `pageSettled(page)` di `e2e/fixtures.ts`. Google e la Drive API si fingono con `fakeGoogle(page)` di `e2e/drive.ts`, con `serviceWorkers: 'block'` (il service worker sfuggirebbe a `page.route`).
 
 ## Deploy
 
-Cloudflare Workers con static assets (`wrangler.jsonc`). Il deploy parte da Workers Builds collegato al repository GitHub: build `pnpm build`, deploy `npx wrangler deploy`, anteprime per branch con `npx wrangler versions upload`. Header di sicurezza e CSP in `public/_headers`: se aggiungi una chiamata a un dominio esterno (es. Google API), aggiorna `connect-src`.
+Cloudflare Workers con static assets (`wrangler.jsonc`). Il deploy parte da Workers Builds collegato al repository GitHub: build `pnpm build`, deploy `npx wrangler deploy`, anteprime per branch con `npx wrangler versions upload`. Header di sicurezza e CSP in `public/_headers`: se aggiungi una chiamata a un dominio esterno, aggiorna `connect-src` (oggi c'è `https://www.googleapis.com`).
+
+Il backup su Google Drive vuole tre segreti del Worker, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` e `COOKIE_SECRET` (`npx wrangler secret put …`; in locale `.dev.vars`, modello in `.dev.vars.example`): procedura in [docs/google-drive.md](docs/google-drive.md). Senza, l'app nasconde la sezione e il resto funziona.

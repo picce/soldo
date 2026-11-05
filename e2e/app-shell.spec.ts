@@ -59,3 +59,16 @@ test('the Worker API responds', async ({ request }) => {
   expect(response.ok()).toBe(true)
   expect(await response.json()).toEqual({ ok: true, service: 'soldo' })
 })
+
+test('the Worker says whether Google Drive is configured', async ({ request }) => {
+  const response = await request.get('/api/google/config')
+  expect(response.ok()).toBe(true)
+  expect(await response.json()).toHaveProperty('configured')
+})
+
+test('opens the privacy page from the settings', async ({ page }) => {
+  await page.goto('/impostazioni')
+  await page.getByRole('link', { name: /^Privacy/ }).click()
+  await expect(page.getByRole('heading', { level: 1, name: 'Privacy di Soldo' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Soldo privacy' })).toBeVisible()
+})
