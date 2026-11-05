@@ -1,53 +1,58 @@
 <script setup lang="ts">
-import type { RouteLocationRaw } from 'vue-router'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 import AppIcon from '@/components/AppIcon.vue'
 
 interface NavEntry {
-  to: RouteLocationRaw
+  /** Name of the route the entry opens. */
+  name: string
   label: string
   icon: string
 }
 
 const { t } = useI18n()
+const route = useRoute()
 
 const items = computed<NavEntry[]>(() => [
   {
-    to: { name: 'home' },
+    name: 'home',
     label: t('nav.home'),
     icon: 'house',
   },
   {
-    to: { name: 'transactions' },
+    name: 'transactions',
     label: t('nav.transactions'),
     icon: 'receipt',
   },
   {
-    to: { name: 'budget' },
+    name: 'budget',
     label: t('nav.budget'),
     icon: 'piggy-bank',
   },
   {
-    to: { name: 'stats' },
+    name: 'stats',
     label: t('nav.stats'),
     icon: 'chart-pie-slice',
   },
   {
-    to: { name: 'settings' },
+    name: 'settings',
     label: t('nav.settings'),
     icon: 'gear-six',
   },
 ])
+
+/** Position of the current section, where the pen mark sits; -1 on other pages. */
+const activeIndex = computed(() => items.value.findIndex(item => item.name === route.name))
 </script>
 
 <template>
   <nav class="bottom-nav" :aria-label="t('nav.label')">
     <RouterLink
       v-for="item in items"
-      :key="item.icon"
+      :key="item.name"
       v-slot="{ href, navigate, isExactActive }"
-      :to="item.to"
+      :to="{ name: item.name }"
       custom
     >
       <a
@@ -60,6 +65,12 @@ const items = computed<NavEntry[]>(() => [
         <span class="bottom-nav__label">{{ item.label }}</span>
       </a>
     </RouterLink>
+    <span
+      v-if="activeIndex >= 0"
+      class="bottom-nav__indicator"
+      :style="{ '--nav-index': activeIndex }"
+      aria-hidden="true"
+    />
   </nav>
 </template>
 
@@ -88,7 +99,28 @@ const items = computed<NavEntry[]>(() => [
   color: var(--color-ink-2);
   font-size: 0.6875rem;
   text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
+  transition: color var(--motion-press) var(--motion-ease);
+}
+
+.bottom-nav__item .app-icon {
+  transition: scale var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .bottom-nav__item:hover {
+    color: var(--color-ink);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.bottom-nav__item:active {
+  color: var(--color-ink);
+  transition-duration: 0s;
+}
+
+.bottom-nav__item:active .app-icon {
+  scale: 0.88;
+  transition-duration: 0s;
 }
 
 .bottom-nav__item[aria-current='page'] {
@@ -96,16 +128,39 @@ const items = computed<NavEntry[]>(() => [
   font-weight: 600;
 }
 
-/* Active item: a 28x2px pen mark on the top edge of the bar. */
-.bottom-nav__item[aria-current='page']::before {
-  content: '';
+/*
+ * Active item: a 28x2px pen mark on the top edge of the bar. One mark for the whole bar,
+ * one column wide, that slides to the current section.
+ */
+.bottom-nav__indicator {
   position: absolute;
   top: -1px;
-  inset-inline: 0;
-  width: 1.75rem;
+  inset-inline-start: 0.5rem;
+  width: calc((100% - 1rem) / 5);
   height: 2px;
+  translate: calc(var(--nav-index) * 100%) 0;
+  transition: translate var(--motion-page) var(--motion-ease);
+  pointer-events: none;
+}
+
+.bottom-nav__indicator::before {
+  content: '';
+  display: block;
+  width: 1.75rem;
+  height: 100%;
   margin-inline: auto;
   background: var(--color-pen);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav__item .app-icon,
+  .bottom-nav__indicator {
+    transition: none;
+  }
+
+  .bottom-nav__item:active .app-icon {
+    scale: none;
+  }
 }
 
 .bottom-nav__item:focus-visible {

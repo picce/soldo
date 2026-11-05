@@ -3,11 +3,12 @@ import type { SwipeAction } from '@/components/SwipeRow.vue'
 import type { Account, Category, Transaction } from '@/db/schema'
 import type { DateRange, PeriodUnit } from '@/domain/periods'
 import { useIntersectionObserver, watchDebounced } from '@vueuse/core'
-import { computed, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/AppIcon.vue'
 import AppPage from '@/components/AppPage.vue'
 import FilterChip from '@/components/FilterChip.vue'
+import { collapse, expand } from '@/components/list-motion'
 import SearchField from '@/components/SearchField.vue'
 import SwipeRow from '@/components/SwipeRow.vue'
 import { accountName, categoryName } from '@/db/names'
@@ -29,7 +30,8 @@ import { useTransactionFilters } from './useTransactionFilters'
 /**
  * Movimenti (docs/specs/released/movimenti.md): transactions grouped by day, search and filters in
  * the URL. A row opens the edit screen; swiped left it is deleted, swiped right duplicated
- * with today's date, each with «Annulla».
+ * with today's date, each with «Annulla». Rows and days that come and go open and close in
+ * height; a search or a filter redraws the list at once instead.
  */
 const { t } = useI18n()
 const intlLocale = useIntlLocale()
@@ -103,11 +105,32 @@ watch([
   dayLimit.value = DAYS_PER_PAGE
 })
 
+// The days added by scrolling just appear: opening thirty of them would be wasted work.
+let growing = false
 const sentinel = useTemplateRef<HTMLElement>('sentinel')
-useIntersectionObserver(sentinel, ([entry]) => {
-  if (entry?.isIntersecting && dayLimit.value < days.value.length)
+useIntersectionObserver(sentinel, async ([entry]) => {
+  if (entry?.isIntersecting && dayLimit.value < days.value.length) {
+    growing = true
     dayLimit.value += DAYS_PER_PAGE
+    await nextTick()
+    growing = false
+  }
 }, { rootMargin: '400px' })
+
+function onDayEnter(element: Element, done: () => void) {
+  if (growing)
+    done()
+  else
+    expand(element, done)
+}
+
+/** A new key for every set of filters: the list is drawn again rather than animated. */
+const listKey = computed(() => JSON.stringify([
+  filters.search.value,
+  filters.kind.value,
+  filters.categoryIds.value,
+  filters.range.value,
+]))
 
 // Category filter: only the categories of the chosen kind; archived ones only if picked.
 const filterOpen = ref(false)
@@ -235,24 +258,33 @@ const empty = computed(() => {
       </p>
     </div>
 
-    <div v-else class="transactions__days">
-      <DayGroup v-for="day in shownDays" :key="day.date" :date="day.date" :total-cents="day.totalCents">
-        <li v-for="transaction in day.transactions" :key="transaction.id">
-          <SwipeRow
-            :left-action="SWIPE_DELETE"
-            :right-action="SWIPE_DUPLICATE"
-            @swipe="onSwipe(transaction, $event)"
-          >
-            <TransactionRow
-              :transaction="transaction"
-              :category="categoryOf(transaction)"
-              :account="accountOf(transaction)"
-            />
-          </SwipeRow>
-        </li>
-      </DayGroup>
+    <template v-else>
+      <TransitionGroup
+        :key="listKey"
+        tag="div"
+        class="transactions__days"
+        :css="false"
+        @enter="onDayEnter"
+        @leave="collapse"
+      >
+        <DayGroup v-for="day in shownDays" :key="day.date" :date="day.date" :total-cents="day.totalCents">
+          <li v-for="transaction in day.transactions" :key="transaction.id">
+            <SwipeRow
+              :left-action="SWIPE_DELETE"
+              :right-action="SWIPE_DUPLICATE"
+              @swipe="onSwipe(transaction, $event)"
+            >
+              <TransactionRow
+                :transaction="transaction"
+                :category="categoryOf(transaction)"
+                :account="accountOf(transaction)"
+              />
+            </SwipeRow>
+          </li>
+        </DayGroup>
+      </TransitionGroup>
       <div ref="sentinel" class="transactions__sentinel" aria-hidden="true" />
-    </div>
+    </template>
 
     <CategoryFilterSheet
       v-model:open="filterOpen"
@@ -273,11 +305,17 @@ const empty = computed(() => {
   scrollbar-width: none;
 }
 
+/*
+ * Each day keeps 24 px below itself, also the last one (the list takes it back): a day
+ * that closes takes its space away with it, wherever it is.
+ */
 .transactions__days {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   margin-top: 0.5rem;
+  margin-bottom: -1.5rem;
+}
+
+.transactions__days > * {
+  margin-bottom: 1.5rem;
 }
 
 .transactions__sentinel {

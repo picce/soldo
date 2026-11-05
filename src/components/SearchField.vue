@@ -103,6 +103,18 @@ function clear() {
   background: none;
   color: var(--color-ink-2);
   cursor: pointer;
+  transition: color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .search-field__clear:hover {
+    color: var(--color-ink);
+  }
+}
+
+.search-field__clear:active {
+  color: var(--color-ink);
+  transition-duration: 0s;
 }
 
 .search-field__clear:focus-visible {

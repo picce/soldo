@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test'
 import { test as base, expect } from '@playwright/test'
 
 /**
@@ -15,3 +16,11 @@ export const test = base.extend({
 })
 
 export { expect }
+
+/**
+ * Waits for the page transition to end (src/app/page-transitions.ts): until then the
+ * screen shows images of the two pages, and a drag would not reach the page underneath.
+ */
+export async function pageSettled(page: Page) {
+  await expect(page.locator('html')).not.toHaveAttribute('data-page-transition')
+}

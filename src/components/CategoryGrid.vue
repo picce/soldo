@@ -66,11 +66,28 @@ const emit = defineEmits<{
   font-size: 0.75rem;
   line-height: 1.2;
   cursor: pointer;
-  touch-action: manipulation;
+  transition:
+    background-color var(--motion-press) var(--motion-ease),
+    scale var(--motion-press) var(--motion-ease);
 }
 
+@media (hover: hover) {
+  .category-grid__item:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once and a little smaller, released in a moment (docs/design/README.md, "Movimento"). */
 .category-grid__item:active {
-  background: var(--color-paper);
+  background: var(--color-pressed);
+  scale: 0.96;
+  transition-duration: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-grid__item:active {
+    scale: none;
+  }
 }
 
 .category-grid__item[aria-pressed='true'] {

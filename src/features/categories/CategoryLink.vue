@@ -32,6 +32,19 @@ defineProps<{
   padding-inline-end: 1rem;
   color: var(--color-ink);
   text-decoration: none;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .category-link:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.category-link:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .category-link:focus-visible {

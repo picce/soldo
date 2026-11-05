@@ -39,7 +39,8 @@ describe('welcomeView', () => {
       start.trigger('click'),
       start.trigger('click'),
     ])
-    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('home'), { timeout: 5000 })
+    // The Home is a lazy page: its first import can take seconds when every file runs at once.
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('home'), { timeout: 10_000 })
     await flushPromises()
 
     expect(await db.categories.count()).toBe(16)

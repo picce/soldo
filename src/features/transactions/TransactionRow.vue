@@ -56,7 +56,19 @@ const cents = computed(() => signedCents(props.transaction))
   padding: 0.5rem 1rem;
   color: var(--color-ink);
   text-decoration: none;
-  -webkit-touch-callout: none;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .transaction-row:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.transaction-row:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .transaction-row:focus-visible {

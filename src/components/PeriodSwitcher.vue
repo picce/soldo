@@ -115,6 +115,18 @@ function onKeydown(event: KeyboardEvent) {
   font-size: 0.875rem;
   font-weight: 400;
   cursor: pointer;
+  transition: color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .period-switcher__tab:hover {
+    color: var(--color-ink);
+  }
+}
+
+.period-switcher__tab:active {
+  color: var(--color-ink);
+  transition-duration: 0s;
 }
 
 .period-switcher__tab[aria-selected='true'] {
@@ -175,6 +187,7 @@ function onKeydown(event: KeyboardEvent) {
   border-radius: 0.375rem;
   color: var(--color-ink);
   cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
 }
 
 .period-switcher__arrow::after {
@@ -183,8 +196,16 @@ function onKeydown(event: KeyboardEvent) {
   inset: -0.3125rem;
 }
 
+@media (hover: hover) {
+  .period-switcher__arrow:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
 .period-switcher__arrow:active {
-  background: var(--color-paper);
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .period-switcher__arrow:focus-visible {

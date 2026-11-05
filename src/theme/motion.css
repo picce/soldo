@@ -1,0 +1,177 @@
+/*
+ * Page transitions (docs/design/README.md, "Movimento"). src/app/page-transitions.ts picks
+ * the kind and writes it in `data-page-transition` on <html>; during the change the browser
+ * draws the old page and the new one as two images, and these rules move them.
+ */
+
+/*
+ * The browser blends the two images to cross-fade them, which lightens what overlaps:
+ * here they stay opaque. The root group keeps its size, so it has nothing to animate.
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(root) {
+  animation: none;
+}
+
+/* Behind the two images, the paper: it shows between a page that fades out and the next. */
+::view-transition {
+  background-color: var(--color-paper);
+}
+
+/*
+ * Fade, between the sections of the navigation: the old page fades out in half the time,
+ * then the new one fades in rising a little. They never show on top of each other.
+ */
+html[data-page-transition='fade']::view-transition-old(root) {
+  animation: page-fade-out calc(var(--motion-quick) / 2) var(--motion-ease-exit) both;
+}
+
+html[data-page-transition='fade']::view-transition-new(root) {
+  animation: page-fade-in var(--motion-quick) var(--motion-ease) calc(var(--motion-quick) / 2) both;
+}
+
+/*
+ * Meanwhile the navigation stays still and its pen mark slides (BottomNav.vue); a notice
+ * on screen moves to its place on the new page (above the action bar of the Home, or
+ * above the navigation) instead of fading out and in.
+ */
+html[data-page-transition='fade'] .bottom-nav {
+  view-transition-name: bottom-nav;
+}
+
+html[data-page-transition='fade'] .app-toast-region {
+  view-transition-name: app-toast;
+}
+
+html[data-page-transition='fade'] .reload-prompt {
+  view-transition-name: reload-prompt;
+}
+
+::view-transition-group(app-toast),
+::view-transition-group(reload-prompt) {
+  animation-duration: var(--motion-page);
+  animation-timing-function: var(--motion-ease);
+}
+
+::view-transition-group(bottom-nav),
+::view-transition-new(bottom-nav) {
+  animation: none;
+}
+
+::view-transition-old(bottom-nav) {
+  animation: none;
+  opacity: 0;
+}
+
+/*
+ * A page that slides over another has a 1 px line on its edge, as the cards: no shadows
+ * (docs/design/README.md, "Principi").
+ */
+html[data-page-transition='push']::view-transition-new(root),
+html[data-page-transition='pop']::view-transition-old(root) {
+  box-shadow: -1px 0 0 var(--color-line);
+}
+
+html[data-page-transition='modal-open']::view-transition-new(root),
+html[data-page-transition='modal-close']::view-transition-old(root) {
+  box-shadow: 0 -1px 0 var(--color-line);
+}
+
+/* Push, to a deeper page: it comes in from the right while the old one moves back a quarter. */
+html[data-page-transition='push']::view-transition-old(root) {
+  animation: page-out-start var(--motion-page) var(--motion-ease) both;
+}
+
+html[data-page-transition='push']::view-transition-new(root) {
+  animation: page-in-end var(--motion-page) var(--motion-ease) both;
+}
+
+/* Pop, back up: the page leaves to the right, over the one coming back. */
+html[data-page-transition='pop']::view-transition-old(root) {
+  z-index: 1;
+  animation: page-out-end var(--motion-page) var(--motion-ease) both;
+}
+
+html[data-page-transition='pop']::view-transition-new(root) {
+  animation: page-in-start var(--motion-page) var(--motion-ease) both;
+}
+
+/* Modal: quick add and edit rise from the bottom over the page, and go back down. */
+html[data-page-transition='modal-open']::view-transition-old(root) {
+  animation: none;
+}
+
+html[data-page-transition='modal-open']::view-transition-new(root) {
+  animation: page-in-bottom var(--motion-page) var(--motion-ease) both;
+}
+
+html[data-page-transition='modal-close']::view-transition-old(root) {
+  z-index: 1;
+  animation: page-out-bottom var(--motion-base) var(--motion-ease-exit) both;
+}
+
+html[data-page-transition='modal-close']::view-transition-new(root) {
+  animation: none;
+}
+
+@keyframes page-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+}
+
+@keyframes page-in-end {
+  from {
+    translate: 100% 0;
+  }
+}
+
+@keyframes page-out-start {
+  to {
+    translate: -25% 0;
+  }
+}
+
+@keyframes page-out-end {
+  to {
+    translate: 100% 0;
+  }
+}
+
+@keyframes page-in-start {
+  from {
+    translate: -25% 0;
+  }
+}
+
+@keyframes page-in-bottom {
+  from {
+    translate: 0 100%;
+  }
+}
+
+@keyframes page-out-bottom {
+  to {
+    translate: 0 100%;
+  }
+}
+
+/* page-transitions.ts does not start a transition then; this covers any other one. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

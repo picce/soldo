@@ -33,6 +33,47 @@ body {
   text-size-adjust: 100%;
 }
 
+/*
+ * Controls behave like an app's (docs/design/README.md, "Movimento"): a long press opens
+ * no browser menu and selects no text, a double tap does not zoom.
+ */
+button,
+a,
+summary,
+label {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/*
+ * Buttons of the design system: pressed at once, released in a moment, slightly smaller
+ * while held, so even a quick tap shows.
+ */
+.vv-button {
+  transition:
+    background-color var(--motion-press) var(--motion-ease),
+    border-color var(--motion-press) var(--motion-ease),
+    color var(--motion-press) var(--motion-ease),
+    scale var(--motion-press) var(--motion-ease);
+}
+
+.vv-button:not([disabled]):active {
+  scale: 0.98;
+  transition-duration: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vv-button {
+    transition: none;
+  }
+
+  .vv-button:not([disabled]):active {
+    scale: none;
+  }
+}
+
 /* Shared text styles: one class per style of the design file. */
 .type-title {
   font-family: var(--font-sans);

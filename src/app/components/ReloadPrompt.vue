@@ -112,8 +112,22 @@ watch(offlineReady, (ready) => {
 .reload-prompt__link {
   min-height: 2.75rem;
   padding-inline: 0.25rem;
+  border-radius: var(--rounded);
   color: var(--color-pen);
   cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .reload-prompt__link:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.reload-prompt__link:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .reload-prompt__link:focus-visible {

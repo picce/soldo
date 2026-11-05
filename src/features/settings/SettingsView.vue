@@ -189,6 +189,7 @@ const versionLine = computed(() =>
 /* Rows in a card, separated by a line (docs/design/README.md, "Elenchi in una scheda"). */
 .settings-section__card {
   align-self: stretch;
+  overflow: hidden;
   background: var(--color-card);
   border: 1px solid var(--color-line);
   border-radius: var(--rounded);
