@@ -8,11 +8,27 @@ import process from 'node:process'
 
 /** Icons used in the Light weight (the default). */
 const LIGHT = [
+  // Navigation
   'house',
   'receipt',
   'piggy-bank',
   'chart-pie-slice',
   'gear-six',
+  // Default categories and account (src/db/seed.ts)
+  'shopping-cart',
+  'fork-knife',
+  'bus',
+  'popcorn',
+  'lightning',
+  'first-aid',
+  't-shirt',
+  'gift',
+  'airplane-tilt',
+  'paw-print',
+  'dots-three-outline',
+  'hand-coins',
+  'arrow-counter-clockwise',
+  'wallet',
 ]
 
 /** Icons also used in the Regular weight (active navigation item, − and + signs). */

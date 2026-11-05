@@ -47,5 +47,28 @@
     "dismiss": "Later",
     "offlineReady": "Soldo is ready to work offline.",
     "close": "Close"
+  },
+  "presets": {
+    "categories": {
+      "groceries": "Groceries",
+      "home": "Home",
+      "restaurants": "Restaurants",
+      "transport": "Transport",
+      "leisure": "Leisure",
+      "bills": "Bills",
+      "health": "Health",
+      "clothes": "Clothes",
+      "gifts": "Gifts",
+      "travel": "Travel",
+      "pets": "Pets",
+      "other": "Other",
+      "salary": "Salary",
+      "refunds": "Refunds",
+      "giftsReceived": "Gifts received",
+      "otherIncome": "Other income"
+    },
+    "accounts": {
+      "cash": "Cash"
+    }
   }
 }

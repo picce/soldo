@@ -47,5 +47,28 @@
     "dismiss": "Più tardi",
     "offlineReady": "Soldo è pronto per funzionare anche offline.",
     "close": "Chiudi"
+  },
+  "presets": {
+    "categories": {
+      "groceries": "Spesa",
+      "home": "Casa",
+      "restaurants": "Ristoranti",
+      "transport": "Trasporti",
+      "leisure": "Svago",
+      "bills": "Bollette",
+      "health": "Salute",
+      "clothes": "Vestiti",
+      "gifts": "Regali",
+      "travel": "Viaggi",
+      "pets": "Animali",
+      "other": "Altro",
+      "salary": "Stipendio",
+      "refunds": "Rimborsi",
+      "giftsReceived": "Regali ricevuti",
+      "otherIncome": "Altre entrate"
+    },
+    "accounts": {
+      "cash": "Contanti"
+    }
   }
 }

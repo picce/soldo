@@ -1,6 +1,6 @@
 # Dati locali: database e dominio
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
 > **Data**: 2026-11-05
 > **Ambito**: Database IndexedDB con Dexie (schema v1 completo), repository, query reattive, funzioni di dominio per importi, date e periodi, dati iniziali (categorie predefinite e conto Contanti). È la base di tutte le altre spec della Fase 2.
 > **Spec collegate**: base di [`aggiunta-rapida.md`](./aggiunta-rapida.md), [`home-rendiconto.md`](./home-rendiconto.md), [`movimenti.md`](./movimenti.md), [`gestione-categorie.md`](./gestione-categorie.md), [`backup-manuale.md`](./backup-manuale.md), [`onboarding.md`](./onboarding.md)
@@ -70,7 +70,7 @@ Funzioni pure in `src/domain/`, senza Vue né Dexie:
 
 - `money.ts`: `formatAmount(cents, locale, { sign, currency })` con `Intl.NumberFormat` del locale di `INTL_LOCALES` (`src/i18n/index.ts`), sempre due decimali, segno meno tipografico (`−`); `sign` è `auto`, `always` (il saldo) o `never` (le colonne).
 - `dates.ts`: `today()` e conversioni tra `Date` locale e `YYYY-MM-DD`, senza passare da UTC.
-- `periods.ts`: `Period` (`unit`: `day`, `week`, `month`, `year`; `anchor`: data), `periodRange(period)` con `from` e `to` inclusi, `shiftPeriod(period, step)`, `periodLabel(period, locale)` («Novembre 2026», un intervallo per la settimana come «3-9 novembre», «2026»; per gli intervalli si usa `Intl.DateTimeFormat.formatRange`). Settimana da lunedì in entrambe le lingue.
+- `periods.ts`: `Period` (`unit`: `day`, `week`, `month`, `year`; `anchor`: data), `periodRange(period)` con `from` e `to` inclusi, `shiftPeriod(period, step)`, `periodLabel(period, locale)` («Novembre 2026», «2-8 novembre» per la settimana, «2026»; la settimana si compone a mano perché `Intl.DateTimeFormat.formatRange` in italiano scrive i giorni con lo zero davanti). Settimana da lunedì in entrambe le lingue.
 - `summary.ts`: `summarize(transactions)` restituisce entrate, uscite, saldo e la ripartizione per categoria (ordinata per importo, con le quote); i trasferimenti non contano.
 
 ### Test

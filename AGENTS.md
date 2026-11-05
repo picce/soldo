@@ -39,7 +39,9 @@ src/
   features/     una cartella per sezione: home, transactions, budgets, stats, settings
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css
-  db/ domain/ backup/ import/   arrivano nelle fasi successive (vedi roadmap)
+  db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
+  domain/       funzioni pure: importi, date, periodi, riepiloghi
+  backup/ import/   arrivano nelle fasi successive (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
 design/         file di design FigCraft (soldo.figcraft): fondamenta, schermate, identità
@@ -51,6 +53,7 @@ e2e/            test Playwright
 
 - **Lingua**: cartelle, nomi e commenti del codice in inglese, anche i titoli dei test. Documentazione (README, roadmap, spec, design) e testi dell'interfaccia in italiano; l'interfaccia ha anche l'inglese.
 - **Spec**: ogni lavoro parte da una spec in `docs/specs/` (skill `new-spec`), elencata nella tabella «Spec attive» di [docs/roadmap.md](docs/roadmap.md); a lavoro pubblicato la spec va in `docs/specs/released/`.
+- **Git flow**: ogni spec si implementa su un branch `feature/<nome-della-spec>` (`git flow feature start <nome>`; in un clone nuovo prima `git flow init` con `main` come branch di produzione, `develop` e prefisso dei tag `v`), che a lavoro finito e con `pnpm check` e `pnpm test:e2e` verdi si chiude su `develop` (`git flow feature finish <nome>`). Su `develop` direttamente vanno solo documenti e piccole correzioni.
 - **Commit**: niente trailer `Co-Authored-By` nei messaggi.
 - **Rilasci**: ogni rilascio su `main` alza la minor (`0.1.0`, `0.2.0`, …) in `package.json`, ha le note per chi usa l'app in `docs/changelog/<versione>.md` (skill `changelog`, in italiano) e il tag `v<versione>` sul merge in `main`.
 - **Volver**: i componenti `Vv*` sono auto-importati uno per uno (resolver con `cherryPick`, solo JS). Quando usi un componente per la prima volta, aggiungi l'import del suo CSS in `src/theme/volver.css` nel layer `volver.components`. Le utility e il tema scuro di Volver non sono caricati: niente classi utility (`p-md`, `text-16`, …), si usa CSS scoped con i token. Prima di scrivere props consulta la skill `volverjs-ui-vue`: props inventate falliscono in silenzio.

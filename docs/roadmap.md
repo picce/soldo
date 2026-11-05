@@ -16,7 +16,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Versione dell'app nelle Impostazioni](specs/versione-app.md) | Fase 2 | da definire | Nessuna | Parziale |
-| [Dati locali: database e dominio](specs/dati-locali.md) | Fase 2 | da definire | Nessuna | Bozza |
+| [Dati locali: database e dominio](specs/dati-locali.md) | Fase 2 | da definire | Nessuna | Parziale |
 | [Schermate della Fase 2](specs/mockup-fase-2.md) | Fase 2 | da definire | Nessuna | Bozza |
 | [Aggiunta rapida e modifica di un movimento](specs/aggiunta-rapida.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Bozza |
 | [Home: periodo, rendiconto e barra per categoria](specs/home-rendiconto.md) | Fase 2 | da definire | Dati locali, Aggiunta rapida | Bozza |
