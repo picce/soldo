@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import type { BackupReading } from '@/backup/import'
+import type { RemoteBackup } from '@/backup/provider'
 import type { LocalePreference } from '@/i18n/locale'
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
+import { markRestoredFromDrive } from '@/backup/auto'
 import { exportBackup, exportTransactionsCsv } from '@/backup/export'
+import { connectGoogle, useDriveAvailable } from '@/backup/google/auth'
 import AppPage from '@/components/AppPage.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import { listCategories } from '@/db/repositories/categories'
@@ -11,8 +15,11 @@ import { getMeta } from '@/db/repositories/meta'
 import { useLiveQuery } from '@/db/useLiveQuery'
 import { timeAgo } from '@/domain/dates'
 import { useIntlLocale, useLocalePreference } from '@/i18n/locale'
+import DriveRestoreSheet from './DriveRestoreSheet.vue'
+import DriveSheet from './DriveSheet.vue'
 import RestoreBackup from './RestoreBackup.vue'
 import SettingsRow from './SettingsRow.vue'
+import { useDriveStatus } from './useDriveStatus'
 
 const { t } = useI18n()
 
@@ -77,6 +84,42 @@ async function runExport(run: () => Promise<'done' | 'cancelled'>, done: string)
   }
 }
 
+// Automatic backup on Google Drive (docs/specs/backup-google-drive.md): shown where the
+// Worker can sign in to Google, or once Drive is connected.
+const driveAvailable = useDriveAvailable()
+const { state: drive, detail: driveDetail, alert: driveAlert, online } = useDriveStatus()
+const driveVisible = computed(() => driveAvailable.value || drive.value.connected)
+const driveSheetOpen = ref(false)
+const driveRestoreOpen = ref(false)
+let driveBackup: RemoteBackup | undefined
+
+function openDrive() {
+  if (drive.value.connected) {
+    driveSheetOpen.value = true
+  }
+  else if (!online.value) {
+    showToast({
+      message: t('drive.offline'),
+    })
+  }
+  else {
+    connectGoogle('/impostazioni')
+  }
+}
+
+function restoreFromDrive(reading: Extract<BackupReading, { ok: true }>, backup: RemoteBackup) {
+  driveBackup = backup
+  restore.value?.show(reading)
+}
+
+/** Restored from Drive: the device now holds that backup, no need to upload it back. */
+async function onRestored() {
+  const backup = driveBackup
+  driveBackup = undefined
+  if (backup)
+    await markRestoredFromDrive(backup)
+}
+
 // Version and commit are fixed at build time (build-info.ts); the commit tells apart two
 // builds with the same version, e.g. the develop preview and production.
 const versionLine = computed(() =>
@@ -116,6 +159,22 @@ const versionLine = computed(() =>
         />
       </div>
     </section>
+    <section v-if="driveVisible" class="settings-section" aria-labelledby="settings-drive">
+      <h2 id="settings-drive" class="settings-section__title type-label">
+        {{ t('drive.label') }}
+      </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="google-drive-logo"
+          :title="t('drive.title')"
+          :detail="driveDetail"
+          :alert="driveAlert"
+          @click="openDrive"
+        />
+      </div>
+      <DriveSheet v-model:open="driveSheetOpen" @restore="driveRestoreOpen = true" />
+      <DriveRestoreSheet v-if="drive.connected" v-model:open="driveRestoreOpen" @chosen="restoreFromDrive" />
+    </section>
     <section class="settings-section" aria-labelledby="settings-backup">
       <div class="settings-section__head">
         <h2 id="settings-backup" class="settings-section__title type-label">
@@ -145,12 +204,20 @@ const versionLine = computed(() =>
           @click="restore?.pick()"
         />
       </div>
-      <RestoreBackup ref="restore" />
+      <RestoreBackup ref="restore" @restored="onRestored" />
     </section>
     <section class="settings-section" aria-labelledby="settings-about">
       <h2 id="settings-about" class="settings-section__title type-label">
         {{ t('settings.about.label') }}
       </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="shield-check"
+          :title="t('settings.about.privacy')"
+          :detail="t('settings.about.privacyDetail')"
+          href="/privacy"
+        />
+      </div>
       <p class="settings-section__value type-note">
         {{ versionLine }}
       </p>

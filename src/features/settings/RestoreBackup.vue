@@ -11,7 +11,8 @@ type ValidReading = Extract<BackupReading, { ok: true }>
 /**
  * Restore of a backup file (docs/specs/released/backup-manuale.md, mockup "Importa backup"): `pick()`
  * opens the file chooser; a valid file shows what it holds and asks for confirmation,
- * because the data on the device is replaced. Used by Settings and by the onboarding.
+ * because the data on the device is replaced. `show(reading)` asks the same for a backup
+ * read elsewhere (Google Drive). Used by Settings and by the onboarding.
  */
 const emit = defineEmits<{
   restored: []
@@ -29,7 +30,12 @@ function pick() {
   input.value?.click()
 }
 
-defineExpose({ pick })
+function show(next: ValidReading) {
+  reading.value = next
+  open.value = true
+}
+
+defineExpose({ pick, show })
 
 async function onChange() {
   const file = input.value?.files?.[0]
@@ -109,7 +115,7 @@ const preview = computed(() => {
   <input
     ref="input"
     type="file"
-    accept=".json,application/json"
+    accept=".json,.gz,application/json,application/gzip"
     hidden
     @change="onChange"
   >

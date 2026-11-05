@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import worker from './index'
 
 function call(path: string) {
-  return worker.fetch(new Request(`https://soldo.test${path}`))
+  return worker.fetch(new Request(`https://soldo.test${path}`), {} as Env)
 }
 
 describe('worker', () => {

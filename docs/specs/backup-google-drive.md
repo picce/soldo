@@ -1,6 +1,6 @@
 # Backup automatico su Google Drive
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Parziale (implementata e provata con Google finto; manca la configurazione di Google, [`docs/google-drive.md`](../google-drive.md), e la prova con un Drive vero)
 > **Data**: 2026-11-05
 > **Ambito**: Fase 3 della roadmap. Si collega Google Drive dalle Impostazioni o dal primo avvio; da lì il backup parte da solo e finisce nella cartella «Soldo» del Drive dell'utente. Da Drive si ripristina, anche su un altro telefono. Il Worker scambia solo i token di Google e non vede mai i dati.
 > **Spec collegate**: usa il formato di [`backup-manuale.md`](./released/backup-manuale.md); estende [`onboarding.md`](./released/onboarding.md) («Ripristina da Google Drive»); le regole visive sono quelle di [`docs/design`](../design/README.md)
@@ -85,7 +85,7 @@ Nessun mockup nuovo: le schermate usano le righe delle Impostazioni, i fogli dal
 - **Foglio «Backup su Google Drive»** (`src/features/settings/DriveRestoreSheet.vue`): i backup dal più recente, con data, ora e movimenti; tocco su uno, download e la conferma di `RestoreBackup.vue` (che ora accetta anche un backup già letto, `show(lettura)`).
 - **Primo avvio**: con Google configurato i pulsanti sono «Inizia da zero», «Ripristina da Google Drive» e, più piccolo, «Ripristina da un file». Il ritorno da Google riapre il benvenuto con l'elenco dei backup (`/benvenuto?ripristina=drive`). Il terzo punto dice che il backup va sul Drive dell'utente.
 - **Privacy**: `public/privacy.html`, pagina statica in italiano e in inglese, raggiungibile all'indirizzo `/privacy` anche senza aver fatto il primo avvio; collegata da Impostazioni → Informazioni.
-- Testi in `src/i18n/locales/it.json` ed `en.json`; icone `google-drive-logo`, `cloud-check`, `cloud-warning`, `arrows-clockwise`, `shield-check` in `scripts/build-icons.js`.
+- Testi in `src/i18n/locales/it.json` ed `en.json`; icone `google-drive-logo` e `shield-check` in `scripts/build-icons.js`.
 - `public/_headers`: `connect-src` aggiunge `https://www.googleapis.com`.
 
 ### Configurazione
@@ -95,7 +95,7 @@ Nessun mockup nuovo: le schermate usano le righe delle Impostazioni, i fogli dal
 ### Test
 
 - Unit: Worker (rotte, cookie cifrati, controllo dell'origine, errori di Google) in ambiente Node; conservazione; compressione e checksum; provider Drive con `fetch` finto; motore (niente caricamento senza modifiche, prima del primo avvio o con la scelta in sospeso; errori; un backup alla volta); Impostazioni e primo avvio con Drive configurato o no.
-- E2E (`e2e/drive.spec.ts`): Google e la Drive API finti con `page.route`; collegamento dalle Impostazioni e backup dopo una spesa; ripristino da Drive al primo avvio; scelta in sospeso quando Drive ha già backup.
+- E2E (`e2e/drive.spec.ts`): Google e la Drive API finti con `page.route` (`e2e/drive.ts`, sullo stesso Drive in memoria dei test unitari, `src/test/fake-drive.ts`); collegamento dalle Impostazioni e backup dopo una spesa; ripristino da Drive al primo avvio; scelta in sospeso quando Drive ha già backup.
 - A mano, dopo la configurazione: collegamento su Android dal browser e dall'app installata, backup dopo una spesa, ripristino su un secondo browser con gli stessi conteggi.
 
 ## Fasi di rilascio

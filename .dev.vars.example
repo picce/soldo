@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `pnpm dev` and `pnpm preview` (docs/google-drive.md). Never commit .dev.vars.
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+# Any long random string, e.g. node -e "console.log(crypto.randomBytes(32).toString('base64url'))"
+COOKIE_SECRET=

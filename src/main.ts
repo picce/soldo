@@ -6,6 +6,7 @@ import { animatePageChanges } from '@/app/page-transitions'
 import { createAppRouter, requireOnboarding } from '@/app/router'
 // Only the Phosphor icons the app uses (scripts/build-icons.js): nothing is fetched at runtime.
 import phIcons from '@/assets/icons/ph.json'
+import { startBackup } from '@/backup/start'
 import { i18n } from '@/i18n'
 import { initLocale } from '@/i18n/locale'
 import App from './App.vue'
@@ -23,6 +24,10 @@ listenForInstall()
 
 // Safari on iPhone shows the pressed state (:active) only on pages that listen to touches.
 document.addEventListener('touchstart', () => {}, { passive: true })
+
+// Before the router reads the address: it may carry the return from Google's sign-in
+// (docs/specs/backup-google-drive.md).
+startBackup()
 
 // Until the first start is done, every page leads to the welcome (docs/specs/released/onboarding.md).
 const router = createAppRouter()

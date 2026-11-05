@@ -63,7 +63,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/api\//],
+        // The API, and the privacy page: a static page outside the app.
+        navigateFallbackDenylist: [/^\/api\//, /^\/privacy/],
         cleanupOutdatedCaches: true,
       },
     }),
