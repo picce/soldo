@@ -63,7 +63,7 @@ Funzioni di supporto: `useIntlLocale()` in `src/i18n/locale.ts`, `formatDate()` 
 
 ### Dati iniziali
 
-Finché non c'è l'onboarding ([`onboarding.md`](./onboarding.md)), `src/main.ts` chiama `seedDefaults()` all'avvio, caricato a parte perché il codice del database non pesi sul primo caricamento.
+Finché non c'era l'onboarding, `src/main.ts` chiamava `seedDefaults()` all'avvio; ora lo fa «Inizia da zero» ([`onboarding.md`](./onboarding.md)).
 
 ### Manifest
 

@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 /** Adds a transaction from the quick add, with an optional note. */
 async function add(page: Page, kind: 'uscita' | 'entrata', keys: string[], category: string, note = '') {

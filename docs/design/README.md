@@ -243,7 +243,7 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 
 ### Onboarding
 
-Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da linee (due tocchi, dati sul telefono, backup sul proprio Drive), la scheda «Installa Soldo» e due pulsanti: «Inizia da zero» e «Ripristina un backup». La scheda spiega che su iPhone, se l'app non è installata, Safari può cancellare i dati dopo 7 giorni senza aprirla. Su Android la scheda ha il pulsante «Installa». Finché non c'è il backup automatico (Fase 3), il terzo punto è «Il backup è un file tuo».
+Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da linee (due tocchi, dati sul telefono, backup sul proprio Drive), la scheda «Installa Soldo» e due pulsanti: «Inizia da zero» e «Ripristina un backup». La scheda spiega che su iPhone, se l'app non è installata, Safari può cancellare i dati dopo 7 giorni senza aprirla. Su Android la scheda ha il pulsante «Installa»; nei browser che non offrono l'installazione dice dove trovarla nel menu, e sparisce quando l'app è già installata. Finché non c'è il backup automatico (Fase 3), il terzo punto è «Il backup è un file tuo». Sulla schermata di benvenuto non compare l'avviso «pronto per funzionare offline», che coprirebbe il logo.
 
 ### Stati vuoti
 

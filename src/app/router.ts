@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteRecordRaw, RouterHistory } from 'vue-router'
+import type { RouteLocationNormalized, Router, RouteRecordRaw, RouterHistory } from 'vue-router'
 import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { i18n } from '@/i18n'
@@ -87,6 +87,12 @@ export const routes: RouteRecordRaw[] = [
     }),
     meta: { titleKey: 'editor.edit', fullscreen: true },
   },
+  {
+    path: '/benvenuto',
+    name: 'welcome',
+    component: () => import('@/features/onboarding/WelcomeView.vue'),
+    meta: { fullscreen: true },
+  },
   // Internal page with every component, in light and dark: development only.
   ...(import.meta.env.DEV
     ? [
@@ -130,4 +136,26 @@ export function createAppRouter(history: RouterHistory = createWebHistory()) {
   watch(i18n.global.locale, () => updateTitle(router.currentRoute.value))
 
   return router
+}
+
+/**
+ * Until the first start is done, every page leads to the welcome, and the welcome leads
+ * to the Home afterwards (docs/specs/onboarding.md). Installed by main.ts, not by
+ * createAppRouter, so page tests do not go through it.
+ */
+export function requireOnboarding(router: Router) {
+  router.beforeEach(async (to) => {
+    if (to.name === 'dev-ui')
+      return true
+    const { isOnboarded } = await import('@/app/onboarding')
+    const done = await isOnboarded()
+    if (to.name === 'welcome') {
+      return done
+        ? { name: 'home' }
+        : true
+    }
+    return done
+      ? true
+      : { name: 'welcome' }
+  })
 }

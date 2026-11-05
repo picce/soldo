@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 import { createMemoryHistory } from 'vue-router'
+import { db } from '@/db/database'
 import { applyLocale } from '@/i18n/locale'
-import { createAppRouter } from './router'
+import { forgetOnboarding, markOnboarded } from './onboarding'
+import { createAppRouter, requireOnboarding } from './router'
 
 afterEach(() => applyLocale('it'))
 
@@ -69,5 +71,34 @@ describe('router', () => {
     applyLocale('en')
     await nextTick()
     expect(document.title).toBe('Transactions · Soldo')
+  })
+})
+
+describe('onboarding guard', () => {
+  beforeEach(async () => {
+    await Promise.all(db.tables.map(table => table.clear()))
+    forgetOnboarding()
+  })
+
+  function guardedRouter() {
+    const router = createAppRouter(createMemoryHistory())
+    requireOnboarding(router)
+    return router
+  }
+
+  it('leads every page to the welcome until the first start is done', async () => {
+    const router = guardedRouter()
+    await router.push('/movimenti')
+    expect(router.currentRoute.value.name).toBe('welcome')
+    expect(router.currentRoute.value.meta.fullscreen).toBe(true)
+  })
+
+  it('leads the welcome to the Home afterwards', async () => {
+    await markOnboarded()
+    const router = guardedRouter()
+    await router.push('/movimenti')
+    expect(router.currentRoute.value.name).toBe('transactions')
+    await router.push('/benvenuto')
+    expect(router.currentRoute.value.name).toBe('home')
   })
 })

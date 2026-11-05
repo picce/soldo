@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test'
 import { Buffer } from 'node:buffer'
 import { readFile } from 'node:fs/promises'
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 /** Adds an expense from the quick add. */
 async function addExpense(page: Page, keys: string[], category: string) {

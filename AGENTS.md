@@ -33,10 +33,10 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 
 ```
 src/
-  app/          router, componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast) e navigation.ts (goBack)
+  app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
   components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker)
-  features/     una cartella per sezione: home, transactions, categories, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
+  features/     una cartella per sezione: onboarding, home, transactions, categories, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
   stores/       stato Pinia condiviso tra pagine (period.ts: il periodo della Home)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css
@@ -49,7 +49,7 @@ scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
 design/         file di design FigCraft (soldo.figcraft): fondamenta, schermate, identità
 docs/specs/     spec dei lavori, attive e in released/ o archived/
-e2e/            test Playwright
+e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il primo avvio)
 ```
 
 ## Convenzioni
@@ -68,6 +68,7 @@ e2e/            test Playwright
 - **Pagine secondarie** (aperte da un'altra, come Categorie dalle Impostazioni): `SubPage` e `meta.fullscreen` nel percorso, così la barra di navigazione non c'è e «Indietro» torna da dove si è venuti.
 - **Test dei componenti**: montali con `global: { plugins: testPlugins() }` (`src/test/plugins.ts`), così le icone restano locali.
 - **Accessibilità**: ogni controllo ha un nome accessibile; i test e2e cercano gli elementi per ruolo e nome.
+- **Test e2e**: importano `test` ed `expect` da `e2e/fixtures.ts`, la cui `page` è già passata da «Inizia da zero»; solo `e2e/onboarding.spec.ts` parte dalla schermata di benvenuto.
 
 ## Deploy
 

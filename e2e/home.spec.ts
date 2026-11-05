@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 async function addFromHome(page: Page, button: 'Uscita' | 'Entrata', keys: string[], category: string) {
   await page.getByRole('link', { name: button, exact: true }).click()

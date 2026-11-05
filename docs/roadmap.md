@@ -23,7 +23,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | [Movimenti: elenco, ricerca e filtri](specs/movimenti.md) | Fase 2 | da definire | Dati locali, Aggiunta rapida, Schermate della Fase 2 | Parziale |
 | [Gestione delle categorie](specs/gestione-categorie.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Parziale |
 | [Backup manuale ed esportazione CSV](specs/backup-manuale.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Parziale |
-| [Onboarding al primo avvio](specs/onboarding.md) | Fase 2 | da definire | Dati locali, Backup manuale | Bozza |
+| [Onboarding al primo avvio](specs/onboarding.md) | Fase 2 | da definire | Dati locali, Backup manuale | Parziale |
 
 ## Contesto
 

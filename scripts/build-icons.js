@@ -44,6 +44,8 @@ const LIGHT = [
   // Movimenti
   'magnifying-glass',
   'caret-down',
+  // Onboarding
+  'device-mobile',
   // Settings: backup
   'export',
   'file-csv',

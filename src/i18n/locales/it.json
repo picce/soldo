@@ -17,6 +17,32 @@
     "stats": "Statistiche",
     "settings": "Impostazioni"
   },
+  "welcome": {
+    "motto": "Il quaderno dei conti di casa.",
+    "points": {
+      "twoTaps": {
+        "title": "Una spesa in due tocchi",
+        "detail": "Scrivi l'importo e tocca la categoria."
+      },
+      "onDevice": {
+        "title": "I dati restano sul telefono",
+        "detail": "Nessun account e nessun server. Funziona anche senza rete."
+      },
+      "backupFile": {
+        "title": "Il backup è un file tuo",
+        "detail": "Lo esporti quando vuoi e lo salvi dove preferisci."
+      }
+    },
+    "install": {
+      "title": "Installa Soldo",
+      "ios": "Su iPhone tocca Condividi, poi «Aggiungi alla schermata Home». Se non la installi, Safari può cancellare i dati dopo 7 giorni senza aprirla.",
+      "prompt": "Si apre come un'app, dalla schermata Home, e funziona offline.",
+      "menu": "Si apre come un'app e funziona offline: nel menu del browser scegli «Installa app» o «Aggiungi alla schermata Home».",
+      "button": "Installa"
+    },
+    "start": "Inizia da zero",
+    "restore": "Ripristina un backup"
+  },
   "pages": {
     "budget": {
       "intro": "Qui potrai impostare un budget mensile, totale o per categoria, e vedere quanto ti resta."

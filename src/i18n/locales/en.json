@@ -17,6 +17,32 @@
     "stats": "Statistics",
     "settings": "Settings"
   },
+  "welcome": {
+    "motto": "The household account book.",
+    "points": {
+      "twoTaps": {
+        "title": "An expense in two taps",
+        "detail": "Type the amount and tap the category."
+      },
+      "onDevice": {
+        "title": "Your data stays on your phone",
+        "detail": "No account and no server. Works offline too."
+      },
+      "backupFile": {
+        "title": "The backup is your own file",
+        "detail": "Export it whenever you like and keep it wherever you want."
+      }
+    },
+    "install": {
+      "title": "Install Soldo",
+      "ios": "On iPhone tap Share, then “Add to Home Screen”. If you do not install it, Safari may delete the data after 7 days without opening it.",
+      "prompt": "It opens like an app, from the Home screen, and works offline.",
+      "menu": "It opens like an app and works offline: in the browser menu choose “Install app” or “Add to Home screen”.",
+      "button": "Install"
+    },
+    "start": "Start from scratch",
+    "restore": "Restore a backup"
+  },
   "pages": {
     "budget": {
       "intro": "Here you will set a monthly budget, overall or per category, and see how much is left."

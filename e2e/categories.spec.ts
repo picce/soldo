@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import { expect, test } from '@playwright/test'
+import { expect, test } from './fixtures'
 
 function categoryGrid(page: Page) {
   return page.getByRole('region', { name: 'Categoria' })
