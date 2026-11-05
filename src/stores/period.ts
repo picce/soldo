@@ -5,7 +5,7 @@ import { today } from '@/domain/dates'
 import { isInPeriod, periodRange, shiftPeriod } from '@/domain/periods'
 
 /**
- * Period shown by the Home (docs/specs/home-rendiconto.md). It lives in memory while the
+ * Period shown by the Home (docs/specs/released/home-rendiconto.md). It lives in memory while the
  * app is open, so going back to the Home does not reset it; at start it is this month.
  */
 export const usePeriodStore = defineStore('period', () => {

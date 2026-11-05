@@ -1,5 +1,5 @@
 /**
- * Search of Movimenti (docs/specs/movimenti.md): case and accents do not matter, so
+ * Search of Movimenti (docs/specs/released/movimenti.md): case and accents do not matter, so
  * "caffe" finds "Caffè" and "ESSELUNGA" finds "Esselunga".
  */
 

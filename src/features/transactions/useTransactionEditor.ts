@@ -40,7 +40,7 @@ export interface EditorOptions {
 }
 
 /**
- * State and actions of the quick-add and edit screen (docs/specs/aggiunta-rapida.md).
+ * State and actions of the quick-add and edit screen (docs/specs/released/aggiunta-rapida.md).
  * A new transaction is saved by tapping a category; an existing one with «Salva».
  */
 export function useTransactionEditor(target: EditorTarget, options: EditorOptions) {

@@ -18,7 +18,7 @@ function buildCommit(): string {
 }
 
 /**
- * Build-time constants shown in Settings (docs/specs/versione-app.md), for Vite's `define`.
+ * Build-time constants shown in Settings (docs/specs/released/versione-app.md), for Vite's `define`.
  * Values are fixed in the bundle, so they are right offline too.
  */
 export function appDefines() {

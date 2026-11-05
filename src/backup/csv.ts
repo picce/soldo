@@ -44,7 +44,7 @@ function amount(transaction: Transaction, decimal: string): string {
 }
 
 /**
- * Transactions as CSV for a spreadsheet (docs/specs/backup-manuale.md): oldest first,
+ * Transactions as CSV for a spreadsheet (docs/specs/released/backup-manuale.md): oldest first,
  * deleted ones left out, UTF-8 with a BOM so that Excel reads accented letters.
  */
 export function transactionsToCsv(transactions: Transaction[], options: CsvOptions): string {

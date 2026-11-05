@@ -27,7 +27,7 @@ import SummaryCard from './SummaryCard.vue'
 import { useHorizontalSwipe } from './useHorizontalSwipe'
 
 /**
- * Home (docs/specs/home-rendiconto.md): the chosen period, its statement, the expenses
+ * Home (docs/specs/released/home-rendiconto.md): the chosen period, its statement, the expenses
  * per category and the buttons to add an expense or an income.
  */
 const { t } = useI18n()

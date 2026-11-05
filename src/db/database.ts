@@ -3,7 +3,7 @@ import type { Account, Budget, Category, KeyValue, Recurrence, Transaction } fro
 import Dexie from 'dexie'
 
 /**
- * The IndexedDB database (docs/specs/dati-locali.md, "Schema"). IndexedDB cannot index
+ * The IndexedDB database (docs/specs/released/dati-locali.md, "Schema"). IndexedDB cannot index
  * booleans or null, so archived and deleted rows are filtered in memory.
  */
 export class SoldoDatabase extends Dexie {

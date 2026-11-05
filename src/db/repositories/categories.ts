@@ -9,7 +9,7 @@ export interface CategoryQuery {
   includeArchived?: boolean
 }
 
-/** Longest category name, in characters (docs/specs/gestione-categorie.md). */
+/** Longest category name, in characters (docs/specs/released/gestione-categorie.md). */
 export const MAX_CATEGORY_NAME = 24
 
 /** What the user chooses for a category: the rest (order, archived) is managed here. */
@@ -92,7 +92,7 @@ export async function createCategory(input: CategoryInput): Promise<Category> {
 /**
  * Changes name, icon or color. A default category keeps following the app language while
  * its name is the translation of its preset; any other name detaches it for good
- * (docs/specs/dati-locali.md, "Nomi delle voci predefinite").
+ * (docs/specs/released/dati-locali.md, "Nomi delle voci predefinite").
  */
 export async function updateCategory(id: string, changes: CategoryChanges): Promise<void> {
   const category = await getCategory(id)

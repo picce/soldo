@@ -1,6 +1,6 @@
 # Versione dell'app nelle Impostazioni
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima pull request verso `main`)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Le Impostazioni mostrano la versione dell'app in uso e il commit da cui è stata costruita, così si capisce subito quale build gira sul telefono.
 > **Spec collegate**: Nessuna

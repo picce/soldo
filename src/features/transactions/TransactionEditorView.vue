@@ -28,7 +28,7 @@ import NoteSheet from './NoteSheet.vue'
 import { useTransactionEditor } from './useTransactionEditor'
 
 /**
- * Quick add and edit of a transaction (docs/specs/aggiunta-rapida.md): amount on the
+ * Quick add and edit of a transaction (docs/specs/released/aggiunta-rapida.md): amount on the
  * keypad, then a tap on the category saves. Editing adds Salva, Duplica and Elimina.
  */
 const props = defineProps<{

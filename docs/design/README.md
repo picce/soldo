@@ -21,7 +21,7 @@ Le schermate del nucleo, disegnate e approvate il 2026-11-05. Ogni immagine apre
 
 ### Fase 2
 
-Le schermate che i mockup del nucleo non coprivano ([spec](../specs/mockup-fase-2.md)), disegnate il 2026-11-05 e da approvare.
+Le schermate che i mockup del nucleo non coprivano ([spec](../specs/released/mockup-fase-2.md)), disegnate e approvate il 2026-11-05.
 
 | Schermata | Chiaro | Scuro |
 |---|---|---|

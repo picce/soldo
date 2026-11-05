@@ -27,7 +27,7 @@ import TransactionRow from './TransactionRow.vue'
 import { useTransactionFilters } from './useTransactionFilters'
 
 /**
- * Movimenti (docs/specs/movimenti.md): transactions grouped by day, search and filters in
+ * Movimenti (docs/specs/released/movimenti.md): transactions grouped by day, search and filters in
  * the URL. A row opens the edit screen; swiped left it is deleted, swiped right duplicated
  * with today's date, each with «Annulla».
  */

@@ -13,7 +13,7 @@ import CategoryLink from './CategoryLink.vue'
 import { useCategoryOrder } from './useCategoryOrder'
 
 /**
- * Categories of expenses and income (docs/specs/gestione-categorie.md): the order here is
+ * Categories of expenses and income (docs/specs/released/gestione-categorie.md): the order here is
  * the order of the quick-add grid. Rows move with the handle, or with «Sposta su» and
  * «Sposta giù», which appear when reached with the keyboard. Archived categories wait in
  * a closed section at the end.

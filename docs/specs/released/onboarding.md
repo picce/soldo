@@ -1,13 +1,13 @@
 # Onboarding al primo avvio
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release; da provare su un iPhone e un Android veri)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Al primo avvio Soldo presenta l'app e offre due strade: iniziare da zero (crea categorie e conto) o ripristinare un backup. Invita a installare l'app, perché su iPhone i dati di un sito non installato possono essere cancellati.
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md) (dati iniziali, storage persistente) e [`backup-manuale.md`](./backup-manuale.md) (ripristino); [`mockup-fase-2.md`](./mockup-fase-2.md) per la variante Android
 
 ## Panoramica
 
-I mockup approvati sono [Onboarding](../design/render/onboarding-chiaro.png) e [Installa su Android](../design/render/onboarding-android-chiaro.png). Prima di questa spec l'app si apriva direttamente sulla Home vuota e creava le categorie da sola a ogni avvio. Il primo avvio è il momento giusto per creare i dati iniziali, chiedere lo storage persistente e spiegare l'installazione: la roadmap indica tra i rischi che Safari può cancellare lo storage dei siti non installati dopo 7 giorni senza uso.
+I mockup approvati sono [Onboarding](../../design/render/onboarding-chiaro.png) e [Installa su Android](../../design/render/onboarding-android-chiaro.png). Prima di questa spec l'app si apriva direttamente sulla Home vuota e creava le categorie da sola a ogni avvio. Il primo avvio è il momento giusto per creare i dati iniziali, chiedere lo storage persistente e spiegare l'installazione: la roadmap indica tra i rischi che Safari può cancellare lo storage dei siti non installati dopo 7 giorni senza uso.
 
 ## Obiettivi e non-obiettivi
 
@@ -48,4 +48,4 @@ I mockup approvati sono [Onboarding](../design/render/onboarding-chiaro.png) e [
 2. **Ripristino** quando c'è l'importazione di [`backup-manuale.md`](./backup-manuale.md).
 3. **Scheda di installazione** per iPhone e Android, con prova su entrambi i dispositivi.
 
-Le tre fasi sono uscite insieme; manca la prova dell'installazione su dispositivi veri.
+Le tre fasi sono uscite insieme con la versione 0.2.0. L'installazione è stata provata su Android il 2026-11-05; su iPhone resta da provare.

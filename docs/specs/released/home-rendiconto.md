@@ -1,13 +1,13 @@
 # Home: periodo, rendiconto e barra per categoria
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: La Home mostra il periodo scelto (giorno, settimana, mese, anno), il rendiconto di entrate, uscite e saldo, la barra delle uscite per categoria con le righe di dettaglio, e i pulsanti «Uscita» ed «Entrata».
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md) e [`aggiunta-rapida.md`](./aggiunta-rapida.md) (i pulsanti aprono la Nuova uscita); le righe aprono [`movimenti.md`](./movimenti.md) filtrato
 
 ## Panoramica
 
-I mockup approvati sono [Home](../design/render/home-chiaro.png) e [Home senza movimenti](../design/render/home-vuota-chiaro.png). Oggi la Home ha solo il logo e un testo introduttivo. Con questa spec diventa la schermata da cui si capisce in un colpo d'occhio com'è andato il periodo.
+I mockup approvati sono [Home](../../design/render/home-chiaro.png) e [Home senza movimenti](../../design/render/home-vuota-chiaro.png). Oggi la Home ha solo il logo e un testo introduttivo. Con questa spec diventa la schermata da cui si capisce in un colpo d'occhio com'è andato il periodo.
 
 ## Obiettivi e non-obiettivi
 

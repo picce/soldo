@@ -1,6 +1,6 @@
 # Gestione delle categorie
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Dalle Impostazioni si creano, rinominano, riordinano e archiviano le categorie di uscita e di entrata, scegliendo icona e colore.
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md) e [`mockup-fase-2.md`](./mockup-fase-2.md) (Categorie, Modifica categoria)
@@ -9,7 +9,7 @@
 
 Soldo parte con 12 categorie di uscita e 4 di entrata (vedi [`dati-locali.md`](./dati-locali.md)). Ognuno spende in modo diverso: serve poter aggiungere «Palestra», togliere «Animali» dalla griglia senza perdere lo storico, mettere in cima le categorie più usate. L'ordine scelto qui è quello della griglia dell'aggiunta rapida.
 
-I mockup approvati sono [Categorie](../design/render/categorie-chiaro.png) e [Modifica categoria](../design/render/modifica-categoria-chiaro.png).
+I mockup approvati sono [Categorie](../../design/render/categorie-chiaro.png) e [Modifica categoria](../../design/render/modifica-categoria-chiaro.png).
 
 ## Obiettivi e non-obiettivi
 

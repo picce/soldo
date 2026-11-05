@@ -6,7 +6,7 @@
 |---|---|
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
 | 1 — Studio grafico | Completata e pubblicata (2026-11-05): direzione **C · Taccuino** ([docs/design](design/README.md)), tema nell'app, icona A · Quaderno e lingua inglese (spec in [docs/specs/released](specs/released/)) |
-| 2 — Nucleo local-first | Spec scritte il 2026-11-05, da approvare (tabella qui sotto) |
+| 2 — Nucleo local-first | Completata e pubblicata con la versione 0.2.0 (2026-11-05): aggiunta rapida, Home, Movimenti, categorie, backup manuale e CSV, onboarding (spec in [docs/specs/released](specs/released/)) |
 | 3–7 | Da iniziare |
 
 ## Spec attive
@@ -15,15 +15,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| [Versione dell'app nelle Impostazioni](specs/versione-app.md) | Fase 2 | da definire | Nessuna | Parziale |
-| [Dati locali: database e dominio](specs/dati-locali.md) | Fase 2 | da definire | Nessuna | Parziale |
-| [Schermate della Fase 2](specs/mockup-fase-2.md) | Fase 2 | da definire | Nessuna | Parziale |
-| [Aggiunta rapida e modifica di un movimento](specs/aggiunta-rapida.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Parziale |
-| [Home: periodo, rendiconto e barra per categoria](specs/home-rendiconto.md) | Fase 2 | da definire | Dati locali, Aggiunta rapida | Parziale |
-| [Movimenti: elenco, ricerca e filtri](specs/movimenti.md) | Fase 2 | da definire | Dati locali, Aggiunta rapida, Schermate della Fase 2 | Parziale |
-| [Gestione delle categorie](specs/gestione-categorie.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Parziale |
-| [Backup manuale ed esportazione CSV](specs/backup-manuale.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Parziale |
-| [Onboarding al primo avvio](specs/onboarding.md) | Fase 2 | da definire | Dati locali, Backup manuale | Parziale |
+| [Sensazione da app nativa: movimento, gesti e risposta al tocco](specs/sensazione-nativa.md) | da definire | da definire | Nessuna | Bozza |
 
 ## Contesto
 

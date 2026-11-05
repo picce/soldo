@@ -48,7 +48,7 @@ export default defineConfig({
         background_color: '#f5f4ef',
         theme_color: '#f5f4ef',
         categories: ['finance', 'productivity'],
-        // Long press on the app icon (docs/specs/aggiunta-rapida.md).
+        // Long press on the app icon (docs/specs/released/aggiunta-rapida.md).
         shortcuts: [
           {
             name: 'Nuova uscita',

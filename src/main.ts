@@ -19,7 +19,7 @@ initLocale()
 // The browser may offer installation before the welcome page is shown.
 listenForInstall()
 
-// Until the first start is done, every page leads to the welcome (docs/specs/onboarding.md).
+// Until the first start is done, every page leads to the welcome (docs/specs/released/onboarding.md).
 const router = createAppRouter()
 requireOnboarding(router)
 

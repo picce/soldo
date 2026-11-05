@@ -11,7 +11,7 @@ import RestoreBackup from '@/features/settings/RestoreBackup.vue'
 import InstallCard from './InstallCard.vue'
 
 /**
- * First start (docs/specs/onboarding.md, mockup "Onboarding"): what Soldo is, how to
+ * First start (docs/specs/released/onboarding.md, mockup "Onboarding"): what Soldo is, how to
  * install it, and two ways in: from scratch (default categories and the cash account)
  * or from a backup file.
  */

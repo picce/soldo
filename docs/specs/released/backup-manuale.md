@@ -1,6 +1,6 @@
 # Backup manuale ed esportazione CSV
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Dalle Impostazioni si esporta un backup completo in JSON, lo si reimporta (anche su un altro dispositivo) e si esportano i movimenti in CSV per un foglio di calcolo.
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md) e [`mockup-fase-2.md`](./mockup-fase-2.md) (Impostazioni, Importa backup); usata da [`onboarding.md`](./onboarding.md) («Ripristina un backup»); il formato è la base del backup automatico della Fase 3
@@ -9,7 +9,7 @@
 
 Finché non arriva il backup automatico su Google Drive (Fase 3), i dati stanno solo nel telefono: se si perde il telefono o Safari cancella lo storage, si perde tutto. Il backup manuale è la rete di sicurezza della Fase 2 e definisce il formato che la Fase 3 caricherà su Drive.
 
-I mockup approvati sono [Impostazioni](../design/render/impostazioni-chiaro.png) e [Importa backup](../design/render/importa-backup-chiaro.png).
+I mockup approvati sono [Impostazioni](../../design/render/impostazioni-chiaro.png) e [Importa backup](../../design/render/importa-backup-chiaro.png).
 
 ## Obiettivi e non-obiettivi
 

@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { useEventListener } from '@vueuse/core'
 
-/** Minimum horizontal travel of a swipe, in CSS pixels (docs/specs/home-rendiconto.md). */
+/** Minimum horizontal travel of a swipe, in CSS pixels (docs/specs/released/home-rendiconto.md). */
 export const SWIPE_THRESHOLD = 60
 
 /**

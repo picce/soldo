@@ -15,7 +15,7 @@ import { isValidAmountCents } from '@/domain/money'
 import { BACKUP_FORMAT } from './version'
 
 /**
- * The backup file (docs/specs/backup-manuale.md): every table, deleted rows included, in a
+ * The backup file (docs/specs/released/backup-manuale.md): every table, deleted rows included, in a
  * versioned JSON (BACKUP_FORMAT in version.ts). The same format will travel to Google
  * Drive in Phase 3.
  */

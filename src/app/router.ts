@@ -140,7 +140,7 @@ export function createAppRouter(history: RouterHistory = createWebHistory()) {
 
 /**
  * Until the first start is done, every page leads to the welcome, and the welcome leads
- * to the Home afterwards (docs/specs/onboarding.md). Installed by main.ts, not by
+ * to the Home afterwards (docs/specs/released/onboarding.md). Installed by main.ts, not by
  * createAppRouter, so page tests do not go through it.
  */
 export function requireOnboarding(router: Router) {

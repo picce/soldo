@@ -3,7 +3,7 @@ import { now } from '@/db/records'
 import { getMeta, setMeta } from '@/db/repositories/meta'
 
 /**
- * First start (docs/specs/onboarding.md): done once `meta.onboardedAt` exists. Loaded
+ * First start (docs/specs/released/onboarding.md): done once `meta.onboardedAt` exists. Loaded
  * lazily by the router guard, so the database stays out of the first chunk.
  */
 

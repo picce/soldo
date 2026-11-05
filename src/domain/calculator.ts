@@ -1,5 +1,5 @@
 /**
- * Calculator of the quick-add keypad (docs/specs/aggiunta-rapida.md, "Calcolatrice").
+ * Calculator of the quick-add keypad (docs/specs/released/aggiunta-rapida.md, "Calcolatrice").
  *
  * The state keeps what the user typed; `evaluate` turns it into cents at any moment, so
  * the keypad needs no `=` key. Arithmetic is exact (fractions of BigInt) and only the

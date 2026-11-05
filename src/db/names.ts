@@ -3,7 +3,7 @@ import { i18n } from '@/i18n'
 
 /**
  * Display name of a category: the user's name, or the translation of its preset, so the
- * defaults follow the app language until the user renames them (docs/specs/dati-locali.md).
+ * defaults follow the app language until the user renames them (docs/specs/released/dati-locali.md).
  */
 export function categoryName(category: Pick<Category, 'name' | 'preset'>): string {
   if (category.name)

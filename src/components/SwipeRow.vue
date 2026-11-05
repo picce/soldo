@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, ref, useTemplateRef } from 'vue'
 import AppIcon from '@/components/AppIcon.vue'
 
 /**
- * A row that can be swiped sideways (docs/specs/movimenti.md, mockup "Riga scorsa").
+ * A row that can be swiped sideways (docs/specs/released/movimenti.md, mockup "Riga scorsa").
  * Under the row appears the action of that side; past 40% of the width it turns solid,
  * with a short vibration, and on release `swipe` is emitted with the direction. Below the
  * threshold the row goes back. A gesture counts only if it is more horizontal than

@@ -9,7 +9,7 @@ import { useIntlLocale } from '@/i18n/locale'
 type ValidReading = Extract<BackupReading, { ok: true }>
 
 /**
- * Restore of a backup file (docs/specs/backup-manuale.md, mockup "Importa backup"): `pick()`
+ * Restore of a backup file (docs/specs/released/backup-manuale.md, mockup "Importa backup"): `pick()`
  * opens the file chooser; a valid file shows what it holds and asks for confirmation,
  * because the data on the device is replaced. Used by Settings and by the onboarding.
  */

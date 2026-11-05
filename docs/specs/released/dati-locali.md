@@ -1,6 +1,6 @@
 # Dati locali: database e dominio
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Database IndexedDB con Dexie (schema v1 completo), repository, query reattive, funzioni di dominio per importi, date e periodi, dati iniziali (categorie predefinite e conto Contanti). È la base di tutte le altre spec della Fase 2.
 > **Spec collegate**: base di [`aggiunta-rapida.md`](./aggiunta-rapida.md), [`home-rendiconto.md`](./home-rendiconto.md), [`movimenti.md`](./movimenti.md), [`gestione-categorie.md`](./gestione-categorie.md), [`backup-manuale.md`](./backup-manuale.md), [`onboarding.md`](./onboarding.md)
@@ -62,7 +62,7 @@ Il segno di un importo dipende da `kind`, mai da `amountCents`. IndexedDB non in
 
 ### Dati iniziali
 
-`src/db/seed.ts` (nuovo): `seedDefaults()` crea, in un'unica transazione e solo se non ci sono categorie, le categorie della tabella «Categorie predefinite» di [docs/design](../design/README.md) e il conto `cash`. Entrate: Stipendio (`hand-coins`, colore 7), Rimborsi (`arrow-counter-clockwise`, colore 3), Regali ricevuti (`gift`, colore 5), Altre entrate (`dots-three-outline`, colore 6). Le icone nuove si aggiungono a `scripts/build-icons.js`.
+`src/db/seed.ts` (nuovo): `seedDefaults()` crea, in un'unica transazione e solo se non ci sono categorie, le categorie della tabella «Categorie predefinite» di [docs/design](../../design/README.md) e il conto `cash`. Entrate: Stipendio (`hand-coins`, colore 7), Rimborsi (`arrow-counter-clockwise`, colore 3), Regali ricevuti (`gift`, colore 5), Altre entrate (`dots-three-outline`, colore 6). Le icone nuove si aggiungono a `scripts/build-icons.js`.
 
 ### Dominio
 

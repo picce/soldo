@@ -25,7 +25,7 @@ interface DragSession {
 }
 
 /**
- * Order of a kind's categories (docs/specs/gestione-categorie.md): the dragged row follows
+ * Order of a kind's categories (docs/specs/released/gestione-categorie.md): the dragged row follows
  * the finger, the others make room, and on release the whole order is saved; «Sposta su»
  * and «Sposta giù» do the same one step at a time. `items` follows the database, except
  * while a row is being dragged.

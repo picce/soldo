@@ -1,5 +1,5 @@
 /**
- * Records stored in IndexedDB (docs/specs/dati-locali.md). Schema v1 already holds every
+ * Records stored in IndexedDB (docs/specs/released/dati-locali.md). Schema v1 already holds every
  * table of the roadmap, so later phases add behaviour without destructive migrations.
  */
 

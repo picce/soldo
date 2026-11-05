@@ -1,7 +1,7 @@
 import { readonly, ref } from 'vue'
 
 /**
- * Installing the app (docs/specs/onboarding.md, "Installa Soldo"). Chrome and Edge offer
+ * Installing the app (docs/specs/released/onboarding.md, "Installa Soldo"). Chrome and Edge offer
  * `beforeinstallprompt`: the event is kept and replayed by the «Installa» button. Safari
  * on iPhone has no such event, so it gets instructions instead.
  */

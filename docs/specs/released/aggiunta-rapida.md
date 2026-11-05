@@ -1,13 +1,13 @@
 # Aggiunta rapida e modifica di un movimento
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Schermata per segnare un'uscita o un'entrata con il minor numero di tocchi (importo, poi categoria), con tastierino calcolatrice, data e nota facoltative; la stessa schermata modifica, duplica ed elimina un movimento. Introduce l'avviso con «Annulla» e la pagina interna `/dev/ui`.
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md) e [`mockup-fase-2.md`](./mockup-fase-2.md) (modifica, data, nota); usata da [`home-rendiconto.md`](./home-rendiconto.md) e [`movimenti.md`](./movimenti.md)
 
 ## Panoramica
 
-È la funzione che si usa ogni giorno, ispirata a Monefy: dalla Home si tocca «Uscita», si scrive l'importo e si tocca la categoria. Il movimento è salvato, senza un pulsante Salva. Il mockup approvato è [Nuova uscita](../design/render/nuova-uscita-chiaro.png); le regole sono in [docs/design](../design/README.md), sezione «Aggiunta rapida».
+È la funzione che si usa ogni giorno, ispirata a Monefy: dalla Home si tocca «Uscita», si scrive l'importo e si tocca la categoria. Il movimento è salvato, senza un pulsante Salva. Il mockup approvato è [Nuova uscita](../../design/render/nuova-uscita-chiaro.png); le regole sono in [docs/design](../../design/README.md), sezione «Aggiunta rapida».
 
 ## Obiettivi e non-obiettivi
 

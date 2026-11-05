@@ -1,13 +1,13 @@
 # Movimenti: elenco, ricerca e filtri
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; esce con la prossima release)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: La sezione Movimenti elenca tutti i movimenti raggruppati per giorno, con ricerca su note e categorie, filtri per tipo, categoria e periodo. Scorrendo una riga la si elimina o la si duplica, con «Annulla»; toccandola si apre la modifica.
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md), [`aggiunta-rapida.md`](./aggiunta-rapida.md) (modifica, eliminazione e avviso con «Annulla») e [`mockup-fase-2.md`](./mockup-fase-2.md) (filtro categoria); riceve i filtri da [`home-rendiconto.md`](./home-rendiconto.md)
 
 ## Panoramica
 
-I mockup approvati sono [Movimenti](../design/render/movimenti-chiaro.png) e [Ricerca senza risultati](../design/render/movimenti-nessun-risultato-chiaro.png). Oggi la sezione ha solo un testo introduttivo.
+I mockup approvati sono [Movimenti](../../design/render/movimenti-chiaro.png) e [Ricerca senza risultati](../../design/render/movimenti-nessun-risultato-chiaro.png). Oggi la sezione ha solo un testo introduttivo.
 
 ## Obiettivi e non-obiettivi
 
