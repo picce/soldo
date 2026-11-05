@@ -202,6 +202,7 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 - **Rendiconto**: scheda su `superficie`. Contiene le righe «Entrate ····· 2.450,00» e «Uscite ····· −1.284,30», con i puntini tratteggiati 1/3 px in `linea`. Sotto c'è una riga piena in `inchiostro`, poi il saldo in Mono 32.
 - **Barra delle categorie**: prende il posto della ciambella delle altre direzioni. È alta 10 px, con i segmenti separati da 2 px e gli estremi arrotondati a 3 px.
 - **Righe categoria**: quadratino da 10 px nel colore della categoria, nome, puntini, importo e percentuale.
+- **Entrate per categoria**: se nel periodo ci sono entrate, sotto le uscite compare la stessa sezione per le entrate, con titolo, totale, barra e righe. Non è nel mockup.
 - **Pulsanti**: il primario è pieno in `biro`; il secondario è su `superficie` con bordo in `inchiostro`. Raggio 8 px, altezza 52 px.
 - **Barra delle azioni**: fissa in basso, sopra la navigazione, con «− Uscita» e «+ Entrata».
 - **Navigazione**: cinque voci, ciascuna con icona ed etichetta. La voce attiva è in `inchiostro`, con una barretta `biro` da 28×2 px in alto.

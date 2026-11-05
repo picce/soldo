@@ -18,6 +18,7 @@ I mockup approvati sono [Home](../../design/render/home-chiaro.png) e [Home senz
   - rendiconto: entrate, uscite, riga in inchiostro e saldo con il segno;
   - barra per categoria come nel mockup: segmenti nei colori delle categorie separati da 2 px; con più di otto categorie restano le prime sette e le altre diventano «Altre» in `--color-ink-2` (un gruppo di una sola categoria ne nasconderebbe solo il nome);
   - righe per categoria (quadratino, nome, puntini, importo, percentuale); toccandone una si apre Movimenti filtrato per quella categoria e quel periodo;
+  - sotto, se nel periodo ci sono entrate, la stessa sezione per le entrate: «Entrate per categoria» con totale, barra e righe (aggiunta il 2026-11-05 su richiesta dopo la prova sul telefono);
   - barra delle azioni «− Uscita» e «+ Entrata» fissa sopra la navigazione;
   - stato vuoto come nel mockup;
   - transizione breve tra periodi e larghezze animate della barra, disattivate con `prefers-reduced-motion`.
@@ -37,6 +38,7 @@ I mockup approvati sono [Home](../../design/render/home-chiaro.png) e [Home senz
 - `src/features/home/SummaryCard.vue` (nuovo): le due righe con i puntini (classe `.dot-leader` in `src/theme/app.css`) e il saldo; usa `AmountText`, che ha la variante `large` per il saldo. Le entrate sono verdi anche a zero, come nel mockup della Home vuota.
 - `src/components/CategoryBar.vue` (nuovo): segmenti in `div` con larghezze in percentuale; `role="img"` con `aria-label` che riassume le prime categorie; le righe sotto sono l'equivalente testuale.
 - `src/features/home/CategoryRows.vue` (nuovo): righe con collegamento a `/movimenti?categoria=<id>&dal=<from>&al=<to>`; per «Altre» `categoria` elenca gli id separati da virgole.
+- `src/features/home/CategorySection.vue`: titolo, totale, barra e righe di un tipo, usata per le uscite e per le entrate; `summarize` (`src/domain/summary.ts`) calcola anche `incomeByCategory`.
 - Stato vuoto: la frase dipende dalla scheda («Nessun movimento il 5 novembre.», «… nella settimana 2–8 novembre.», «… a novembre.», «… nel 2026.»; l'anno compare se non è quello in corso). Con sole entrate le righe lasciano posto a «Nessuna uscita in questo periodo.».
 - `src/domain/summary.ts` (da [`dati-locali.md`](./dati-locali.md)): calcoli; `src/domain/category-share.ts` (nuovo) raggruppa oltre la settima in «Altre» senza cambiare il colore delle altre categorie.
 - Testi in `src/i18n/locales/it.json` ed `en.json`; icone `caret-left`, `caret-right`, `minus`, `plus` in `scripts/build-icons.js`.

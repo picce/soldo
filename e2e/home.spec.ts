@@ -27,6 +27,9 @@ test('sums the month and splits the expenses per category', async ({ page }) => 
   const rows = page.getByRole('region', { name: 'Uscite per categoria' }).getByRole('link')
   await expect(rows).toHaveCount(2)
   await expect(rows.nth(0)).toContainText(/Spesa\s*12,40\s*62%/)
+  const incomeRows = page.getByRole('region', { name: 'Entrate per categoria' }).getByRole('link')
+  await expect(incomeRows).toHaveCount(1)
+  await expect(incomeRows.first()).toContainText(/Stipendio\s*100,00\s*100%/)
   await expect(rows.nth(1)).toContainText(/Ristoranti\s*7,60\s*38%/)
 
   await expect(page.getByRole('button', { name: 'Torna a oggi' })).toHaveCount(0)

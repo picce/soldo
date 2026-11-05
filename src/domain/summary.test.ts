@@ -29,12 +29,25 @@ describe('summarize', () => {
     ])
   })
 
+  it('splits income by category too', () => {
+    const { incomeByCategory } = summarize([
+      { kind: 'income', amountCents: 150000, categoryId: 'salary' },
+      { kind: 'income', amountCents: 50000, categoryId: 'refunds' },
+      { kind: 'expense', amountCents: 999, categoryId: 'groceries' },
+    ])
+    expect(incomeByCategory).toEqual([
+      { categoryId: 'salary', cents: 150000, share: 0.75 },
+      { categoryId: 'refunds', cents: 50000, share: 0.25 },
+    ])
+  })
+
   it('is empty and balanced with no transactions', () => {
     expect(summarize([])).toEqual({
       incomeCents: 0,
       expenseCents: 0,
       balanceCents: 0,
       expenseByCategory: [],
+      incomeByCategory: [],
     })
   })
 })

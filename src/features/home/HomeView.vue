@@ -2,13 +2,13 @@
 import type { CategoryRow } from './CategoryRows.vue'
 import type { Category } from '@/db/schema'
 import type { Period } from '@/domain/periods'
+import type { CategoryTotal } from '@/domain/summary'
 import { storeToRefs } from 'pinia'
 import { computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ActionChip from '@/components/ActionChip.vue'
 import AppLogo from '@/components/AppLogo.vue'
 import AppPage from '@/components/AppPage.vue'
-import CategoryBar from '@/components/CategoryBar.vue'
 import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
 import { categoryName } from '@/db/names'
 import { listCategories } from '@/db/repositories/categories'
@@ -21,7 +21,7 @@ import { periodLabel, periodRange } from '@/domain/periods'
 import { summarize } from '@/domain/summary'
 import { useIntlLocale } from '@/i18n/locale'
 import { usePeriodStore } from '@/stores/period'
-import CategoryRows from './CategoryRows.vue'
+import CategorySection from './CategorySection.vue'
 import HomeActions from './HomeActions.vue'
 import SummaryCard from './SummaryCard.vue'
 import { useHorizontalSwipe } from './useHorizontalSwipe'
@@ -52,8 +52,6 @@ const summary = computed(() => data.value
   : undefined)
 const isEmpty = computed(() => data.value?.transactions.length === 0)
 
-const shares = computed(() => groupCategoryShares(summary.value?.expenseByCategory ?? []))
-
 function colorOf(key: string): string {
   const category = categoriesById.value.get(key)
   return category
@@ -70,17 +68,16 @@ function nameOf(key: string): string {
     : ''
 }
 
-const segments = computed(() => shares.value.map(share => ({
-  key: share.key,
-  color: colorOf(share.key),
-  share: share.share,
-})))
-
-const rows = computed<CategoryRow[]>(() => {
+/**
+ * Bar and rows of one kind: the first seven categories and «Altre», each row opening
+ * Movimenti on that category and period. `labelKey` names the bar for screen readers.
+ */
+function breakdown(totals: CategoryTotal[], labelKey: 'home.barLabel' | 'home.incomeBarLabel', emptyLabel: string) {
   const range = data.value
     ? periodRange(data.value.period)
     : undefined
-  return shares.value.map(share => ({
+  const shares = groupCategoryShares(totals)
+  const rows: CategoryRow[] = shares.map(share => ({
     key: share.key,
     name: nameOf(share.key),
     color: colorOf(share.key),
@@ -95,14 +92,23 @@ const rows = computed<CategoryRow[]>(() => {
       },
     },
   }))
-})
+  const list = rows.slice(0, 3).map(row => `${row.name} ${row.percent}%`).join(', ')
+  return {
+    rows,
+    segments: shares.map(share => ({
+      key: share.key,
+      color: colorOf(share.key),
+      share: share.share,
+    })),
+    barLabel: list
+      ? t(labelKey, { list })
+      : emptyLabel,
+  }
+}
 
-const barLabel = computed(() => {
-  const list = rows.value.slice(0, 3).map(row => `${row.name} ${row.percent}%`).join(', ')
-  return list
-    ? t('home.barLabel', { list })
-    : t('home.noExpenses')
-})
+const expenses = computed(() => breakdown(summary.value?.expenseByCategory ?? [], 'home.barLabel', t('home.noExpenses')))
+// The income section shows only when the period has income.
+const income = computed(() => breakdown(summary.value?.incomeByCategory ?? [], 'home.incomeBarLabel', ''))
 
 /** «a novembre», «nel 2026», «il 5 novembre»: the period inside the empty-state sentence. */
 const emptyMessage = computed(() => {
@@ -121,6 +127,7 @@ const emptyMessage = computed(() => {
 })
 
 const expenseTotal = computed(() => formatAmount(summary.value?.expenseCents ?? 0, intlLocale.value, { currency: true }))
+const incomeTotal = computed(() => formatAmount(summary.value?.incomeCents ?? 0, intlLocale.value, { currency: true }))
 
 const swipeArea = useTemplateRef<HTMLElement>('swipeArea')
 useHorizontalSwipe(swipeArea, step => store.shift(step))
@@ -163,16 +170,15 @@ useHorizontalSwipe(swipeArea, step => store.shift(step))
           :balance-cents="summary.balanceCents"
         />
 
-        <section class="home__categories" aria-labelledby="home-categories-title">
-          <div class="home__categories-head">
-            <h2 id="home-categories-title" class="home__categories-title type-label">
-              {{ t('home.byCategory') }}
-            </h2>
-            <span class="type-note">{{ expenseTotal }}</span>
-          </div>
-          <CategoryBar :segments="segments" :label="barLabel" />
-          <CategoryRows v-if="rows.length" :rows="rows" class="home__rows" />
-          <div v-else-if="isEmpty" class="home__empty">
+        <CategorySection
+          title-id="home-categories-title"
+          :title="t('home.byCategory')"
+          :total="expenseTotal"
+          :segments="expenses.segments"
+          :bar-label="expenses.barLabel"
+          :rows="expenses.rows"
+        >
+          <div v-if="isEmpty" class="home__empty">
             <p class="type-body-strong">
               {{ emptyMessage }}
             </p>
@@ -183,7 +189,17 @@ useHorizontalSwipe(swipeArea, step => store.shift(step))
           <p v-else class="home__no-expenses type-small">
             {{ t('home.noExpenses') }}
           </p>
-        </section>
+        </CategorySection>
+
+        <CategorySection
+          v-if="income.rows.length"
+          title-id="home-income-title"
+          :title="t('home.incomeByCategory')"
+          :total="incomeTotal"
+          :segments="income.segments"
+          :bar-label="income.barLabel"
+          :rows="income.rows"
+        />
       </template>
     </div>
 
@@ -201,22 +217,6 @@ useHorizontalSwipe(swipeArea, step => store.shift(step))
   flex-direction: column;
   gap: 1.75rem;
   touch-action: pan-y;
-}
-
-.home__categories-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.home__categories-title {
-  margin: 0;
-}
-
-.home__rows {
-  margin-top: 1rem;
 }
 
 .home__empty {

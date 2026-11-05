@@ -70,6 +70,8 @@
     "byCategory": "Uscite per categoria",
     "other": "Altre",
     "barLabel": "Uscite per categoria: {list}",
+    "incomeByCategory": "Entrate per categoria",
+    "incomeBarLabel": "Entrate per categoria: {list}",
     "empty": {
       "day": "Nessun movimento il {date}.",
       "week": "Nessun movimento nella settimana {date}.",

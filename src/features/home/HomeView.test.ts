@@ -58,7 +58,7 @@ function summaryLines(wrapper: VueWrapper) {
 }
 
 describe('homeView', () => {
-  it('shows the statement and the expenses per category of the month', async () => {
+  it('shows the statement and the expenses and income per category of the month', async () => {
     await add('income', 245000, income[0]!)
     await add('expense', 41280, expense[0]!)
     await add('expense', 35000, expense[1]!)
@@ -71,7 +71,8 @@ describe('homeView', () => {
 
     const wrapper = await mountHome()
     // Totals and category names come from two queries: wait for both.
-    await vi.waitFor(() => expect(wrapper.findAll('.category-rows__name').map(name => name.text())).toEqual(['Spesa', 'Casa']))
+    const expenses = () => wrapper.get('[aria-labelledby="home-categories-title"]')
+    await vi.waitFor(() => expect(expenses().findAll('.category-rows__name').map(name => name.text())).toEqual(['Spesa', 'Casa']))
 
     expect(summaryLines(wrapper)).toEqual([
       ['Entrate', '2.450,00'],
@@ -79,25 +80,36 @@ describe('homeView', () => {
       ['Saldo', '+1.592,20 €'],
     ])
 
-    const rows = wrapper.findAll('.category-rows li').map(row => [
+    const rowsOf = (section: ReturnType<typeof expenses>) => section.findAll('.category-rows li').map(row => [
       row.get('.category-rows__name').text(),
       row.get('.amount-text').text(),
       row.get('.category-rows__percent').text(),
     ])
-    expect(rows).toEqual([
+    expect(rowsOf(expenses())).toEqual([
       ['Spesa', '507,80', '59%'],
       ['Casa', '350,00', '41%'],
     ])
-    expect(wrapper.get('.category-bar').attributes('aria-label')).toBe('Uscite per categoria: Spesa 59%, Casa 41%')
+    expect(expenses().get('.category-bar').attributes('aria-label')).toBe('Uscite per categoria: Spesa 59%, Casa 41%')
 
-    const link = wrapper.get('.category-rows a').attributes('href')
+    const link = expenses().get('.category-rows a').attributes('href')
     expect(link).toContain(`categoria=${expense[0]!.id}`)
     expect(link).toContain('dal=')
+
+    // The income of the month, under the expenses.
+    const incomeSection = wrapper.get('[aria-labelledby="home-income-title"]')
+    expect(incomeSection.get('h2').text()).toBe('Entrate per categoria')
+    expect(rowsOf(incomeSection)).toEqual([
+      ['Stipendio', '2.450,00', '100%'],
+    ])
+    expect(incomeSection.get('.category-bar').attributes('aria-label')).toBe('Entrate per categoria: Stipendio 100%')
+    expect(incomeSection.get('.category-rows a').attributes('href')).toContain(`categoria=${income[0]!.id}`)
   })
 
   it('shows the empty state', async () => {
     const wrapper = await mountHome()
     expect(wrapper.find('.category-bar--empty').exists()).toBe(true)
+    // Without income there is no income section.
+    expect(wrapper.find('[aria-labelledby="home-income-title"]').exists()).toBe(false)
     expect(wrapper.get('.home__empty').text()).toMatch(/^Nessun movimento a \S+\./)
     expect(summaryLines(wrapper).at(-1)).toEqual(['Saldo', '0,00 €'])
   })

@@ -70,6 +70,8 @@
     "byCategory": "Expenses by category",
     "other": "Others",
     "barLabel": "Expenses by category: {list}",
+    "incomeByCategory": "Income by category",
+    "incomeBarLabel": "Income by category: {list}",
     "empty": {
       "day": "No transactions on {date}.",
       "week": "No transactions in the week of {date}.",
