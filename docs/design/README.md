@@ -179,6 +179,28 @@ Gli importi si formattano con `Intl.NumberFormat('it-IT')`, quindi `1.284,30 €
 - Bordi da 1 px, nessuna ombra. Anche il pulsante primario ha il bordo (nel suo stesso colore), così primario e secondario sono alti uguali.
 - Target tattili di almeno 44 px. Le frecce del mese e il pulsante Chiudi misurano 34 px a vista, ma hanno un'area tattile di 44 px.
 
+## Movimento
+
+Il movimento spiega da dove arriva una cosa e dove va, e conferma ogni tocco. È breve e sobrio come il resto: niente rimbalzi, niente effetti decorativi. Con «Riduci movimento» attivo nel sistema (`prefers-reduced-motion`) le animazioni si spengono e i cambi sono immediati. Nel file di design non si disegna: valgono queste regole ([spec](../specs/sensazione-nativa.md)).
+
+| Token | Valore | Uso |
+|---|---|---|
+| `--motion-press` | 150 ms | ritorno dallo stato premuto, passaggio del mouse |
+| `--motion-quick` | 150 ms | dissolvenza tra le sezioni della navigazione |
+| `--motion-base` | 200 ms | righe che entrano ed escono, fogli e pagine che si chiudono, cifre del rendiconto |
+| `--motion-page` | 250 ms | pagine e fogli che entrano, barretta della navigazione |
+| `--motion-ease` | `cubic-bezier(0.2, 0, 0, 1)` | ciò che entra o si sposta: parte veloce e si posa piano |
+| `--motion-ease-exit` | `cubic-bezier(0.3, 0, 1, 1)` | ciò che esce: accelera fino a sparire |
+
+- **Tocco**: tutto ciò che si tocca cambia subito e torna com'era in 150 ms, così anche un tocco brevissimo lascia il segno. Righe, chip, tasti e pulsanti chiari passano a `--color-pressed` (`superficie` con il 10% di `inchiostro`), i pulsanti pieni a `--color-pen-pressed` (`biro` con il 22% di `inchiostro`); i pulsanti grandi e le caselle delle categorie si rimpiccioliscono al 98% e al 96%. Sui controlli non si seleziona il testo e il tocco prolungato non apre il menu del browser.
+- **Mouse**: solo dove c'è un puntatore (`hover: hover`) righe e pulsanti passano a `--color-hover` (5% di `inchiostro`) o `--color-pen-hover` (12%).
+- **Pagine**: tra le sezioni della navigazione la vecchia pagina sfuma e la nuova compare salendo di 8 px, senza che le due si sovrappongano; una pagina secondaria (Categorie, Modifica categoria) entra da destra mentre quella di prima arretra di un quarto, e con «Indietro» fa il contrario; aggiunta rapida e modifica di un movimento salgono dal basso come una finestra e scendono alla chiusura. La pagina che scorre sopra l'altra ha sul bordo una linea da 1 px in `linea`, non un'ombra.
+- **Navigazione**: la barretta `biro` della voce attiva scivola fino alla voce nuova.
+- **Fogli**: salgono dal basso e si chiudono anche trascinando in basso la testata, oltre un quarto della loro altezza o con un colpo veloce.
+- **Gesti**: su iPhone con l'app installata, dove il sistema non lo fa, un trascinamento dal bordo sinistro riporta alla pagina di prima.
+- **Liste**: in Movimenti una riga eliminata si chiude in altezza e una nuova (duplicata o ripristinata) si apre. Una ricerca o un filtro ridisegnano la lista senza animazione.
+- **Cifre**: cambiando periodo, entrate, uscite e saldo del rendiconto scorrono fino al nuovo valore.
+
 ## Icone
 
 Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiva della navigazione e per i segni − e + nei pulsanti. L'app include solo le icone usate, in una collezione locale: niente download a runtime. Nel codice si usa `AppIcon`; l'elenco delle icone incluse sta in [scripts/build-icons.js](../../scripts/build-icons.js) e `pnpm icons` rigenera la collezione.
@@ -205,7 +227,7 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 - **Entrate per categoria**: se nel periodo ci sono entrate, sotto le uscite compare la stessa sezione per le entrate, con titolo, totale, barra e righe. Non è nel mockup.
 - **Pulsanti**: il primario è pieno in `biro`; il secondario è su `superficie` con bordo in `inchiostro`. Raggio 8 px, altezza 52 px.
 - **Barra delle azioni**: fissa in basso, sopra la navigazione, con «− Uscita» e «+ Entrata».
-- **Navigazione**: cinque voci, ciascuna con icona ed etichetta. La voce attiva è in `inchiostro`, con una barretta `biro` da 28×2 px in alto.
+- **Navigazione**: cinque voci, ciascuna con icona ed etichetta. La voce attiva è in `inchiostro`, con una barretta `biro` da 28×2 px in alto, che scivola da una voce all'altra (vedi Movimento).
 
 ### Aggiunta rapida
 

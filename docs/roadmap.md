@@ -15,7 +15,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| [Sensazione da app nativa: movimento, gesti e risposta al tocco](specs/sensazione-nativa.md) | da definire | da definire | Nessuna | Bozza |
+| [Sensazione da app nativa: movimento, gesti e risposta al tocco](specs/sensazione-nativa.md) | Prima della Fase 3 | da definire | Nessuna | Parziale |
 
 ## Contesto
 
