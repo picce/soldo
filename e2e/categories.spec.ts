@@ -68,8 +68,11 @@ test('rows move with the keyboard buttons and with the handle', async ({ page })
   await page.mouse.up()
   await expect(list.getByRole('link').first()).toHaveText('Ristoranti')
 
-  // The quick add follows the new order.
-  await page.goto('/nuovo/uscita')
+  // The quick add follows the new order. Reached within the app: a reload right after the
+  // drop could cut off the write of the new order.
+  await page.getByRole('button', { name: 'Indietro' }).click()
+  await page.getByRole('navigation').getByRole('link', { name: 'Home' }).click()
+  await page.getByRole('link', { name: 'Uscita', exact: true }).click()
   const grid = categoryGrid(page).getByRole('button')
   await expect(grid.nth(0)).toHaveText('Ristoranti')
   await expect(grid.nth(1)).toHaveText('Casa')

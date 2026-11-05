@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 import { expect, test } from './fixtures'
 
 declare global {
@@ -23,6 +23,11 @@ async function recordTransitions(page: Page) {
   await page.goto('/')
   // The Home is drawn: the first navigation is over, the next ones animate.
   await expect(page.getByRole('tablist', { name: 'Periodo' })).toBeVisible()
+}
+
+/** Waits for the element and what is inside to stop moving (a sheet sliding in or back). */
+async function settled(element: Locator) {
+  await element.evaluate(node => Promise.all(node.getAnimations({ subtree: true }).map(animation => animation.finished)))
 }
 
 function transitions(page: Page) {
@@ -77,6 +82,7 @@ test('a sheet closes by dragging its head down', async ({ page }) => {
   await page.getByRole('button', { name: /^Data:/ }).click()
   const sheet = page.getByRole('dialog', { name: 'Data' })
   await expect(sheet).toBeVisible()
+  await settled(sheet)
 
   // A short drag: the sheet goes back up.
   const title = await sheet.getByRole('heading', { name: 'Data' }).boundingBox()
@@ -88,6 +94,7 @@ test('a sheet closes by dragging its head down', async ({ page }) => {
   await page.waitForTimeout(150)
   await page.mouse.up()
   await expect(sheet).toBeVisible()
+  await settled(sheet)
 
   // Past a quarter of its height: it closes.
   await page.mouse.move(x, y)

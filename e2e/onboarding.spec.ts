@@ -30,6 +30,8 @@ test('a backup restored from the welcome opens the Home with its data', async ({
   const other = await otherContext.newPage()
   await other.goto('/')
   await other.getByRole('button', { name: 'Inizia da zero' }).click()
+  // The first start is saved once the Home shows: before that, the app would go back to the welcome.
+  await expect(other.getByRole('tablist', { name: 'Periodo' })).toBeVisible()
   await other.goto('/nuovo/uscita')
   await other.getByRole('group', { name: 'Tastierino' }).getByRole('button', { name: '8', exact: true }).click()
   await other.getByRole('button', { name: 'Ristoranti', exact: true }).click()
