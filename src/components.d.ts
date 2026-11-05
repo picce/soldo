@@ -13,8 +13,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VvAlert: typeof import('@volverjs/ui-vue/components')['VvAlert']
-    VvButton: typeof import('@volverjs/ui-vue/components')['VvButton']
-    VvIcon: typeof import('@volverjs/ui-vue/components')['VvIcon']
+    VvButton: typeof import('@volverjs/ui-vue/vv-button')['default']
+    VvButtonGroup: typeof import('@volverjs/ui-vue/vv-button-group')['default']
+    VvIcon: typeof import('@volverjs/ui-vue/vv-icon')['default']
   }
 }

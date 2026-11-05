@@ -1,6 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 import { createMemoryHistory } from 'vue-router'
+import { applyLocale } from '@/i18n/locale'
 import { createAppRouter } from './router'
+
+afterEach(() => applyLocale('it'))
 
 describe('router', () => {
   it.each([
@@ -9,22 +13,30 @@ describe('router', () => {
     ['/budget', 'budget'],
     ['/statistiche', 'stats'],
     ['/impostazioni', 'settings'],
-  ])('risolve %s nella rotta %s', (path, name) => {
+  ])('resolves %s to the %s route', (path, name) => {
     const router = createAppRouter(createMemoryHistory())
     expect(router.resolve(path).name).toBe(name)
   })
 
-  it('reindirizza le rotte sconosciute alla home', async () => {
+  it('redirects unknown routes to home', async () => {
     const router = createAppRouter(createMemoryHistory())
     await router.push('/non-esiste')
     expect(router.currentRoute.value.name).toBe('home')
   })
 
-  it('aggiorna il titolo del documento', async () => {
+  it('updates the document title', async () => {
     const router = createAppRouter(createMemoryHistory())
     await router.push('/movimenti')
     expect(document.title).toBe('Movimenti · Soldo')
     await router.push('/')
     expect(document.title).toBe('Soldo')
+  })
+
+  it('translates the document title when the language changes', async () => {
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/movimenti')
+    applyLocale('en')
+    await nextTick()
+    expect(document.title).toBe('Transactions · Soldo')
   })
 })

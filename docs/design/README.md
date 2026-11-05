@@ -1,6 +1,6 @@
 # Design di Soldo
 
-Direzione scelta il 2026-11-05: **C · Taccuino**. Questo documento spiega le regole del sistema: colori, tipografia, icone, componenti e tono di voce. I mockup stanno nel file di design [design/soldo.figcraft](../../design/soldo.figcraft), che usa gli stessi valori. Le tre direzioni esplorate all'inizio sono archiviate in [esplorazione/](esplorazione/).
+Direzione scelta il 2026-11-05: **C · Taccuino**. Questo documento spiega le regole del sistema: colori, tipografia, icone, componenti e tono di voce. I mockup stanno nel file di design [design/soldo.figcraft](../../design/soldo.figcraft), che usa gli stessi valori. Le tre direzioni esplorate all'inizio sono archiviate in [exploration/](exploration/).
 
 | Home, tema chiaro | Home, tema scuro |
 |---|---|
@@ -8,7 +8,7 @@ Direzione scelta il 2026-11-05: **C · Taccuino**. Questo documento spiega le re
 
 ## Schermate
 
-Le schermate del nucleo, disegnate il 2026-11-05 e da approvare. Ogni immagine apre la versione a grandezza piena.
+Le schermate del nucleo, disegnate e approvate il 2026-11-05. Ogni immagine apre la versione a grandezza piena.
 
 | Schermata | Chiaro | Scuro |
 |---|---|---|
@@ -53,17 +53,19 @@ Se cambia un valore, va aggiornato sia nel file sia qui.
 
 ## Colori
 
-| Token | Uso | Chiaro | Scuro |
-|---|---|---|---|
-| `carta` | Sfondo della pagina, colonna degli operatori nel tastierino | `#F5F4EF` | `#141414` |
-| `superficie` | Schede, barra di navigazione, pulsanti secondari, tasti | `#FFFFFF` | `#1C1C1C` |
-| `quadretti` | Griglia di sfondo, passo 20 px | `#E4E6EC` | `#1F2128` |
-| `linea` | Divisori e bordi decorativi | `#D9D7CF` | `#34342F` |
-| `inchiostro` | Testo principale, uscite, bordo dei pulsanti secondari | `#161616` | `#ECEBE6` |
-| `testo-2` | Testo secondario, percentuali | `#5F5E59` | `#A3A29C` |
-| `biro` | Azioni, link, stato attivo | `#2340C8` | `#7C93FF` |
-| `su-biro` | Testo e icone sui pulsanti Biro | `#FFFFFF` | `#0F1530` |
-| `entrate` | Importi positivi | `#1F7A45` | `#4CC184` |
+| Token | Nel codice | Uso | Chiaro | Scuro |
+|---|---|---|---|---|
+| `carta` | `--color-paper` | Sfondo della pagina, colonna degli operatori nel tastierino | `#F5F4EF` | `#141414` |
+| `superficie` | `--color-card` | Schede, barra di navigazione, pulsanti secondari, tasti | `#FFFFFF` | `#1C1C1C` |
+| `quadretti` | `--color-grid` | Griglia di sfondo, passo 20 px | `#E4E6EC` | `#1F2128` |
+| `linea` | `--color-line` | Divisori e bordi decorativi | `#D9D7CF` | `#34342F` |
+| `inchiostro` | `--color-ink` | Testo principale, uscite, bordo dei pulsanti secondari | `#161616` | `#ECEBE6` |
+| `testo-2` | `--color-ink-2` | Testo secondario, percentuali | `#5F5E59` | `#A3A29C` |
+| `biro` | `--color-pen` | Azioni, link, stato attivo | `#2340C8` | `#7C93FF` |
+| `su-biro` | `--color-on-pen` | Testo e icone sui pulsanti Biro | `#FFFFFF` | `#0F1530` |
+| `entrate` | `--color-income` | Importi positivi | `#1F7A45` | `#4CC184` |
+
+Nel codice i token stanno in [src/theme/tokens.css](../../src/theme/tokens.css), con nomi inglesi; i colori delle categorie sono `--color-category-1` … `--color-category-8`. Il tema scuro segue quello del sistema.
 
 Contrasto (WCAG 2), tutto sopra 4,5:1:
 
@@ -122,7 +124,7 @@ Per le entrate ci sarà una lista a parte; nei mockup compare Stipendio (`hand-c
 
 ## Tipografia
 
-IBM Plex Sans per l'interfaccia, IBM Plex Mono per le cifre. Sono self-hosted (`@fontsource`, solo il sottoinsieme latino), così l'app funziona offline.
+IBM Plex Sans per l'interfaccia, IBM Plex Mono per le cifre. Sono self-hosted (`@fontsource`, solo il sottoinsieme latino, pesi 400, 500 e 600: [src/theme/fonts.css](../../src/theme/fonts.css)), così l'app funziona offline. Gli stili usati da più componenti sono classi `.type-*` in [src/theme/app.css](../../src/theme/app.css).
 
 | Stile | Uso | Font | Peso | Corpo | Note |
 |---|---|---|---|---|---|
@@ -158,7 +160,7 @@ Gli importi si formattano con `Intl.NumberFormat('it-IT')`, quindi `1.284,30 €
 
 ## Icone
 
-Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiva della navigazione e per i segni − e + nei pulsanti. L'app include solo le icone usate, in una collezione locale: niente download a runtime.
+Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiva della navigazione e per i segni − e + nei pulsanti. L'app include solo le icone usate, in una collezione locale: niente download a runtime. Nel codice si usa `AppIcon`; l'elenco delle icone incluse sta in [scripts/build-icons.js](../../scripts/build-icons.js) e `pnpm icons` rigenera la collezione.
 
 | Dove | Icona |
 |---|---|
@@ -213,7 +215,7 @@ Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da lin
 ## Identità
 
 - **Logo**: la parola «soldo» in Mono SemiBold, sempre minuscola, spaziatura −4%, con il punto in `biro`. Il punto è accostato alla parola di 0,18 em, perché nel Mono ogni carattere occupa la stessa larghezza e il punto resterebbe staccato.
-- **Icona dell'app**: tre proposte nella pagina Identità, tutte con la «s» e il punto del logo. A · Quaderno (carta a quadretti, s in inchiostro, punto in biro), B · Biro (fondo blu, segno bianco), C · Inchiostro (fondo scuro, punto in biro chiaro). Le anteprime mostrano iOS, il cerchio della zona sicura di Android e le favicon da 32 e 16 px. Da scegliere prima di aggiornare il manifest.
+- **Icona dell'app**: scelta il 2026-11-05 la **A · Quaderno** (carta a quadretti, s in inchiostro, punto in biro). Nella pagina Identità restano anche le proposte scartate, B · Biro (fondo blu, segno bianco) e C · Inchiostro (fondo scuro, punto in biro chiaro). Nel codice è [public/logo.svg](../../public/logo.svg), a tutta pagina e con il testo in tracciati; le icone PNG del manifest, la favicon e l'icona Apple si generano in build da quel file.
 
 Sui termini: «Uscita» ed «Entrata» indicano il tipo di movimento; «Spesa» è la categoria della spesa alimentare.
 
@@ -231,6 +233,6 @@ Sobrio e preciso, prima i fatti. Si usa il tu quando serve un verbo. Niente punt
 
 | Direzione | In breve | Esito |
 |---|---|---|
-| [A · Rame](esplorazione/direzione-a-rame.png) | Carta calda, accento rame, Fraunces + Manrope, ciambella in una scheda | Scartata |
-| [B · Mercato](esplorazione/direzione-b-mercato.png) | Testata gialla, colori pieni, Bricolage Grotesque + DM Sans | Scartata |
-| [C · Taccuino](esplorazione/direzione-c-taccuino.png) | Quadretti, inchiostro e biro, IBM Plex Sans + Mono, rendiconto e barra | **Scelta** |
+| [A · Rame](exploration/direzione-a-rame.png) | Carta calda, accento rame, Fraunces + Manrope, ciambella in una scheda | Scartata |
+| [B · Mercato](exploration/direzione-b-mercato.png) | Testata gialla, colori pieni, Bricolage Grotesque + DM Sans | Scartata |
+| [C · Taccuino](exploration/direzione-c-taccuino.png) | Quadretti, inchiostro e biro, IBM Plex Sans + Mono, rendiconto e barra | **Scelta** |

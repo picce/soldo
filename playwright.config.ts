@@ -3,8 +3,8 @@ import { defineConfig, devices } from '@playwright/test'
 
 const PORT = 4173
 const isCI = !!process.env.CI
-// Con E2E_BASE_URL i test girano contro un sito già pubblicato (es. produzione o anteprima)
-// invece che contro la build locale.
+// With E2E_BASE_URL the tests run against a published site (e.g. production or a preview)
+// instead of the local build.
 const remoteBaseURL = process.env.E2E_BASE_URL
 
 export default defineConfig({
@@ -35,7 +35,7 @@ export default defineConfig({
   webServer: remoteBaseURL
     ? undefined
     : {
-        // In CI la build è già stata fatta da uno step precedente.
+        // In CI an earlier step has already built the app.
         command: `${isCI ? '' : 'pnpm build && '}pnpm preview --port ${PORT} --strictPort`,
         url: `http://localhost:${PORT}`,
         reuseExistingServer: !isCI,

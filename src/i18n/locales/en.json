@@ -1,0 +1,47 @@
+{
+  "app": {
+    "name": "Soldo"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "transactions": "Transactions",
+    "budget": "Budget",
+    "stats": "Statistics",
+    "settings": "Settings"
+  },
+  "pages": {
+    "home": {
+      "intro": "Here you will see the summary of the period, with spending by category and the buttons to add an expense or an income."
+    },
+    "transactions": {
+      "intro": "Here you will find all your transactions, grouped by day, with search and filters."
+    },
+    "budget": {
+      "intro": "Here you will set a monthly budget, overall or per category, and see how much is left."
+    },
+    "stats": {
+      "intro": "Here you will see how income and expenses change over time."
+    },
+    "settings": {
+      "intro": "Here you will manage categories, accounts, backup and preferences."
+    }
+  },
+  "settings": {
+    "language": {
+      "label": "Language",
+      "auto": "Automatic",
+      "it": "Italiano",
+      "en": "English",
+      "hint": "Automatic uses the language of your device."
+    }
+  },
+  "pwa": {
+    "updateTitle": "New version available",
+    "updateContent": "Update to use the latest version of Soldo.",
+    "updateAction": "Update",
+    "dismiss": "Later",
+    "offlineReady": "Soldo is ready to work offline.",
+    "close": "Close"
+  }
+}

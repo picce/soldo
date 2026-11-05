@@ -1,0 +1,50 @@
+// Builds src/assets/icons/ph.json: only the Phosphor icons the app uses, as an Iconify
+// collection that main.ts registers with VolverPlugin (prefix "ph"). The app never
+// downloads icons at runtime. After changing the lists below run `pnpm icons` and commit
+// the generated file. Icon choices: docs/design/README.md, "Icone".
+import { readFileSync, writeFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import process from 'node:process'
+
+/** Icons used in the Light weight (the default). */
+const LIGHT = [
+  'house',
+  'receipt',
+  'piggy-bank',
+  'chart-pie-slice',
+  'gear-six',
+]
+
+/** Icons also used in the Regular weight (active navigation item, − and + signs). */
+const REGULAR = [
+  'house',
+  'receipt',
+  'piggy-bank',
+  'chart-pie-slice',
+  'gear-six',
+]
+
+const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)
+
+const require = createRequire(import.meta.url)
+const source = JSON.parse(readFileSync(require.resolve('@iconify-json/ph/icons.json'), 'utf8'))
+const info = JSON.parse(readFileSync(require.resolve('@iconify-json/ph/info.json'), 'utf8'))
+
+const names = [
+  ...LIGHT.map(name => `${name}-light`),
+  ...REGULAR,
+]
+const missing = names.filter(name => !source.icons[name])
+if (missing.length)
+  throw new Error(`Unknown Phosphor icons: ${missing.join(', ')}`)
+
+const collection = {
+  prefix: source.prefix,
+  info: { name: info.name, author: info.author, license: info.license },
+  width: source.width,
+  height: source.height,
+  icons: Object.fromEntries(names.sort().map(name => [name, source.icons[name]])),
+}
+
+writeFileSync(OUTPUT, `${JSON.stringify(collection, null, 2)}\n`)
+process.stdout.write(`Wrote ${names.length} icons to src/assets/icons/ph.json\n`)

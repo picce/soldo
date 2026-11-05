@@ -1,12 +1,12 @@
 name: CI
 
-# Push su develop + tutte le pull request. Niente run al push su main: con la protezione del
-# branch ci si arriva solo da una PR, che ha già controllato lo stesso codice.
+# Pushes to develop and every pull request. No run on pushes to main: branch protection only
+# lets code in through a PR, which has already checked the same code.
 on:
   push:
     branches: [develop]
-    # Solo sui push: sulle PR il controllo è obbligatorio per il merge su main, quindi deve
-    # girare sempre (un controllo saltato resterebbe "in attesa" e bloccherebbe la PR).
+    # Pushes only: on PRs the check is required to merge into main, so it must always run
+    # (a skipped check would stay "pending" and block the PR).
     paths-ignore:
       - 'docs/**'
       - '**/*.md'
@@ -21,8 +21,8 @@ jobs:
     name: Lint, typecheck, test, build, e2e
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # Niente container Playwright: misurato il 2026-11-04, l'immagine costa ~33 s
-    # contro i ~15 s dell'installazione di Chromium.
+    # No Playwright container: measured on 2026-11-04, the image costs ~33 s
+    # against ~15 s to install Chromium.
     steps:
       - uses: actions/checkout@v5
 

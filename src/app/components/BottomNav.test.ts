@@ -1,10 +1,12 @@
 import { VolverPlugin } from '@volverjs/ui-vue'
-import normalIcons from '@volverjs/ui-vue/src/assets/icons/normal.json'
 import { mount } from '@vue/test-utils'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { createMemoryHistory } from 'vue-router'
 import { createAppRouter } from '@/app/router'
+import phIcons from '@/assets/icons/ph.json'
+import AppIcon from '@/components/AppIcon.vue'
 import { i18n } from '@/i18n'
+import { applyLocale } from '@/i18n/locale'
 import BottomNav from './BottomNav.vue'
 
 async function mountAt(path: string) {
@@ -18,7 +20,7 @@ async function mountAt(path: string) {
         [
           VolverPlugin,
           {
-            iconsCollections: [normalIcons],
+            iconsCollections: [phIcons],
           },
         ],
       ],
@@ -26,8 +28,10 @@ async function mountAt(path: string) {
   })
 }
 
+afterEach(() => applyLocale('it'))
+
 describe('bottomNav', () => {
-  it('mostra le cinque sezioni principali', async () => {
+  it('shows the five main sections', async () => {
     const wrapper = await mountAt('/')
     const labels = wrapper.findAll('a').map(link => link.text())
     expect(labels).toEqual([
@@ -40,10 +44,32 @@ describe('bottomNav', () => {
     expect(wrapper.get('nav').attributes('aria-label')).toBe('Navigazione principale')
   })
 
-  it('segna come corrente la sezione attiva', async () => {
+  it('marks the active section as current, with the Regular icon', async () => {
     const wrapper = await mountAt('/statistiche')
     const current = wrapper.findAll('a').filter(link => link.attributes('aria-current') === 'page')
     expect(current).toHaveLength(1)
     expect(current[0]?.text()).toBe('Statistiche')
+    const weights = wrapper.findAllComponents(AppIcon).map(icon => icon.props('weight'))
+    expect(weights).toEqual([
+      'light',
+      'light',
+      'light',
+      'regular',
+      'light',
+    ])
+  })
+
+  it('follows the app language', async () => {
+    applyLocale('en')
+    const wrapper = await mountAt('/')
+    const labels = wrapper.findAll('a').map(link => link.text())
+    expect(labels).toEqual([
+      'Home',
+      'Transactions',
+      'Budget',
+      'Statistics',
+      'Settings',
+    ])
+    expect(wrapper.get('nav').attributes('aria-label')).toBe('Main navigation')
   })
 })

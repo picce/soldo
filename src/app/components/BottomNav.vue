@@ -2,6 +2,7 @@
 import type { RouteLocationRaw } from 'vue-router'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AppIcon from '@/components/AppIcon.vue'
 
 interface NavEntry {
   to: RouteLocationRaw
@@ -11,32 +12,31 @@ interface NavEntry {
 
 const { t } = useI18n()
 
-// Icone provvisorie dal set Volver: lo studio grafico (Fase 1) definirà il set definitivo.
 const items = computed<NavEntry[]>(() => [
   {
     to: { name: 'home' },
     label: t('nav.home'),
-    icon: 'home',
+    icon: 'house',
   },
   {
     to: { name: 'transactions' },
     label: t('nav.transactions'),
-    icon: 'view-list',
+    icon: 'receipt',
   },
   {
     to: { name: 'budget' },
     label: t('nav.budget'),
-    icon: 'dashboard',
+    icon: 'piggy-bank',
   },
   {
     to: { name: 'stats' },
     label: t('nav.stats'),
-    icon: 'analysis',
+    icon: 'chart-pie-slice',
   },
   {
     to: { name: 'settings' },
     label: t('nav.settings'),
-    icon: 'settings',
+    icon: 'gear-six',
   },
 ])
 </script>
@@ -45,12 +45,20 @@ const items = computed<NavEntry[]>(() => [
   <nav class="bottom-nav" :aria-label="t('nav.label')">
     <RouterLink
       v-for="item in items"
-      :key="item.label"
+      :key="item.icon"
+      v-slot="{ href, navigate, isExactActive }"
       :to="item.to"
-      class="bottom-nav__item"
+      custom
     >
-      <VvIcon :name="item.icon" class="bottom-nav__icon" aria-hidden="true" />
-      <span class="bottom-nav__label">{{ item.label }}</span>
+      <a
+        :href="href"
+        class="bottom-nav__item"
+        :aria-current="isExactActive ? 'page' : undefined"
+        @click="navigate"
+      >
+        <AppIcon :name="item.icon" :weight="isExactActive ? 'regular' : 'light'" />
+        <span class="bottom-nav__label">{{ item.label }}</span>
+      </a>
     </RouterLink>
   </nav>
 </template>
@@ -63,38 +71,47 @@ const items = computed<NavEntry[]>(() => [
   z-index: 10;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-surface-3);
+  padding: 0 0.5rem env(safe-area-inset-bottom);
+  background: var(--color-card);
+  border-top: 1px solid var(--color-line);
 }
 
 .bottom-nav__item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-4);
+  gap: 0.1875rem;
   min-width: 0;
-  color: var(--color-word-3);
-  font-size: var(--text-12);
+  height: var(--bottom-nav-height);
+  color: var(--color-ink-2);
+  font-size: 0.6875rem;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .bottom-nav__item[aria-current='page'] {
-  color: var(--color-brand);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* Active item: a 28x2px pen mark on the top edge of the bar. */
+.bottom-nav__item[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  inset-inline: 0;
+  width: 1.75rem;
+  height: 2px;
+  margin-inline: auto;
+  background: var(--color-pen);
 }
 
 .bottom-nav__item:focus-visible {
-  outline: 2px solid var(--color-brand);
+  outline: 2px solid var(--color-pen);
   outline-offset: -4px;
-  border-radius: var(--rounded-md);
-}
-
-.bottom-nav__icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  border-radius: var(--rounded);
 }
 
 .bottom-nav__label {
