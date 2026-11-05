@@ -1,15 +1,25 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import AppToast from '@/app/components/AppToast.vue'
 import BottomNav from '@/app/components/BottomNav.vue'
 import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
+
+const route = useRoute()
+const fullscreen = computed(() => route.meta.fullscreen === true)
 </script>
 
 <template>
-  <div class="app-shell">
+  <div class="app-shell" :class="{ 'app-shell--fullscreen': fullscreen }">
     <main class="app-shell__main">
-      <RouterView />
+      <!-- Keyed by path: /movimenti/a and /movimenti/b are two screens, not one reused. -->
+      <RouterView v-slot="{ Component, route: current }">
+        <component :is="Component" :key="current.path" />
+      </RouterView>
     </main>
     <ReloadPrompt />
-    <BottomNav />
+    <AppToast />
+    <BottomNav v-if="!fullscreen" />
   </div>
 </template>
 
@@ -27,5 +37,15 @@ import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
   margin-inline: auto;
   padding: calc(0.75rem + env(safe-area-inset-top)) var(--page-gutter)
     calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1.5rem);
+}
+
+/* Full-screen pages lay out their own margins, edge to edge. */
+.app-shell--fullscreen {
+  --toast-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+}
+
+.app-shell--fullscreen .app-shell__main {
+  max-width: none;
+  padding: 0;
 }
 </style>

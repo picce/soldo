@@ -35,6 +35,44 @@ export const routes: RouteRecordRaw[] = [
     meta: { titleKey: 'nav.settings' },
   },
   {
+    path: '/nuovo/:kind(uscita|entrata)',
+    name: 'transaction-new',
+    component: () => import('@/features/transactions/TransactionEditorView.vue'),
+    props: route => ({
+      target: {
+        mode: 'new',
+        kind: route.params.kind === 'entrata'
+          ? 'income'
+          : 'expense',
+      },
+    }),
+    meta: {
+      titleKey: route => route.params.kind === 'entrata'
+        ? 'editor.newIncome'
+        : 'editor.newExpense',
+      fullscreen: true,
+    },
+  },
+  {
+    path: '/movimenti/:id',
+    name: 'transaction-edit',
+    component: () => import('@/features/transactions/TransactionEditorView.vue'),
+    props: route => ({
+      target: { mode: 'edit', id: route.params.id },
+    }),
+    meta: { titleKey: 'editor.edit', fullscreen: true },
+  },
+  // Internal page with every component, in light and dark: development only.
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: '/dev/ui',
+          name: 'dev-ui',
+          component: () => import('@/features/dev/DevUiView.vue'),
+        },
+      ]
+    : []),
+  {
     path: '/:pathMatch(.*)*',
     redirect: { name: 'home' },
   },
@@ -45,8 +83,12 @@ export function createAppRouter(history: RouterHistory = createWebHistory()) {
 
   function updateTitle(route: RouteLocationNormalized) {
     const appName = i18n.global.t('app.name')
-    document.title = route.meta.titleKey && route.name !== 'home'
-      ? `${i18n.global.t(route.meta.titleKey)} · ${appName}`
+    const { titleKey } = route.meta
+    const key = typeof titleKey === 'function'
+      ? titleKey(route)
+      : titleKey
+    document.title = key && route.name !== 'home'
+      ? `${i18n.global.t(key)} · ${appName}`
       : appName
   }
 

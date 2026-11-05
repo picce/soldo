@@ -232,7 +232,7 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 
 ### Fogli, finestre e campi
 
-- **Foglio dal basso** (data, nota, filtri): su `superficie`, angoli in alto da 12 px, bordo superiore `linea`, maniglia 36×4 in `linea`, titolo nello stile Titolo e Chiudi. Sotto, la schermata è velata di nero al 40%.
+- **Foglio dal basso** (data, nota, filtri): su `superficie`, angoli in alto da 12 px, bordo superiore `linea`, maniglia 36×4 in `linea`, titolo nello stile Titolo e Chiudi. Sotto, la schermata è velata di nero al 40% (`--color-scrim`).
 - **Finestra di conferma** (importazione): scheda su `superficie` con bordo `inchiostro`, angoli da 12 px, anteprima in una scheda su `carta` con le righe a puntini, avviso in `errore` con l'icona `warning`; l'azione distruttiva è il pulsante pieno in `errore`.
 - **Campi di testo**: alti 44 px, raggio 8, bordo `testo-2` (il contorno è l'unico segno del campo); bordo `biro` quando è attivo.
 - **Elenchi in una scheda** (Impostazioni, Categorie, Data): righe da 12 px di margine verticale separate da `linea`, con la freccia `caret-right` quando aprono un'altra pagina.

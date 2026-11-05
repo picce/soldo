@@ -1,6 +1,6 @@
 # Schermate della Fase 2
 
-> **Stato**: Parziale (schermate disegnate il 2026-11-05; manca l'approvazione)
+> **Stato**: Parziale (schermate disegnate e approvate il 2026-11-05; va in `released/` con la prossima release)
 > **Data**: 2026-11-05
 > **Ambito**: Disegna in FigCraft le schermate della Fase 2 che i mockup del nucleo non coprono: modifica di un movimento, scelta della data e della nota, filtro per categoria, Impostazioni complete, gestione delle categorie, importazione di un backup.
 > **Spec collegate**: serve a [`aggiunta-rapida.md`](./aggiunta-rapida.md), [`movimenti.md`](./movimenti.md), [`gestione-categorie.md`](./gestione-categorie.md), [`backup-manuale.md`](./backup-manuale.md), [`onboarding.md`](./onboarding.md)

@@ -15,6 +15,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     VvButton: typeof import('@volverjs/ui-vue/vv-button')['default']
     VvButtonGroup: typeof import('@volverjs/ui-vue/vv-button-group')['default']
+    VvDialog: typeof import('@volverjs/ui-vue/vv-dialog')['default']
     VvIcon: typeof import('@volverjs/ui-vue/vv-icon')['default']
   }
 }

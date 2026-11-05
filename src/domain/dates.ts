@@ -32,3 +32,8 @@ export function today(now: Date = new Date()): IsoDate {
 export function addDays(value: IsoDate, days: number): IsoDate {
   return toIsoDate(addDaysToDate(fromIsoDate(value), days))
 }
+
+/** A calendar date formatted with Intl, e.g. `{ weekday: 'long', day: 'numeric', month: 'long' }`. */
+export function formatDate(value: IsoDate, intlLocale: string, options: Intl.DateTimeFormatOptions): string {
+  return new Intl.DateTimeFormat(intlLocale, options).format(fromIsoDate(value))
+}

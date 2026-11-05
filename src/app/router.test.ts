@@ -13,6 +13,9 @@ describe('router', () => {
     ['/budget', 'budget'],
     ['/statistiche', 'stats'],
     ['/impostazioni', 'settings'],
+    ['/nuovo/uscita', 'transaction-new'],
+    ['/nuovo/entrata', 'transaction-new'],
+    ['/movimenti/abc', 'transaction-edit'],
   ])('resolves %s to the %s route', (path, name) => {
     const router = createAppRouter(createMemoryHistory())
     expect(router.resolve(path).name).toBe(name)
@@ -30,6 +33,17 @@ describe('router', () => {
     expect(document.title).toBe('Movimenti · Soldo')
     await router.push('/')
     expect(document.title).toBe('Soldo')
+  })
+
+  it('names the editor after the kind of transaction', async () => {
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/nuovo/entrata')
+    expect(document.title).toBe('Nuova entrata · Soldo')
+    expect(router.currentRoute.value.meta.fullscreen).toBe(true)
+    await router.push('/nuovo/uscita')
+    expect(document.title).toBe('Nuova uscita · Soldo')
+    await router.push('/nuovo/altro')
+    expect(router.currentRoute.value.name).toBe('home')
   })
 
   it('translates the document title when the language changes', async () => {

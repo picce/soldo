@@ -83,6 +83,9 @@
  */
 :root,
 .theme {
+  /* Veil under sheets and dialogs, the same in both themes (black at 40%). */
+  --color-scrim: rgb(0 0 0 / 40%);
+
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
   --rounded: 0.5rem;

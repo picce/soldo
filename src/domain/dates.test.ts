@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, fromIsoDate, isIsoDate, today, toIsoDate } from './dates'
+import { addDays, formatDate, fromIsoDate, isIsoDate, today, toIsoDate } from './dates'
 
 describe('calendar dates', () => {
   it('validates YYYY-MM-DD strings that are real dates', () => {
@@ -29,5 +29,11 @@ describe('calendar dates', () => {
     expect(addDays('2026-12-31', 1)).toBe('2027-01-01')
     expect(addDays('2026-03-29', 1)).toBe('2026-03-30')
     expect(addDays('2026-10-25', -1)).toBe('2026-10-24')
+  })
+
+  it('formats dates in each language', () => {
+    const long = { weekday: 'long', day: 'numeric', month: 'long' } as const
+    expect(formatDate('2026-11-05', 'it-IT', long)).toBe('giovedì 5 novembre')
+    expect(formatDate('2026-11-05', 'en-GB', long)).toBe('Thursday 5 November')
   })
 })

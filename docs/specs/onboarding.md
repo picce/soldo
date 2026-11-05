@@ -27,7 +27,7 @@ Il mockup approvato è [Onboarding](../design/render/onboarding-chiaro.png). Ogg
 - `src/app/router.ts`: percorso `/benvenuto` (`welcome`, `meta.fullscreen`) e una guardia globale che legge `meta.onboardedAt` (una volta per sessione, poi in memoria).
 - `src/features/onboarding/WelcomeView.vue` (nuovo).
 - `src/features/onboarding/InstallCard.vue` (nuovo) e `src/app/install.ts` (nuovo): rileva iOS non installato e intercetta `beforeinstallprompt` per mostrarlo più tardi.
-- Usa `src/db/seed.ts`, `src/db/persist.ts` e `src/backup/import.ts`.
+- Usa `src/db/seed.ts`, `src/db/persist.ts` e `src/backup/import.ts`. Oggi `src/main.ts` chiama `seedDefaults()` a ogni avvio ([`aggiunta-rapida.md`](./aggiunta-rapida.md)): l'onboarding toglie quella chiamata. Chi ha già categorie senza `onboardedAt` (chi ha usato l'anteprima prima dell'onboarding) non rivede l'onboarding.
 - Testi in `src/i18n/locales/it.json` ed `en.json`; icone `receipt`, `device-mobile`, `file-arrow-up`, `export` in `scripts/build-icons.js`.
 - `e2e/*`: gli e2e delle altre spec partono da un database già inizializzato con un helper in `e2e/fixtures.ts` (nuovo), così non passano ogni volta dall'onboarding.
 

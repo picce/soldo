@@ -15,6 +15,11 @@ import '@/theme/app.css'
 // Before mounting, so the first render is already in the right language.
 initLocale()
 
+// Default categories and the "Contanti" account, once. The onboarding
+// (docs/specs/onboarding.md) will take this over with «Inizia da zero».
+// Imported lazily: the database code stays out of the first chunk.
+void import('@/db/seed').then(({ seedDefaults }) => seedDefaults())
+
 const app = createApp(App)
 
 app

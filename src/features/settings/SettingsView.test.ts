@@ -1,8 +1,7 @@
-import { VolverPlugin } from '@volverjs/ui-vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it } from 'vitest'
-import { i18n } from '@/i18n'
 import { applyLocale, LOCALE_STORAGE_KEY } from '@/i18n/locale'
+import { testPlugins } from '@/test/plugins'
 import SettingsView from './SettingsView.vue'
 
 // happy-dom has no ARIA reflection, so aria-pressed shows up only as the "pressed" class.
@@ -13,7 +12,7 @@ function pressedLabel(wrapper: ReturnType<typeof mountSettings>) {
 function mountSettings() {
   return mount(SettingsView, {
     global: {
-      plugins: [i18n, VolverPlugin],
+      plugins: testPlugins(),
     },
   })
 }

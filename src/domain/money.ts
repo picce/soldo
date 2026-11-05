@@ -36,3 +36,16 @@ export function formatAmount(cents: number, intlLocale: string, options: FormatA
     return `+${body}`
   return body
 }
+
+/** Where a locale puts the euro symbol, and the symbol itself: `after` in it-IT (`12,40 €`), `before` in en-GB (`€12.40`). */
+export function currencyPlacement(intlLocale: string): { position: 'before' | 'after', symbol: string } {
+  const parts = new Intl.NumberFormat(intlLocale, { style: 'currency', currency: 'EUR' }).formatToParts(1)
+  const currencyIndex = parts.findIndex(part => part.type === 'currency')
+  const integerIndex = parts.findIndex(part => part.type === 'integer')
+  return {
+    position: currencyIndex < integerIndex
+      ? 'before'
+      : 'after',
+    symbol: parts[currencyIndex]?.value ?? '€',
+  }
+}

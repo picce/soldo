@@ -2,6 +2,10 @@
   "app": {
     "name": "Soldo"
   },
+  "common": {
+    "close": "Chiudi",
+    "undo": "Annulla"
+  },
   "nav": {
     "label": "Navigazione principale",
     "home": "Home",
@@ -47,6 +51,55 @@
     "dismiss": "Più tardi",
     "offlineReady": "Soldo è pronto per funzionare anche offline.",
     "close": "Chiudi"
+  },
+  "editor": {
+    "newExpense": "Nuova uscita",
+    "newIncome": "Nuova entrata",
+    "edit": "Modifica movimento",
+    "kind": "Tipo di movimento",
+    "expense": "Uscita",
+    "income": "Entrata",
+    "editing": "Modifica",
+    "amount": "Importo",
+    "category": "Categoria",
+    "tapToSave": "tocca per salvare",
+    "tapToChange": "tocca per cambiare",
+    "enterAmount": "Scrivi prima l'importo",
+    "invalidAmount": "Importo non valido",
+    "chooseCategory": "Scegli una categoria",
+    "dateChip": "Data: {date}",
+    "note": "Nota",
+    "noteChip": "Nota: {note}",
+    "save": "Salva",
+    "duplicate": "Duplica",
+    "delete": "Elimina movimento",
+    "saveError": "Non è stato possibile salvare. Riprova."
+  },
+  "dateSheet": {
+    "title": "Data",
+    "today": "Oggi",
+    "yesterday": "Ieri",
+    "other": "Altra data",
+    "confirm": "Conferma"
+  },
+  "noteSheet": {
+    "title": "Nota",
+    "remove": "Rimuovi nota",
+    "done": "Fatto"
+  },
+  "keypad": {
+    "label": "Tastierino",
+    "decimal": "Virgola",
+    "backspace": "Cancella",
+    "add": "Più",
+    "subtract": "Meno",
+    "multiply": "Per",
+    "divide": "Diviso"
+  },
+  "toast": {
+    "saved": "Salvato: {amount} · {category}",
+    "deleted": "Eliminato: {amount} · {category}",
+    "duplicated": "Duplicato: {amount} · {category}"
   },
   "presets": {
     "categories": {

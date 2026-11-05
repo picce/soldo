@@ -12,3 +12,4 @@
 
 @import '@volverjs/style/components/vv-button' layer(volver.components);
 @import '@volverjs/style/components/vv-button-group' layer(volver.components);
+@import '@volverjs/style/components/vv-dialog' layer(volver.components);

@@ -2,6 +2,10 @@
   "app": {
     "name": "Soldo"
   },
+  "common": {
+    "close": "Close",
+    "undo": "Undo"
+  },
   "nav": {
     "label": "Main navigation",
     "home": "Home",
@@ -47,6 +51,55 @@
     "dismiss": "Later",
     "offlineReady": "Soldo is ready to work offline.",
     "close": "Close"
+  },
+  "editor": {
+    "newExpense": "New expense",
+    "newIncome": "New income",
+    "edit": "Edit transaction",
+    "kind": "Transaction type",
+    "expense": "Expense",
+    "income": "Income",
+    "editing": "Editing",
+    "amount": "Amount",
+    "category": "Category",
+    "tapToSave": "tap to save",
+    "tapToChange": "tap to change",
+    "enterAmount": "Enter the amount first",
+    "invalidAmount": "Invalid amount",
+    "chooseCategory": "Choose a category",
+    "dateChip": "Date: {date}",
+    "note": "Note",
+    "noteChip": "Note: {note}",
+    "save": "Save",
+    "duplicate": "Duplicate",
+    "delete": "Delete transaction",
+    "saveError": "Could not save. Please try again."
+  },
+  "dateSheet": {
+    "title": "Date",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "other": "Other date",
+    "confirm": "Confirm"
+  },
+  "noteSheet": {
+    "title": "Note",
+    "remove": "Remove note",
+    "done": "Done"
+  },
+  "keypad": {
+    "label": "Keypad",
+    "decimal": "Decimal point",
+    "backspace": "Delete",
+    "add": "Plus",
+    "subtract": "Minus",
+    "multiply": "Times",
+    "divide": "Divided by"
+  },
+  "toast": {
+    "saved": "Saved: {amount} · {category}",
+    "deleted": "Deleted: {amount} · {category}",
+    "duplicated": "Duplicated: {amount} · {category}"
   },
   "presets": {
     "categories": {

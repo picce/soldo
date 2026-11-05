@@ -33,14 +33,15 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 
 ```
 src/
-  app/          router, componenti della shell (BottomNav, ReloadPrompt)
+  app/          router, componenti della shell (BottomNav, ReloadPrompt, AppToast) e avvisi (toast.ts: showToast)
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
-  components/   componenti riusabili (AppPage, AppIcon, AppLogo, SegmentedControl, poi CategoryBar, Keypad, ...)
-  features/     una cartella per sezione: home, transactions, budgets, stats, settings
+  components/   componenti riusabili (AppPage, AppIcon, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet)
+  features/     una cartella per sezione: home, transactions, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
-  domain/       funzioni pure: importi, date, periodi, riepiloghi
+  domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice
+  test/         supporto ai test unitari (plugins.ts: i18n e Volver con le icone locali)
   backup/ import/   arrivano nelle fasi successive (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
@@ -61,7 +62,8 @@ e2e/            test Playwright
 - **Icone**: `AppIcon` con il nome Phosphor (`<AppIcon name="house" />`, peso Light; `weight="regular"` per lo stato attivo). Per un'icona nuova aggiungila in `scripts/build-icons.js` e lancia `pnpm icons`. Niente prefissi Iconify remoti: l'app deve funzionare offline.
 - **Colori e testo**: token di `src/theme/tokens.css` (`--color-paper`, `--color-card`, `--color-line`, `--color-ink`, `--color-ink-2`, `--color-pen`, `--color-income`, `--color-category-1…8`), mai hex nei componenti, così il tema scuro continua a funzionare. Gli stili di testo condivisi sono le classi `.type-*` di `src/theme/app.css`.
 - **CSS del design system in cascade layer**: il CSS dell'app (scoped o in `app.css`) vince sempre senza `!important`.
-- **Componenti locali** importati esplicitamente; alias `@/` → `src/`.
+- **Componenti locali** importati esplicitamente; alias `@/` → `src/`. Ogni componente nuovo va anche nella pagina `/dev/ui` (`src/features/dev/DevUiView.vue`), in chiaro e in scuro.
+- **Test dei componenti**: montali con `global: { plugins: testPlugins() }` (`src/test/plugins.ts`), così le icone restano locali.
 - **Accessibilità**: ogni controllo ha un nome accessibile; i test e2e cercano gli elementi per ruolo e nome.
 
 ## Deploy

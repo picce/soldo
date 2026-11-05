@@ -29,6 +29,14 @@ const LIGHT = [
   'hand-coins',
   'arrow-counter-clockwise',
   'wallet',
+  // Quick add and transaction editor
+  'x',
+  'calendar-blank',
+  'note-pencil',
+  'backspace',
+  'trash',
+  'copy',
+  'check',
 ]
 
 /** Icons also used in the Regular weight (active navigation item, − and + signs). */

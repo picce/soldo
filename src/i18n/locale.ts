@@ -1,6 +1,6 @@
 import type { AppLocale } from '.'
 import { computed, ref } from 'vue'
-import { i18n, isAppLocale } from '.'
+import { i18n, INTL_LOCALES, isAppLocale } from '.'
 
 /** What the user picked in Settings: `auto` follows the device language. */
 export type LocalePreference = 'auto' | AppLocale
@@ -78,4 +78,14 @@ export function useLocalePreference() {
       applyLocale(resolveLocale(preference, deviceLanguages()))
     },
   })
+}
+
+/** Locale for Intl (numbers, dates) of the current app language: `it-IT` or `en-GB`. */
+export function intlLocale(): string {
+  return INTL_LOCALES[i18n.global.locale.value]
+}
+
+/** `intlLocale()` as a computed ref, for templates. */
+export function useIntlLocale() {
+  return computed(intlLocale)
 }
