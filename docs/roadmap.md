@@ -6,7 +6,8 @@
 |---|---|
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
 | 1 — Studio grafico | Completata e pubblicata (2026-11-05): direzione **C · Taccuino** ([docs/design](design/README.md)), tema nell'app, icona A · Quaderno e lingua inglese (spec in [docs/specs/released](specs/released/)) |
-| 2–7 | Da iniziare |
+| 2 — Nucleo local-first | Spec scritte il 2026-11-05, da approvare (tabella qui sotto) |
+| 3–7 | Da iniziare |
 
 ## Spec attive
 
@@ -14,9 +15,15 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| | | | | |
-
-Al momento non ci sono spec attive.
+| [Versione dell'app nelle Impostazioni](specs/versione-app.md) | Fase 2 | da definire | Nessuna | Parziale |
+| [Dati locali: database e dominio](specs/dati-locali.md) | Fase 2 | da definire | Nessuna | Bozza |
+| [Schermate della Fase 2](specs/mockup-fase-2.md) | Fase 2 | da definire | Nessuna | Bozza |
+| [Aggiunta rapida e modifica di un movimento](specs/aggiunta-rapida.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Bozza |
+| [Home: periodo, rendiconto e barra per categoria](specs/home-rendiconto.md) | Fase 2 | da definire | Dati locali, Aggiunta rapida | Bozza |
+| [Movimenti: elenco, ricerca e filtri](specs/movimenti.md) | Fase 2 | da definire | Dati locali, Aggiunta rapida, Schermate della Fase 2 | Bozza |
+| [Gestione delle categorie](specs/gestione-categorie.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Bozza |
+| [Backup manuale ed esportazione CSV](specs/backup-manuale.md) | Fase 2 | da definire | Dati locali, Schermate della Fase 2 | Bozza |
+| [Onboarding al primo avvio](specs/onboarding.md) | Fase 2 | da definire | Dati locali, Backup manuale | Bozza |
 
 ## Contesto
 
@@ -128,16 +135,20 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 **Fatto quando**: mockup approvati, tema applicato all'app shell, icona definitiva nel manifest.
 
 ### Fase 2 — Nucleo local-first (MVP usabile ogni giorno)
-- Schema Dexie v1 completo, seed delle categorie italiane di default (icone e colori dello studio grafico), conto "Contanti".
-- **Aggiunta rapida** stile Monefy: tasti − e + in Home, tastierino con calcolatrice, griglia categorie, salvataggio. Data, nota e conto sono opzionali.
-- **Home**: selettore di periodo (giorno/settimana/mese/anno/personalizzato) con swipe, rendiconto e barra per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata.
+
+Le spec della fase sono nella tabella «Spec attive».
+
+- Schema Dexie v1 completo, seed delle categorie di default (icone e colori dello studio grafico), conto "Contanti". I nomi delle voci predefinite seguono la lingua dell'app finché l'utente non le rinomina.
+- **Aggiunta rapida** stile Monefy: tasti − e + in Home, tastierino con calcolatrice, griglia categorie, salvataggio. Data e nota sono opzionali; la scelta del conto compare con la Fase 4, quando i conti sono più di uno.
+- **Home**: selettore di periodo (giorno/settimana/mese/anno) con swipe, rendiconto e barra per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata. Proposta: il periodo personalizzato passa alla Fase 5, con le statistiche.
 - **Movimenti**: lista raggruppata per giorno, ricerca e filtri, modifica ed eliminazione con annulla.
 - **Categorie**: CRUD, riordino, archiviazione.
 - **Backup manuale**: esportazione/importazione JSON (formato versionato, validato con Zod) ed esportazione CSV.
 - Onboarding: "Inizia da zero" oppure "Importa file", più l'invito a installare l'app.
 - **Microinterazioni**: transizioni tra periodi, feedback del tastierino (vibrazione su Android), animazione della barra per categoria.
 - Pagina interna `/dev/ui` con tutti i componenti, per verificarli in chiaro e in scuro.
-- Testi di ogni schermata in italiano e in inglese; nomi delle categorie predefinite nella lingua attiva al primo avvio (da confermare nella spec della fase).
+- Testi di ogni schermata in italiano e in inglese.
+- Le schermate non coperte dai mockup approvati (modifica, data, nota, filtri, Impostazioni, categorie, importazione) si disegnano prima in FigCraft.
 
 **Fatto quando**: si usa ogni giorno dal telefono anche in modalità aereo e i dati sopravvivono a chiusura e riavvio.
 
@@ -161,7 +172,7 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 **Fatto quando**: affitto e abbonamenti compaiono da soli, i saldi dei conti sono corretti, il budget del mese mostra quanto resta.
 
 ### Fase 5 — Statistiche, altri provider, rifiniture
-- **Statistiche**: trend mensile di entrate e uscite, andamento per categoria, confronto con il periodo precedente, media giornaliera.
+- **Statistiche**: trend mensile di entrate e uscite, andamento per categoria, confronto con il periodo precedente, media giornaliera, periodo personalizzato (se confermato lo spostamento dalla Fase 2).
 - Provider **Dropbox** (PKCE con refresh token direttamente dal browser, cartella `Apps/Soldo`, nessun backend) e **OneDrive** (stesso schema del Worker usato per Google).
 - **Cifratura opzionale** dei backup con passphrase (WebCrypto AES-GCM + PBKDF2), con un avviso chiaro: passphrase persa significa backup illeggibile.
 - **Blocco con PIN** opzionale (è un blocco dell'interfaccia, non una cifratura), accessibilità, lista virtualizzata per lo storico lungo.
