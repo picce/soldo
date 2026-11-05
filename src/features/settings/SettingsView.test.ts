@@ -1,8 +1,13 @@
-import { VolverPlugin } from '@volverjs/ui-vue'
 import { flushPromises, mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it } from 'vitest'
-import { i18n } from '@/i18n'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createMemoryHistory } from 'vue-router'
+import { createAppRouter } from '@/app/router'
+import { db } from '@/db/database'
+import { archiveCategory, listCategories } from '@/db/repositories/categories'
+import { setMeta } from '@/db/repositories/meta'
+import { seedDefaults } from '@/db/seed'
 import { applyLocale, LOCALE_STORAGE_KEY } from '@/i18n/locale'
+import { testPlugins } from '@/test/plugins'
 import SettingsView from './SettingsView.vue'
 
 // happy-dom has no ARIA reflection, so aria-pressed shows up only as the "pressed" class.
@@ -13,10 +18,15 @@ function pressedLabel(wrapper: ReturnType<typeof mountSettings>) {
 function mountSettings() {
   return mount(SettingsView, {
     global: {
-      plugins: [i18n, VolverPlugin],
+      plugins: testPlugins(createAppRouter(createMemoryHistory())),
     },
   })
 }
+
+beforeEach(async () => {
+  await Promise.all(db.tables.map(table => table.clear()))
+  await seedDefaults()
+})
 
 afterEach(() => {
   localStorage.clear()
@@ -26,9 +36,38 @@ afterEach(() => {
 describe('settingsView', () => {
   it('offers automatic, Italian and English', () => {
     const wrapper = mountSettings()
-    const labels = wrapper.findAll('button').map(button => button.text())
+    const labels = wrapper.get('[aria-labelledby="settings-language"]').findAll('button').map(button => button.text())
     expect(labels).toEqual(['Automatica', 'Italiano', 'English'])
     expect(pressedLabel(wrapper)).toEqual(['Automatica'])
+  })
+
+  it('opens the categories, counting those in the quick add', async () => {
+    const [groceries] = await listCategories({ kind: 'expense' })
+    await archiveCategory(groceries!.id)
+    const wrapper = mountSettings()
+    const row = wrapper.get('[aria-labelledby="settings-categories"] a')
+    expect(row.attributes('href')).toBe('/impostazioni/categorie')
+    await vi.waitFor(() => expect(row.text()).toContain('11 uscite · 4 entrate'), { timeout: 5000 })
+  })
+
+  it('tells when the last backup was made', async () => {
+    const wrapper = mountSettings()
+    const backup = wrapper.get('[aria-labelledby="settings-backup"]')
+    await vi.waitFor(() => expect(backup.text()).toContain('ultimo: mai'), { timeout: 5000 })
+    expect(backup.findAll('.settings-row').map(row => row.text())).toEqual([
+      'Esporta backupFile JSON con tutti i dati',
+      'Esporta movimentiFile CSV per un foglio di calcolo',
+      'Importa backupSostituisce i dati di questo telefono',
+    ])
+
+    await setMeta('lastExportAt', new Date(Date.now() - 3 * 24 * 3600 * 1000).toISOString())
+    await vi.waitFor(() => expect(backup.text()).toContain('ultimo: 3 giorni fa'), { timeout: 5000 })
+  })
+
+  it('shows the app version', () => {
+    const wrapper = mountSettings()
+    const about = wrapper.get('[aria-labelledby="settings-about"]')
+    expect(about.text()).toContain(`Versione ${__APP_VERSION__}`)
   })
 
   it('switches the language and remembers it', async () => {

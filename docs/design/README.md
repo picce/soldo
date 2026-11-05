@@ -19,6 +19,23 @@ Le schermate del nucleo, disegnate e approvate il 2026-11-05. Ogni immagine apre
 | Ricerca senza risultati | <img src="render/movimenti-nessun-risultato-chiaro.png" width="220" alt="Ricerca senza risultati in chiaro"> | <img src="render/movimenti-nessun-risultato-scuro.png" width="220" alt="Ricerca senza risultati in scuro"> |
 | Onboarding | <img src="render/onboarding-chiaro.png" width="220" alt="Onboarding in chiaro"> | <img src="render/onboarding-scuro.png" width="220" alt="Onboarding in scuro"> |
 
+### Fase 2
+
+Le schermate che i mockup del nucleo non coprivano ([spec](../specs/released/mockup-fase-2.md)), disegnate e approvate il 2026-11-05.
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Modifica movimento | <img src="render/modifica-movimento-chiaro.png" width="220" alt="Modifica movimento in chiaro"> | <img src="render/modifica-movimento-scuro.png" width="220" alt="Modifica movimento in scuro"> |
+| Righe scorse (elimina, duplica) | <img src="render/riga-scorsa-chiaro.png" width="220" alt="Righe scorse (elimina, duplica) in chiaro"> | <img src="render/riga-scorsa-scuro.png" width="220" alt="Righe scorse (elimina, duplica) in scuro"> |
+| Data | <img src="render/foglio-data-chiaro.png" width="220" alt="Data in chiaro"> | <img src="render/foglio-data-scuro.png" width="220" alt="Data in scuro"> |
+| Nota | <img src="render/foglio-nota-chiaro.png" width="220" alt="Nota in chiaro"> | <img src="render/foglio-nota-scuro.png" width="220" alt="Nota in scuro"> |
+| Filtro categoria | <img src="render/filtro-categoria-chiaro.png" width="220" alt="Filtro categoria in chiaro"> | <img src="render/filtro-categoria-scuro.png" width="220" alt="Filtro categoria in scuro"> |
+| Impostazioni | <img src="render/impostazioni-chiaro.png" width="220" alt="Impostazioni in chiaro"> | <img src="render/impostazioni-scuro.png" width="220" alt="Impostazioni in scuro"> |
+| Categorie | <img src="render/categorie-chiaro.png" width="220" alt="Categorie in chiaro"> | <img src="render/categorie-scuro.png" width="220" alt="Categorie in scuro"> |
+| Modifica categoria | <img src="render/modifica-categoria-chiaro.png" width="220" alt="Modifica categoria in chiaro"> | <img src="render/modifica-categoria-scuro.png" width="220" alt="Modifica categoria in scuro"> |
+| Importa backup | <img src="render/importa-backup-chiaro.png" width="220" alt="Importa backup in chiaro"> | <img src="render/importa-backup-scuro.png" width="220" alt="Importa backup in scuro"> |
+| Onboarding su Android | <img src="render/onboarding-android-chiaro.png" width="220" alt="Onboarding su Android in chiaro"> | <img src="render/onboarding-android-scuro.png" width="220" alt="Onboarding su Android in scuro"> |
+
 Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
 
 ## File di design
@@ -26,7 +43,7 @@ Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta
 Il file si apre con [FigCraft](https://github.com/storytold/figcraft), un editor open source che gira in locale (versione usata: 0.15.1). È un archivio binario versionato in git; gli screenshot aggiornati sono in [render/](render/).
 
 - **Pagina Fondamenta**: colori e categorie nei due temi, stili di testo, icone usate divise per gruppo.
-- **Pagina Schermate**: ogni schermata è un componente, nella riga in alto. Sotto c'è la versione scura: un'istanza dentro una cornice con il modo «Scuro» e lo stesso nome più « · scuro». Se modifichi il componente, cambia anche la versione scura.
+- **Pagina Schermate**: ogni schermata è un componente, nella riga in alto; le prime sei sono il nucleo, le successive la Fase 2. Sotto c'è la versione scura: un'istanza dentro una cornice con il modo «Scuro» e lo stesso nome più « · scuro». Se modifichi il componente, cambia anche la versione scura.
 - **Pagina Identità**: logo nei due temi e tre proposte di icona dell'app, con le anteprime alle misure reali.
 - **Variabili**: la collezione «Soldo» ha due modi, Chiaro e Scuro. Contiene `colore/*` (i token della tabella qui sotto) e `categoria/1…8`. I riempimenti sono legati alle variabili: per vedere una schermata al buio basta cambiare il modo della cornice che la contiene. Fa eccezione l'icona dell'app, che ha colori fissi.
 - **Stili di testo**: sono 22, uno per ogni riga della tabella Tipografia.
@@ -64,6 +81,8 @@ Se cambia un valore, va aggiornato sia nel file sia qui.
 | `biro` | `--color-pen` | Azioni, link, stato attivo | `#2340C8` | `#7C93FF` |
 | `su-biro` | `--color-on-pen` | Testo e icone sui pulsanti Biro | `#FFFFFF` | `#0F1530` |
 | `entrate` | `--color-income` | Importi positivi | `#1F7A45` | `#4CC184` |
+| `errore` | `--color-danger` | Errori, eliminazione (riga scorsa, «Ripristina» che sostituisce i dati) | `#B3261E` | `#F2B8B5` |
+| `su-errore` | `--color-on-danger` | Testo e icone su Errore | `#FFFFFF` | `#601410` |
 
 Nel codice i token stanno in [src/theme/tokens.css](../../src/theme/tokens.css), con nomi inglesi; i colori delle categorie sono `--color-category-1` … `--color-category-8`. Il tema scuro segue quello del sistema.
 
@@ -75,6 +94,8 @@ Contrasto (WCAG 2), tutto sopra 4,5:1:
 | testo-2 su carta | 5,9 | 7,2 |
 | biro su carta | 7,2 | 6,6 |
 | entrate su carta | 4,9 | 8,1 |
+| errore su carta | 5,9 | 10,8 |
+| su-errore su errore | 6,5 | 7,7 |
 | su-biro su biro | 8,0 | 6,4 |
 
 `linea` e `quadretti` sono decorativi (1,3:1 e 1,1:1). Un controllo il cui contorno è l'unico segno visibile usa `inchiostro` o `testo-2`, non `linea`.
@@ -166,19 +187,22 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 |---|---|
 | Categorie | vedi la tabella delle categorie predefinite; entrate: `hand-coins` |
 | Navigazione: Home, Movimenti, Budget, Statistiche, Impostazioni | `house`, `receipt`, `piggy-bank`, `chart-pie-slice`, `gear-six` |
-| Home | `wallet`, `caret-down`, `caret-left`, `caret-right`, `minus`, `plus` |
+| Home | `wallet`, `caret-down`, `caret-left`, `caret-right`, `calendar-dot` (Oggi), `minus`, `plus` |
 | Aggiunta rapida | `x`, `calendar-blank`, `wallet`, `note-pencil`, `backspace` |
 | Movimenti | `magnifying-glass`, `x` |
 | Onboarding | `receipt`, `device-mobile`, `cloud-check`, `export` (il Condividi di iOS) |
+| Fase 2 | `trash`, `copy`, `check`, `caret-right`, `dots-six-vertical` (maniglia), `archive`, `file-csv`, `file-arrow-up`, `warning`; `caret-up` (Sposta su); per le categorie una griglia di 30 icone: le 24 del mockup (`coffee`, `car`, `train`, `barbell`, `book-open`, …) più quelle delle categorie predefinite e `briefcase` (elenco in `src/features/categories/icons.ts`) |
 
 ## Componenti
 
 ### Home
 
 - **Schede del periodo** (Giorno, Settimana, Mese, Anno): solo testo. La scheda attiva è in `inchiostro`, peso 600, sottolineata in `biro` da 2 px. Sotto la riga c'è una linea.
+- **Oggi**: quando il periodo mostrato non contiene oggi, in alto a destra compare il pulsante «Oggi» (come i pulsanti Data e Nota dell'aggiunta rapida, con l'icona `calendar-dot`), che riporta al periodo di oggi. Non è nel mockup, che mostra il mese corrente.
 - **Rendiconto**: scheda su `superficie`. Contiene le righe «Entrate ····· 2.450,00» e «Uscite ····· −1.284,30», con i puntini tratteggiati 1/3 px in `linea`. Sotto c'è una riga piena in `inchiostro`, poi il saldo in Mono 32.
 - **Barra delle categorie**: prende il posto della ciambella delle altre direzioni. È alta 10 px, con i segmenti separati da 2 px e gli estremi arrotondati a 3 px.
 - **Righe categoria**: quadratino da 10 px nel colore della categoria, nome, puntini, importo e percentuale.
+- **Entrate per categoria**: se nel periodo ci sono entrate, sotto le uscite compare la stessa sezione per le entrate, con titolo, totale, barra e righe. Non è nel mockup.
 - **Pulsanti**: il primario è pieno in `biro`; il secondario è su `superficie` con bordo in `inchiostro`. Raggio 8 px, altezza 52 px.
 - **Barra delle azioni**: fissa in basso, sopra la navigazione, con «− Uscita» e «+ Entrata».
 - **Navigazione**: cinque voci, ciascuna con icona ed etichetta. La voce attiva è in `inchiostro`, con una barretta `biro` da 28×2 px in alto.
@@ -203,9 +227,24 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 - **Riga**: icona da 22 px nel colore della categoria; la nota (o il nome della categoria, se la nota manca); sotto, in Testo piccolo, categoria e conto; a destra l'importo. Le entrate sono in `entrate` con il segno +.
 - **Eliminazione**: l'avviso «Eliminato: −1,80 € · Ristoranti» compare sopra la navigazione, su `superficie` con bordo in `inchiostro`, con «Annulla» in `biro`.
 
+### Righe scorse
+
+- Verso sinistra si elimina, verso destra si duplica con la data di oggi. Sotto la riga compare l'azione: prima della soglia (40% della riga) su `quadretti` con icona Light e testo in `testo-2`; oltre la soglia su `errore` (eliminare) o `biro` (duplicare), con icona Regular e testo forte nei colori `su-errore` e `su-biro`, e una vibrazione breve.
+- Al rilascio oltre la soglia l'azione parte subito e compare l'avviso con «Annulla». Le stesse azioni sono anche nella schermata di modifica.
+
+### Fogli, finestre e campi
+
+- **Foglio dal basso** (data, nota, filtri): su `superficie`, angoli in alto da 12 px, bordo superiore `linea`, maniglia 36×4 in `linea`, titolo nello stile Titolo e Chiudi. Sotto, la schermata è velata di nero al 40% (`--color-scrim`).
+- **Finestra di conferma** (importazione): scheda su `superficie` con bordo `inchiostro`, angoli da 12 px, anteprima in una scheda su `carta` con le righe a puntini, avviso in `errore` con l'icona `warning`; l'azione distruttiva è il pulsante pieno in `errore`.
+- **Campi di testo**: alti 44 px, raggio 8, bordo `testo-2` (il contorno è l'unico segno del campo); bordo `biro` quando è attivo.
+- **Elenchi in una scheda** (Impostazioni, Categorie, Data): righe da 12 px di margine verticale separate da `linea`, con la freccia `caret-right` quando aprono un'altra pagina.
+- **Categorie**: maniglia `dots-six-vertical` in `testo-2` a sinistra; la riga trascinata ha il contorno `biro` e le altre scorrono per farle posto. Con la tastiera, al posto della maniglia compaiono le frecce `caret-up` e `caret-down` (Sposta su, Sposta giù). Le righe sono alte almeno 44 px. Il cestino in alto nella modifica c'è solo per le categorie mai usate.
+- **Caselle di spunta**: 22 px, raggio 4; spuntate piene in `biro` con `check` in `su-biro`.
+- **Scelta di icona e colore**: griglia di 6 icone per riga e otto campioni di colore; la scelta ha il bordo `biro` (icona) o `inchiostro` (colore) da 2 px, e il nome del colore compare accanto al titolo.
+
 ### Onboarding
 
-Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da linee (due tocchi, dati sul telefono, backup sul proprio Drive), la scheda «Installa Soldo» e due pulsanti: «Inizia da zero» e «Ripristina un backup». La scheda spiega che su iPhone, se l'app non è installata, Safari può cancellare i dati dopo 7 giorni senza aprirla.
+Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da linee (due tocchi, dati sul telefono, backup sul proprio Drive), la scheda «Installa Soldo» e due pulsanti: «Inizia da zero» e «Ripristina un backup». La scheda spiega che su iPhone, se l'app non è installata, Safari può cancellare i dati dopo 7 giorni senza aprirla. Su Android la scheda ha il pulsante «Installa»; nei browser che non offrono l'installazione dice dove trovarla nel menu, e sparisce quando l'app è già installata. Finché non c'è il backup automatico (Fase 3), il terzo punto è «Il backup è un file tuo». Sulla schermata di benvenuto non compare l'avviso «pronto per funzionare offline», che coprirebbe il logo.
 
 ### Stati vuoti
 

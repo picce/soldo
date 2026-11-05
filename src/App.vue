@@ -1,15 +1,32 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import AppToast from '@/app/components/AppToast.vue'
 import BottomNav from '@/app/components/BottomNav.vue'
 import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
+import { dismissToast } from '@/app/toast'
+
+const route = useRoute()
+const fullscreen = computed(() => route.meta.fullscreen === true)
+
+// A notice of the page left behind ("Salvato…") does not follow into a full-screen editor.
+watch(fullscreen, (isFullscreen) => {
+  if (isFullscreen)
+    dismissToast()
+})
 </script>
 
 <template>
-  <div class="app-shell">
+  <div class="app-shell" :class="{ 'app-shell--fullscreen': fullscreen }">
     <main class="app-shell__main">
-      <RouterView />
+      <!-- Keyed by path: /movimenti/a and /movimenti/b are two screens, not one reused. -->
+      <RouterView v-slot="{ Component, route: current }">
+        <component :is="Component" :key="current.path" />
+      </RouterView>
     </main>
     <ReloadPrompt />
-    <BottomNav />
+    <AppToast />
+    <BottomNav v-if="!fullscreen" />
   </div>
 </template>
 
@@ -27,5 +44,16 @@ import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
   margin-inline: auto;
   padding: calc(0.75rem + env(safe-area-inset-top)) var(--page-gutter)
     calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1.5rem);
+}
+
+/* Full-screen pages lay out their own margins, edge to edge; notices go on top, off the keypad. */
+.app-shell--fullscreen {
+  --toast-top: calc(env(safe-area-inset-top) + 0.75rem);
+  --toast-bottom: auto;
+}
+
+.app-shell--fullscreen .app-shell__main {
+  max-width: none;
+  padding: 0;
 }
 </style>

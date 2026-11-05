@@ -2,6 +2,13 @@
   "app": {
     "name": "Soldo"
   },
+  "common": {
+    "close": "Close",
+    "undo": "Undo",
+    "back": "Back",
+    "saveError": "Could not save. Please try again.",
+    "cancel": "Cancel"
+  },
   "nav": {
     "label": "Main navigation",
     "home": "Home",
@@ -10,22 +17,98 @@
     "stats": "Statistics",
     "settings": "Settings"
   },
+  "welcome": {
+    "motto": "The household account book.",
+    "points": {
+      "twoTaps": {
+        "title": "An expense in two taps",
+        "detail": "Type the amount and tap the category."
+      },
+      "onDevice": {
+        "title": "Your data stays on your phone",
+        "detail": "No account and no server. Works offline too."
+      },
+      "backupFile": {
+        "title": "The backup is your own file",
+        "detail": "Export it whenever you like and keep it wherever you want."
+      }
+    },
+    "install": {
+      "title": "Install Soldo",
+      "ios": "On iPhone tap Share, then “Add to Home Screen”. If you do not install it, Safari may delete the data after 7 days without opening it.",
+      "prompt": "It opens like an app, from the Home screen, and works offline.",
+      "menu": "It opens like an app and works offline: in the browser menu choose “Install app” or “Add to Home screen”.",
+      "button": "Install"
+    },
+    "start": "Start from scratch",
+    "restore": "Restore a backup"
+  },
   "pages": {
-    "home": {
-      "intro": "Here you will see the summary of the period, with spending by category and the buttons to add an expense or an income."
-    },
-    "transactions": {
-      "intro": "Here you will find all your transactions, grouped by day, with search and filters."
-    },
     "budget": {
       "intro": "Here you will set a monthly budget, overall or per category, and see how much is left."
     },
     "stats": {
       "intro": "Here you will see how income and expenses change over time."
-    },
-    "settings": {
-      "intro": "Here you will manage categories, accounts, backup and preferences."
     }
+  },
+  "period": {
+    "label": "Period",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year",
+    "previous": "Previous period",
+    "next": "Next period",
+    "today": "Today",
+    "backToToday": "Back to today"
+  },
+  "home": {
+    "summary": "Statement",
+    "income": "Income",
+    "expenses": "Expenses",
+    "balance": "Balance",
+    "byCategory": "Expenses by category",
+    "other": "Others",
+    "barLabel": "Expenses by category: {list}",
+    "incomeByCategory": "Income by category",
+    "incomeBarLabel": "Income by category: {list}",
+    "empty": {
+      "day": "No transactions on {date}.",
+      "week": "No transactions in the week of {date}.",
+      "month": "No transactions in {date}.",
+      "year": "No transactions in {date}."
+    },
+    "emptyHint": "Tap “Expense” below to record your first one.",
+    "noExpenses": "No expenses in this period.",
+    "actions": "Add a transaction",
+    "addExpense": "Expense",
+    "addIncome": "Income"
+  },
+  "transactions": {
+    "search": "Search notes and categories",
+    "clearSearch": "Clear the search",
+    "filters": "Filters",
+    "all": "All",
+    "expenses": "Expenses",
+    "income": "Income",
+    "category": "Category",
+    "categoryCount": "Category ({count})",
+    "removePeriod": "Remove the {period} filter",
+    "swipeDelete": "Delete",
+    "swipeDuplicate": "Duplicate",
+    "emptyTitle": "No transactions yet.",
+    "emptyHint": "Tap “Expense” on the Home to record your first one.",
+    "noMatchTitle": "No transactions match these filters.",
+    "noMatchHint": "Remove a filter to see the other transactions.",
+    "noResultsTitle": "No results for “{query}”.",
+    "noResultsHint": "The search covers notes and categories of every month."
+  },
+  "categoryFilter": {
+    "title": "Categories",
+    "all": "All categories",
+    "reset": "Reset",
+    "apply": "Apply",
+    "applyCount": "Apply ({count})"
   },
   "settings": {
     "language": {
@@ -34,7 +117,135 @@
       "it": "Italiano",
       "en": "English",
       "hint": "Automatic uses the language of your device."
+    },
+    "categories": {
+      "label": "Categories",
+      "title": "Expenses and income",
+      "expenses": "none for expenses | {n} for expenses | {n} for expenses",
+      "income": "none for income | {n} for income | {n} for income"
+    },
+    "backup": {
+      "label": "Backup",
+      "last": "last: {when}",
+      "never": "never",
+      "export": "Export backup",
+      "exportDetail": "JSON file with all your data",
+      "csv": "Export transactions",
+      "csvDetail": "CSV file for a spreadsheet",
+      "import": "Import backup",
+      "importDetail": "Replaces the data on this phone"
+    },
+    "about": {
+      "label": "About",
+      "version": "Version {version}"
     }
+  },
+  "categories": {
+    "title": "Categories",
+    "kind": "Category type",
+    "expenses": "Expenses",
+    "income": "Income",
+    "listExpense": "Expense categories",
+    "listIncome": "Income categories",
+    "moveUp": "Move up: {name}",
+    "moveDown": "Move down: {name}",
+    "moved": "{name}: position {position} of {count}",
+    "archived": "Archived ({count})",
+    "empty": "No active categories. Add one below.",
+    "new": "New category"
+  },
+  "categoryEdit": {
+    "new": "New category",
+    "edit": "Edit category",
+    "name": "Name",
+    "defaultName": "Default name: it follows the language until you change it.",
+    "nameRequired": "Write a name.",
+    "nameTaken": "There is already a category with this name.",
+    "icon": "Icon",
+    "color": "Color",
+    "save": "Save",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "delete": "Delete category",
+    "usage": "Used in {n} transaction: archive it to remove it from quick add and keep the history. | Used in {n} transactions: archive it to remove it from quick add and keep the history.",
+    "archivedNote": "Archived: hidden from quick add, still in your transactions.",
+    "added": "Added: {name}",
+    "archivedToast": "Archived: {name}",
+    "unarchivedToast": "Restored: {name}",
+    "deletedToast": "Deleted: {name}"
+  },
+  "categoryIcons": {
+    "shoppingCart": "Shopping cart",
+    "shoppingBag": "Shopping bag",
+    "coffee": "Coffee",
+    "forkKnife": "Fork and knife",
+    "house": "House",
+    "lightning": "Lightning",
+    "car": "Car",
+    "bus": "Bus",
+    "train": "Train",
+    "bicycle": "Bicycle",
+    "gasPump": "Fuel pump",
+    "airplaneTilt": "Airplane",
+    "firstAid": "First aid cross",
+    "pill": "Pill",
+    "barbell": "Barbell",
+    "heart": "Heart",
+    "popcorn": "Popcorn",
+    "television": "Television",
+    "gameController": "Game controller",
+    "musicNotes": "Music notes",
+    "bookOpen": "Open book",
+    "graduationCap": "Graduation cap",
+    "baby": "Baby",
+    "pawPrint": "Paw print",
+    "tShirt": "T-shirt",
+    "gift": "Gift",
+    "handCoins": "Hand with coins",
+    "briefcase": "Briefcase",
+    "arrowCounterClockwise": "Arrow turning back",
+    "dotsThreeOutline": "Three dots"
+  },
+  "palette": {
+    "blue": "Blue",
+    "orange": "Orange",
+    "teal": "Teal",
+    "ochre": "Ochre",
+    "pink": "Pink",
+    "green": "Green",
+    "purple": "Purple",
+    "red": "Red"
+  },
+  "backup": {
+    "exported": "Backup exported.",
+    "csvExported": "Transactions exported.",
+    "exportError": "Could not export. Please try again.",
+    "errors": {
+      "notSoldo": "This file is not a Soldo backup.",
+      "newerFormat": "This backup comes from a newer version of Soldo: update the app and try again.",
+      "invalid": "The backup is damaged: the data on this phone was not touched."
+    },
+    "restoreTitle": "Restore this backup?",
+    "file": "File",
+    "created": "Created",
+    "transactions": "Transactions",
+    "categoriesAccounts": "Categories and accounts",
+    "warning": "The current data on this phone will be replaced. If you need it, export a backup first.",
+    "restore": "Restore",
+    "restored": "Backup restored.",
+    "restoreError": "Could not restore the backup: the data on this phone was not touched."
+  },
+  "csv": {
+    "fileName": "soldo-transactions-{date}.csv",
+    "date": "Date",
+    "kind": "Type",
+    "amount": "Amount",
+    "category": "Category",
+    "account": "Account",
+    "note": "Note",
+    "expense": "Expense",
+    "income": "Income",
+    "transfer": "Transfer"
   },
   "pwa": {
     "updateTitle": "New version available",
@@ -43,5 +254,76 @@
     "dismiss": "Later",
     "offlineReady": "Soldo is ready to work offline.",
     "close": "Close"
+  },
+  "editor": {
+    "newExpense": "New expense",
+    "newIncome": "New income",
+    "edit": "Edit transaction",
+    "kind": "Transaction type",
+    "expense": "Expense",
+    "income": "Income",
+    "editing": "Editing",
+    "amount": "Amount",
+    "category": "Category",
+    "tapToSave": "tap to save",
+    "tapToChange": "tap to change",
+    "enterAmount": "Enter the amount first",
+    "invalidAmount": "Invalid amount",
+    "chooseCategory": "Choose a category",
+    "dateChip": "Date: {date}",
+    "note": "Note",
+    "noteChip": "Note: {note}",
+    "save": "Save",
+    "duplicate": "Duplicate",
+    "delete": "Delete transaction"
+  },
+  "dateSheet": {
+    "title": "Date",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "other": "Other date",
+    "confirm": "Confirm"
+  },
+  "noteSheet": {
+    "title": "Note",
+    "remove": "Remove note",
+    "done": "Done"
+  },
+  "keypad": {
+    "label": "Keypad",
+    "decimal": "Decimal point",
+    "backspace": "Delete",
+    "add": "Plus",
+    "subtract": "Minus",
+    "multiply": "Times",
+    "divide": "Divided by"
+  },
+  "toast": {
+    "saved": "Saved: {amount} · {category}",
+    "deleted": "Deleted: {amount} · {category}",
+    "duplicated": "Duplicated: {amount} · {category}"
+  },
+  "presets": {
+    "categories": {
+      "groceries": "Groceries",
+      "home": "Home",
+      "restaurants": "Restaurants",
+      "transport": "Transport",
+      "leisure": "Leisure",
+      "bills": "Bills",
+      "health": "Health",
+      "clothes": "Clothes",
+      "gifts": "Gifts",
+      "travel": "Travel",
+      "pets": "Pets",
+      "other": "Other",
+      "salary": "Salary",
+      "refunds": "Refunds",
+      "giftsReceived": "Gifts received",
+      "otherIncome": "Other income"
+    },
+    "accounts": {
+      "cash": "Cash"
+    }
   }
 }

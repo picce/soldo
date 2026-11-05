@@ -2,11 +2,21 @@
 /// <reference types="vite-plugin-pwa/vue" />
 /// <reference types="vite-plugin-pwa/info" />
 
+import type { RouteLocationNormalized } from 'vue-router'
 import 'vue-router'
+
+declare global {
+  /** App version from package.json, fixed at build time (build-info.ts). */
+  const __APP_VERSION__: string
+  /** Short commit the app was built from; empty when unknown. */
+  const __APP_COMMIT__: string
+}
 
 declare module 'vue-router' {
   interface RouteMeta {
-    /** i18n key of the page title, used for `document.title`. */
-    titleKey?: string
+    /** i18n key of the page title, used for `document.title`; a function when it depends on the route. */
+    titleKey?: string | ((route: RouteLocationNormalized) => string)
+    /** Full-screen page (the transaction editor): no bottom navigation. */
+    fullscreen?: boolean
   }
 }

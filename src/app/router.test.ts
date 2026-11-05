@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 import { createMemoryHistory } from 'vue-router'
+import { db } from '@/db/database'
 import { applyLocale } from '@/i18n/locale'
-import { createAppRouter } from './router'
+import { forgetOnboarding, markOnboarded } from './onboarding'
+import { createAppRouter, requireOnboarding } from './router'
 
 afterEach(() => applyLocale('it'))
 
@@ -13,6 +15,12 @@ describe('router', () => {
     ['/budget', 'budget'],
     ['/statistiche', 'stats'],
     ['/impostazioni', 'settings'],
+    ['/nuovo/uscita', 'transaction-new'],
+    ['/nuovo/entrata', 'transaction-new'],
+    ['/movimenti/abc', 'transaction-edit'],
+    ['/impostazioni/categorie', 'categories'],
+    ['/impostazioni/categorie/nuova', 'category-edit'],
+    ['/impostazioni/categorie/abc', 'category-edit'],
   ])('resolves %s to the %s route', (path, name) => {
     const router = createAppRouter(createMemoryHistory())
     expect(router.resolve(path).name).toBe(name)
@@ -32,11 +40,65 @@ describe('router', () => {
     expect(document.title).toBe('Soldo')
   })
 
+  it('names the editor after the kind of transaction', async () => {
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/nuovo/entrata')
+    expect(document.title).toBe('Nuova entrata · Soldo')
+    expect(router.currentRoute.value.meta.fullscreen).toBe(true)
+    await router.push('/nuovo/uscita')
+    expect(document.title).toBe('Nuova uscita · Soldo')
+    await router.push('/nuovo/altro')
+    expect(router.currentRoute.value.name).toBe('home')
+  })
+
+  it('opens a new category of the kind in the URL, or an existing one', async () => {
+    const router = createAppRouter(createMemoryHistory())
+    const props = (path: string) => {
+      const route = router.resolve(path)
+      const resolve = route.matched[0]!.props.default as (r: typeof route) => unknown
+      return resolve(route)
+    }
+    expect(props('/impostazioni/categorie/nuova?tipo=entrate')).toEqual({ id: null, kind: 'income' })
+    expect(props('/impostazioni/categorie/abc')).toEqual({ id: 'abc', kind: 'expense' })
+    await router.push('/impostazioni/categorie/nuova')
+    expect(document.title).toBe('Nuova categoria · Soldo')
+    expect(router.currentRoute.value.meta.fullscreen).toBe(true)
+  })
+
   it('translates the document title when the language changes', async () => {
     const router = createAppRouter(createMemoryHistory())
     await router.push('/movimenti')
     applyLocale('en')
     await nextTick()
     expect(document.title).toBe('Transactions · Soldo')
+  })
+})
+
+describe('onboarding guard', () => {
+  beforeEach(async () => {
+    await Promise.all(db.tables.map(table => table.clear()))
+    forgetOnboarding()
+  })
+
+  function guardedRouter() {
+    const router = createAppRouter(createMemoryHistory())
+    requireOnboarding(router)
+    return router
+  }
+
+  it('leads every page to the welcome until the first start is done', async () => {
+    const router = guardedRouter()
+    await router.push('/movimenti')
+    expect(router.currentRoute.value.name).toBe('welcome')
+    expect(router.currentRoute.value.meta.fullscreen).toBe(true)
+  })
+
+  it('leads the welcome to the Home afterwards', async () => {
+    await markOnboarded()
+    const router = guardedRouter()
+    await router.push('/movimenti')
+    expect(router.currentRoute.value.name).toBe('transactions')
+    await router.push('/benvenuto')
+    expect(router.currentRoute.value.name).toBe('home')
   })
 })

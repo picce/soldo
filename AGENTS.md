@@ -33,32 +33,42 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 
 ```
 src/
-  app/          router, componenti della shell (BottomNav, ReloadPrompt)
+  app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
-  components/   componenti riusabili (AppPage, AppIcon, AppLogo, SegmentedControl, poi CategoryBar, Keypad, ...)
-  features/     una cartella per sezione: home, transactions, budgets, stats, settings
+  components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker)
+  features/     una cartella per sezione: onboarding, home, transactions, categories, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
+  stores/       stato Pinia condiviso tra pagine (period.ts: il periodo della Home)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css
-  db/ domain/ backup/ import/   arrivano nelle fasi successive (vedi roadmap)
+  db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
+  domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice, ricerca, giorni
+  test/         supporto ai test unitari (plugins.ts: i18n e Volver con le icone locali)
+  backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti
+  import/       arriva in Fase 6 (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto)
 design/         file di design FigCraft (soldo.figcraft): fondamenta, schermate, identità
 docs/specs/     spec dei lavori, attive e in released/ o archived/
-e2e/            test Playwright
+e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il primo avvio)
 ```
 
 ## Convenzioni
 
 - **Lingua**: cartelle, nomi e commenti del codice in inglese, anche i titoli dei test. Documentazione (README, roadmap, spec, design) e testi dell'interfaccia in italiano; l'interfaccia ha anche l'inglese.
 - **Spec**: ogni lavoro parte da una spec in `docs/specs/` (skill `new-spec`), elencata nella tabella «Spec attive» di [docs/roadmap.md](docs/roadmap.md); a lavoro pubblicato la spec va in `docs/specs/released/`.
+- **Git flow**: ogni spec si implementa su un branch `feature/<nome-della-spec>` (`git flow feature start <nome>`; in un clone nuovo prima `git flow init` con `main` come branch di produzione, `develop` e prefisso dei tag `v`), che a lavoro finito e con `pnpm check` e `pnpm test:e2e` verdi si chiude su `develop` (`git flow feature finish <nome>`). Su `develop` direttamente vanno solo documenti e piccole correzioni.
 - **Commit**: niente trailer `Co-Authored-By` nei messaggi.
+- **Rilasci**: ogni rilascio su `main` alza la minor (`0.1.0`, `0.2.0`, …) in `package.json`, ha le note per chi usa l'app in `docs/changelog/<versione>.md` (skill `changelog`, in italiano) e il tag `v<versione>` sul merge in `main`.
 - **Volver**: i componenti `Vv*` sono auto-importati uno per uno (resolver con `cherryPick`, solo JS). Quando usi un componente per la prima volta, aggiungi l'import del suo CSS in `src/theme/volver.css` nel layer `volver.components`. Le utility e il tema scuro di Volver non sono caricati: niente classi utility (`p-md`, `text-16`, …), si usa CSS scoped con i token. Prima di scrivere props consulta la skill `volverjs-ui-vue`: props inventate falliscono in silenzio.
 - **Design**: le regole sono in [docs/design/README.md](docs/design/README.md) (direzione Taccuino: colori, tipografia, icone, componenti, tono di voce), i mockup in `design/soldo.figcraft` (FigCraft 0.15.1, editor open source in locale; con `figcraft-cli` si esportano gli screenshot in `docs/design/render/`). Il design vive nel repository, non in Figma.
 - **Icone**: `AppIcon` con il nome Phosphor (`<AppIcon name="house" />`, peso Light; `weight="regular"` per lo stato attivo). Per un'icona nuova aggiungila in `scripts/build-icons.js` e lancia `pnpm icons`. Niente prefissi Iconify remoti: l'app deve funzionare offline.
 - **Colori e testo**: token di `src/theme/tokens.css` (`--color-paper`, `--color-card`, `--color-line`, `--color-ink`, `--color-ink-2`, `--color-pen`, `--color-income`, `--color-category-1…8`), mai hex nei componenti, così il tema scuro continua a funzionare. Gli stili di testo condivisi sono le classi `.type-*` di `src/theme/app.css`.
 - **CSS del design system in cascade layer**: il CSS dell'app (scoped o in `app.css`) vince sempre senza `!important`.
-- **Componenti locali** importati esplicitamente; alias `@/` → `src/`.
+- **Componenti locali** importati esplicitamente; alias `@/` → `src/`. Ogni componente nuovo va anche nella pagina `/dev/ui` (`src/features/dev/DevUiView.vue`), in chiaro e in scuro (tranne le impaginazioni di pagina, AppPage e SubPage).
+- **Pagine secondarie** (aperte da un'altra, come Categorie dalle Impostazioni): `SubPage` e `meta.fullscreen` nel percorso, così la barra di navigazione non c'è e «Indietro» torna da dove si è venuti.
+- **Test dei componenti**: montali con `global: { plugins: testPlugins() }` (`src/test/plugins.ts`), così le icone restano locali.
 - **Accessibilità**: ogni controllo ha un nome accessibile; i test e2e cercano gli elementi per ruolo e nome.
+- **Test e2e**: importano `test` ed `expect` da `e2e/fixtures.ts`, la cui `page` è già passata da «Inizia da zero»; solo `e2e/onboarding.spec.ts` parte dalla schermata di benvenuto.
 
 ## Deploy
 

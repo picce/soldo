@@ -16,6 +16,8 @@
   --color-pen: #2340c8;
   --color-on-pen: #fff;
   --color-income: #1f7a45;
+  --color-danger: #b3261e;
+  --color-on-danger: #fff;
   --color-category-1: #3a66c4;
   --color-category-2: #d9663b;
   --color-category-3: #1f9a86;
@@ -38,6 +40,8 @@
     --color-pen: #7c93ff;
     --color-on-pen: #0f1530;
     --color-income: #4cc184;
+    --color-danger: #f2b8b5;
+    --color-on-danger: #601410;
     --color-category-1: #5c86e0;
     --color-category-2: #d8653f;
     --color-category-3: #28a08a;
@@ -60,6 +64,8 @@
   --color-pen: #7c93ff;
   --color-on-pen: #0f1530;
   --color-income: #4cc184;
+  --color-danger: #f2b8b5;
+  --color-on-danger: #601410;
   --color-category-1: #5c86e0;
   --color-category-2: #d8653f;
   --color-category-3: #28a08a;
@@ -77,6 +83,9 @@
  */
 :root,
 .theme {
+  /* Veil under sheets and dialogs, the same in both themes (black at 40%). */
+  --color-scrim: rgb(0 0 0 / 40%);
+
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
   --rounded: 0.5rem;
@@ -114,4 +123,16 @@
   --vv-button-modifier-secondary-state-active-background: var(--color-paper);
   --vv-button-modifier-secondary-state-pressed-background: var(--color-paper);
   --vv-button-modifier-secondary-state-focus-visible-outline: 2px solid var(--color-pen);
+  /* Destructive action (Ripristina a backup): filled in the error color. */
+  --vv-button-modifier-danger-background: var(--color-danger);
+  --vv-button-modifier-danger-border-color: var(--color-danger);
+  --vv-button-modifier-danger-color: var(--color-on-danger);
+  --vv-button-modifier-danger-text-shadow: none;
+  --vv-button-modifier-danger-state-hover-background: var(--color-danger);
+  --vv-button-modifier-danger-state-hover-border-color: var(--color-danger);
+  --vv-button-modifier-danger-state-hover-color: var(--color-on-danger);
+  --vv-button-modifier-danger-state-active-background: var(--color-danger);
+  --vv-button-modifier-danger-state-active-border-color: var(--color-danger);
+  --vv-button-modifier-danger-state-active-color: var(--color-on-danger);
+  --vv-button-modifier-danger-state-focus-visible-outline: 2px solid var(--color-pen);
 }

@@ -4,9 +4,15 @@ import { applyLocale, LOCALE_STORAGE_KEY, readLocalePreference, resolveLocale, u
 import enMessages from './locales/en.json'
 import itMessages from './locales/it.json'
 
+/** A message precompiled by @intlify/unplugin-vue-i18n: an AST with a type and a body. */
+function isMessage(value: object): boolean {
+  return ('type' in value || 't' in value) && ('body' in value || 'b' in value)
+}
+
+/** Message keys only: the inside of each precompiled message differs between languages. */
 function keysOf(messages: object, prefix = ''): string[] {
   return Object.entries(messages).flatMap(([key, value]) =>
-    typeof value === 'object' && value !== null
+    typeof value === 'object' && value !== null && !isMessage(value)
       ? keysOf(value, `${prefix}${key}.`)
       : [`${prefix}${key}`],
   ).sort()

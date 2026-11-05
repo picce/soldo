@@ -1,13 +1,13 @@
 # Tema Taccuino nell'app
 
-> **Stato**: Parziale (implementata su `develop` il 2026-11-05; manca la pubblicazione su `main` con la prova da installata)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Porta nel codice la direzione grafica Taccuino: token chiari e scuri, font IBM Plex self-hosted, icone Phosphor in una collezione locale, app shell ridisegnata e icona A · Quaderno nel manifest. Chiude la Fase 1 della roadmap.
 > **Spec collegate**: [`lingua-inglese.md`](./lingua-inglese.md) (stessa fase: i testi nuovi nascono in italiano e in inglese, e i messaggi precompilati contribuiscono al peso)
 
 ## Panoramica
 
-Il 2026-11-05 sono stati approvati i mockup del Taccuino ([docs/design](../design/README.md)) ed è stata scelta l'icona A · Quaderno. L'app pubblicata con la Fase 0 usa ancora il tema predefinito di Volver, l'icona provvisoria blu, le icone `normal` di Volver e tutto il CSS delle utility.
+Il 2026-11-05 sono stati approvati i mockup del Taccuino ([docs/design](../../design/README.md)) ed è stata scelta l'icona A · Quaderno. L'app pubblicata con la Fase 0 usa ancora il tema predefinito di Volver, l'icona provvisoria blu, le icone `normal` di Volver e tutto il CSS delle utility.
 
 Il peso iniziale, misurato con `pnpm build` il 2026-11-05, è di 113,5 kB di JS e 67,2 kB di CSS (gzip). Quasi tutto il CSS sono utility che l'app non usa; nel JS pesano la collezione di icone `normal` (24 kB gzip) e il compilatore dei messaggi di vue-i18n.
 
@@ -33,7 +33,7 @@ Questa spec applica il tema all'app shell (sfondo, navigazione, titoli, avvisi),
 
 ### Token
 
-I token vivono in `src/theme/tokens.css`, fuori dai cascade layer, quindi vincono sul CSS di Volver. I valori chiari stanno su `:root`; quelli scuri in `@media (prefers-color-scheme: dark)` su `:root:not(.theme--light)` e, per forzarli, su `.theme.theme--dark`. I nomi seguono la tabella dei colori di [docs/design](../design/README.md):
+I token vivono in `src/theme/tokens.css`, fuori dai cascade layer, quindi vincono sul CSS di Volver. I valori chiari stanno su `:root`; quelli scuri in `@media (prefers-color-scheme: dark)` su `:root:not(.theme--light)` e, per forzarli, su `.theme.theme--dark`. I nomi seguono la tabella dei colori di [docs/design](../../design/README.md):
 
 | Design | CSS |
 |---|---|

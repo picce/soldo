@@ -26,4 +26,5 @@ In alternativa, dal tuo computer: `npx wrangler login` e poi `pnpm deploy`.
 
 - [Roadmap e decisioni](docs/roadmap.md), con le [spec](docs/specs/) dei lavori in corso
 - [Design](docs/design/README.md)
+- [Note di rilascio](docs/changelog/)
 - [Convenzioni per chi sviluppa](AGENTS.md)

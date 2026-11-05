@@ -2,6 +2,13 @@
   "app": {
     "name": "Soldo"
   },
+  "common": {
+    "close": "Chiudi",
+    "undo": "Annulla",
+    "back": "Indietro",
+    "saveError": "Non è stato possibile salvare. Riprova.",
+    "cancel": "Annulla"
+  },
   "nav": {
     "label": "Navigazione principale",
     "home": "Home",
@@ -10,22 +17,98 @@
     "stats": "Statistiche",
     "settings": "Impostazioni"
   },
+  "welcome": {
+    "motto": "Il quaderno dei conti di casa.",
+    "points": {
+      "twoTaps": {
+        "title": "Una spesa in due tocchi",
+        "detail": "Scrivi l'importo e tocca la categoria."
+      },
+      "onDevice": {
+        "title": "I dati restano sul telefono",
+        "detail": "Nessun account e nessun server. Funziona anche senza rete."
+      },
+      "backupFile": {
+        "title": "Il backup è un file tuo",
+        "detail": "Lo esporti quando vuoi e lo salvi dove preferisci."
+      }
+    },
+    "install": {
+      "title": "Installa Soldo",
+      "ios": "Su iPhone tocca Condividi, poi «Aggiungi alla schermata Home». Se non la installi, Safari può cancellare i dati dopo 7 giorni senza aprirla.",
+      "prompt": "Si apre come un'app, dalla schermata Home, e funziona offline.",
+      "menu": "Si apre come un'app e funziona offline: nel menu del browser scegli «Installa app» o «Aggiungi alla schermata Home».",
+      "button": "Installa"
+    },
+    "start": "Inizia da zero",
+    "restore": "Ripristina un backup"
+  },
   "pages": {
-    "home": {
-      "intro": "Qui vedrai il riepilogo del periodo, con le spese per categoria e i tasti per aggiungere un'uscita o un'entrata."
-    },
-    "transactions": {
-      "intro": "Qui troverai tutti i tuoi movimenti, raggruppati per giorno, con ricerca e filtri."
-    },
     "budget": {
       "intro": "Qui potrai impostare un budget mensile, totale o per categoria, e vedere quanto ti resta."
     },
     "stats": {
       "intro": "Qui vedrai come cambiano entrate e uscite nel tempo."
-    },
-    "settings": {
-      "intro": "Qui gestirai categorie, conti, backup e preferenze."
     }
+  },
+  "period": {
+    "label": "Periodo",
+    "day": "Giorno",
+    "week": "Settimana",
+    "month": "Mese",
+    "year": "Anno",
+    "previous": "Periodo precedente",
+    "next": "Periodo successivo",
+    "today": "Oggi",
+    "backToToday": "Torna a oggi"
+  },
+  "home": {
+    "summary": "Rendiconto",
+    "income": "Entrate",
+    "expenses": "Uscite",
+    "balance": "Saldo",
+    "byCategory": "Uscite per categoria",
+    "other": "Altre",
+    "barLabel": "Uscite per categoria: {list}",
+    "incomeByCategory": "Entrate per categoria",
+    "incomeBarLabel": "Entrate per categoria: {list}",
+    "empty": {
+      "day": "Nessun movimento il {date}.",
+      "week": "Nessun movimento nella settimana {date}.",
+      "month": "Nessun movimento a {date}.",
+      "year": "Nessun movimento nel {date}."
+    },
+    "emptyHint": "Tocca «Uscita» qui sotto per segnare la prima spesa.",
+    "noExpenses": "Nessuna uscita in questo periodo.",
+    "actions": "Aggiungi un movimento",
+    "addExpense": "Uscita",
+    "addIncome": "Entrata"
+  },
+  "transactions": {
+    "search": "Cerca nelle note e nelle categorie",
+    "clearSearch": "Svuota la ricerca",
+    "filters": "Filtri",
+    "all": "Tutti",
+    "expenses": "Uscite",
+    "income": "Entrate",
+    "category": "Categoria",
+    "categoryCount": "Categoria ({count})",
+    "removePeriod": "Togli il filtro {period}",
+    "swipeDelete": "Elimina",
+    "swipeDuplicate": "Duplica",
+    "emptyTitle": "Nessun movimento.",
+    "emptyHint": "Tocca «Uscita» nella Home per segnare la prima spesa.",
+    "noMatchTitle": "Nessun movimento con questi filtri.",
+    "noMatchHint": "Togli un filtro per vedere gli altri movimenti.",
+    "noResultsTitle": "Nessun risultato per «{query}».",
+    "noResultsHint": "La ricerca include note e categorie di tutti i mesi."
+  },
+  "categoryFilter": {
+    "title": "Categorie",
+    "all": "Tutte le categorie",
+    "reset": "Azzera",
+    "apply": "Applica",
+    "applyCount": "Applica ({count})"
   },
   "settings": {
     "language": {
@@ -34,7 +117,135 @@
       "it": "Italiano",
       "en": "English",
       "hint": "Automatica usa la lingua del dispositivo."
+    },
+    "categories": {
+      "label": "Categorie",
+      "title": "Uscite ed entrate",
+      "expenses": "nessuna uscita | {n} uscita | {n} uscite",
+      "income": "nessuna entrata | {n} entrata | {n} entrate"
+    },
+    "backup": {
+      "label": "Backup",
+      "last": "ultimo: {when}",
+      "never": "mai",
+      "export": "Esporta backup",
+      "exportDetail": "File JSON con tutti i dati",
+      "csv": "Esporta movimenti",
+      "csvDetail": "File CSV per un foglio di calcolo",
+      "import": "Importa backup",
+      "importDetail": "Sostituisce i dati di questo telefono"
+    },
+    "about": {
+      "label": "Informazioni",
+      "version": "Versione {version}"
     }
+  },
+  "categories": {
+    "title": "Categorie",
+    "kind": "Tipo di categoria",
+    "expenses": "Uscite",
+    "income": "Entrate",
+    "listExpense": "Categorie di uscita",
+    "listIncome": "Categorie di entrata",
+    "moveUp": "Sposta su: {name}",
+    "moveDown": "Sposta giù: {name}",
+    "moved": "{name}: posizione {position} di {count}",
+    "archived": "Archiviate ({count})",
+    "empty": "Nessuna categoria attiva. Aggiungine una qui sotto.",
+    "new": "Nuova categoria"
+  },
+  "categoryEdit": {
+    "new": "Nuova categoria",
+    "edit": "Modifica categoria",
+    "name": "Nome",
+    "defaultName": "Nome predefinito: cambia con la lingua finché non lo modifichi.",
+    "nameRequired": "Scrivi un nome.",
+    "nameTaken": "C'è già una categoria con questo nome.",
+    "icon": "Icona",
+    "color": "Colore",
+    "save": "Salva",
+    "archive": "Archivia",
+    "unarchive": "Ripristina",
+    "delete": "Elimina categoria",
+    "usage": "Usata in {n} movimento: archiviala per toglierla dall'aggiunta rapida senza perdere lo storico. | Usata in {n} movimenti: archiviala per toglierla dall'aggiunta rapida senza perdere lo storico.",
+    "archivedNote": "Archiviata: non compare nell'aggiunta rapida, ma resta nei movimenti.",
+    "added": "Aggiunta: {name}",
+    "archivedToast": "Archiviata: {name}",
+    "unarchivedToast": "Ripristinata: {name}",
+    "deletedToast": "Eliminata: {name}"
+  },
+  "categoryIcons": {
+    "shoppingCart": "Carrello",
+    "shoppingBag": "Borsa della spesa",
+    "coffee": "Caffè",
+    "forkKnife": "Posate",
+    "house": "Casa",
+    "lightning": "Fulmine",
+    "car": "Auto",
+    "bus": "Autobus",
+    "train": "Treno",
+    "bicycle": "Bicicletta",
+    "gasPump": "Distributore di benzina",
+    "airplaneTilt": "Aereo",
+    "firstAid": "Croce del pronto soccorso",
+    "pill": "Pillola",
+    "barbell": "Bilanciere",
+    "heart": "Cuore",
+    "popcorn": "Popcorn",
+    "television": "Televisore",
+    "gameController": "Controller per videogiochi",
+    "musicNotes": "Note musicali",
+    "bookOpen": "Libro aperto",
+    "graduationCap": "Tocco di laurea",
+    "baby": "Bambino",
+    "pawPrint": "Impronta di zampa",
+    "tShirt": "Maglietta",
+    "gift": "Regalo",
+    "handCoins": "Mano con monete",
+    "briefcase": "Valigetta",
+    "arrowCounterClockwise": "Freccia che torna indietro",
+    "dotsThreeOutline": "Tre puntini"
+  },
+  "palette": {
+    "blue": "Blu",
+    "orange": "Arancio",
+    "teal": "Verde acqua",
+    "ochre": "Ocra",
+    "pink": "Rosa",
+    "green": "Verde",
+    "purple": "Viola",
+    "red": "Rosso"
+  },
+  "backup": {
+    "exported": "Backup esportato.",
+    "csvExported": "Movimenti esportati.",
+    "exportError": "Non è stato possibile esportare. Riprova.",
+    "errors": {
+      "notSoldo": "Questo file non è un backup di Soldo.",
+      "newerFormat": "Questo backup viene da una versione più recente di Soldo: aggiorna l'app e riprova.",
+      "invalid": "Il backup è danneggiato: i dati di questo telefono non sono stati toccati."
+    },
+    "restoreTitle": "Ripristinare questo backup?",
+    "file": "File",
+    "created": "Creato",
+    "transactions": "Movimenti",
+    "categoriesAccounts": "Categorie e conti",
+    "warning": "I dati attuali di questo telefono verranno sostituiti. Se ti servono, esporta prima un backup.",
+    "restore": "Ripristina",
+    "restored": "Backup ripristinato.",
+    "restoreError": "Non è stato possibile ripristinare il backup: i dati di questo telefono non sono stati toccati."
+  },
+  "csv": {
+    "fileName": "soldo-movimenti-{date}.csv",
+    "date": "Data",
+    "kind": "Tipo",
+    "amount": "Importo",
+    "category": "Categoria",
+    "account": "Conto",
+    "note": "Nota",
+    "expense": "Uscita",
+    "income": "Entrata",
+    "transfer": "Trasferimento"
   },
   "pwa": {
     "updateTitle": "Nuova versione disponibile",
@@ -43,5 +254,76 @@
     "dismiss": "Più tardi",
     "offlineReady": "Soldo è pronto per funzionare anche offline.",
     "close": "Chiudi"
+  },
+  "editor": {
+    "newExpense": "Nuova uscita",
+    "newIncome": "Nuova entrata",
+    "edit": "Modifica movimento",
+    "kind": "Tipo di movimento",
+    "expense": "Uscita",
+    "income": "Entrata",
+    "editing": "Modifica",
+    "amount": "Importo",
+    "category": "Categoria",
+    "tapToSave": "tocca per salvare",
+    "tapToChange": "tocca per cambiare",
+    "enterAmount": "Scrivi prima l'importo",
+    "invalidAmount": "Importo non valido",
+    "chooseCategory": "Scegli una categoria",
+    "dateChip": "Data: {date}",
+    "note": "Nota",
+    "noteChip": "Nota: {note}",
+    "save": "Salva",
+    "duplicate": "Duplica",
+    "delete": "Elimina movimento"
+  },
+  "dateSheet": {
+    "title": "Data",
+    "today": "Oggi",
+    "yesterday": "Ieri",
+    "other": "Altra data",
+    "confirm": "Conferma"
+  },
+  "noteSheet": {
+    "title": "Nota",
+    "remove": "Rimuovi nota",
+    "done": "Fatto"
+  },
+  "keypad": {
+    "label": "Tastierino",
+    "decimal": "Virgola",
+    "backspace": "Cancella",
+    "add": "Più",
+    "subtract": "Meno",
+    "multiply": "Per",
+    "divide": "Diviso"
+  },
+  "toast": {
+    "saved": "Salvato: {amount} · {category}",
+    "deleted": "Eliminato: {amount} · {category}",
+    "duplicated": "Duplicato: {amount} · {category}"
+  },
+  "presets": {
+    "categories": {
+      "groceries": "Spesa",
+      "home": "Casa",
+      "restaurants": "Ristoranti",
+      "transport": "Trasporti",
+      "leisure": "Svago",
+      "bills": "Bollette",
+      "health": "Salute",
+      "clothes": "Vestiti",
+      "gifts": "Regali",
+      "travel": "Viaggi",
+      "pets": "Animali",
+      "other": "Altro",
+      "salary": "Stipendio",
+      "refunds": "Rimborsi",
+      "giftsReceived": "Regali ricevuti",
+      "otherIncome": "Altre entrate"
+    },
+    "accounts": {
+      "cash": "Contanti"
+    }
   }
 }

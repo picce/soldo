@@ -5,8 +5,9 @@
 | Fase | Stato |
 |---|---|
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
-| 1 — Studio grafico | In chiusura: direzione **C · Taccuino**, mockup del nucleo e icona A · Quaderno approvati il 2026-11-05 ([docs/design](design/README.md)). Tema e lingua inglese implementati su `develop` (vedi le spec attive); manca la pubblicazione su `main` |
-| 2–7 | Da iniziare |
+| 1 — Studio grafico | Completata e pubblicata (2026-11-05): direzione **C · Taccuino** ([docs/design](design/README.md)), tema nell'app, icona A · Quaderno e lingua inglese (spec in [docs/specs/released](specs/released/)) |
+| 2 — Nucleo local-first | Completata e pubblicata con la versione 0.2.0 (2026-11-05): aggiunta rapida, Home, Movimenti, categorie, backup manuale e CSV, onboarding (spec in [docs/specs/released](specs/released/)) |
+| 3–7 | Da iniziare |
 
 ## Spec attive
 
@@ -14,8 +15,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| [Tema Taccuino nell'app](specs/tema-taccuino.md) | Fase 1 | da definire | Nessuna | Parziale |
-| [Lingua inglese](specs/lingua-inglese.md) | Fase 1 | da definire | Nessuna | Parziale |
+| [Sensazione da app nativa: movimento, gesti e risposta al tocco](specs/sensazione-nativa.md) | da definire | da definire | Nessuna | Bozza |
 
 ## Contesto
 
@@ -118,8 +118,8 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - **Direzione visiva**: tre direzioni esplorate, scelta **C · Taccuino** (2026-11-05). Specifiche e immagini in [docs/design](design/README.md).
 - **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si disegnano in FigCraft nel file `design/soldo.figcraft`, versionato nel repository, con le stesse variabili (chiaro/scuro) e gli stessi stili di testo. Gli screenshot vanno in `docs/design/render/`. Approvati il 2026-11-05, con l'icona A · Quaderno.
 - **Aggiunta rapida**: importo, poi un tocco sulla categoria salva il movimento. Il tastierino fa anche i conti (+ − × ÷); data, conto e nota sono facoltativi (di base: oggi, il conto predefinito, nessuna nota).
-- **Traduzione in codice**: token CSS del Taccuino mappati su quelli di Volver, font self-hosted, icone Phosphor locali, app shell e icona nel manifest. Spec: [Tema Taccuino nell'app](specs/tema-taccuino.md).
-- **Lingua inglese** (anticipata dalla Fase 5 il 2026-11-05): lingua dal dispositivo, scelta nelle Impostazioni. Spec: [Lingua inglese](specs/lingua-inglese.md).
+- **Traduzione in codice**: token CSS del Taccuino mappati su quelli di Volver, font self-hosted, icone Phosphor locali, app shell e icona nel manifest. Spec: [Tema Taccuino nell'app](specs/released/tema-taccuino.md).
+- **Lingua inglese** (anticipata dalla Fase 5 il 2026-11-05): lingua dal dispositivo, scelta nelle Impostazioni. Spec: [Lingua inglese](specs/released/lingua-inglese.md).
 - **Peso iniziale**: a fine Fase 0 la shell pesava 113,5 kB di JS e 67,2 kB di CSS (gzip). Senza utility né tema scuro di Volver, con i soli componenti Volver usati, le icone usate e i messaggi precompilati il bundle principale pesa 71,6 kB di JS e 13,2 kB di CSS (misurato il 2026-11-05).
 - **Microinterazioni** e pagina interna `/dev/ui`: spostate in Fase 2, insieme ai componenti a cui servono.
 - Le schermate delle fasi successive (Budget, Conti, Statistiche, Backup, Import) si disegnano **all'inizio di ciascuna fase**, con lo stesso sistema.
@@ -127,16 +127,20 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 **Fatto quando**: mockup approvati, tema applicato all'app shell, icona definitiva nel manifest.
 
 ### Fase 2 — Nucleo local-first (MVP usabile ogni giorno)
-- Schema Dexie v1 completo, seed delle categorie italiane di default (icone e colori dello studio grafico), conto "Contanti".
-- **Aggiunta rapida** stile Monefy: tasti − e + in Home, tastierino con calcolatrice, griglia categorie, salvataggio. Data, nota e conto sono opzionali.
-- **Home**: selettore di periodo (giorno/settimana/mese/anno/personalizzato) con swipe, rendiconto e barra per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata.
-- **Movimenti**: lista raggruppata per giorno, ricerca e filtri, modifica ed eliminazione con annulla.
+
+Le spec della fase sono nella tabella «Spec attive».
+
+- Schema Dexie v1 completo, seed delle categorie di default (icone e colori dello studio grafico), conto "Contanti". I nomi delle voci predefinite seguono la lingua dell'app finché l'utente non le rinomina.
+- **Aggiunta rapida** stile Monefy: tasti − e + in Home, tastierino con calcolatrice, griglia categorie, salvataggio. Data e nota sono opzionali; la scelta del conto compare con la Fase 4, quando i conti sono più di uno.
+- **Home**: selettore di periodo (giorno/settimana/mese/anno) con swipe, rendiconto e barra per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata. Proposta: il periodo personalizzato passa alla Fase 5, con le statistiche.
+- **Movimenti**: lista raggruppata per giorno, ricerca e filtri, modifica. Scorrendo una riga verso sinistra la si elimina, verso destra la si duplica con la data di oggi; in entrambi i casi un avviso offre «Annulla» per qualche secondo.
 - **Categorie**: CRUD, riordino, archiviazione.
 - **Backup manuale**: esportazione/importazione JSON (formato versionato, validato con Zod) ed esportazione CSV.
 - Onboarding: "Inizia da zero" oppure "Importa file", più l'invito a installare l'app.
 - **Microinterazioni**: transizioni tra periodi, feedback del tastierino (vibrazione su Android), animazione della barra per categoria.
 - Pagina interna `/dev/ui` con tutti i componenti, per verificarli in chiaro e in scuro.
-- Testi di ogni schermata in italiano e in inglese; nomi delle categorie predefinite nella lingua attiva al primo avvio (da confermare nella spec della fase).
+- Testi di ogni schermata in italiano e in inglese.
+- Le schermate non coperte dai mockup approvati (modifica, data, nota, filtri, Impostazioni, categorie, importazione) si disegnano prima in FigCraft.
 
 **Fatto quando**: si usa ogni giorno dal telefono anche in modalità aereo e i dati sopravvivono a chiusura e riavvio.
 
@@ -160,7 +164,7 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 **Fatto quando**: affitto e abbonamenti compaiono da soli, i saldi dei conti sono corretti, il budget del mese mostra quanto resta.
 
 ### Fase 5 — Statistiche, altri provider, rifiniture
-- **Statistiche**: trend mensile di entrate e uscite, andamento per categoria, confronto con il periodo precedente, media giornaliera.
+- **Statistiche**: trend mensile di entrate e uscite, andamento per categoria, confronto con il periodo precedente, media giornaliera, periodo personalizzato (se confermato lo spostamento dalla Fase 2).
 - Provider **Dropbox** (PKCE con refresh token direttamente dal browser, cartella `Apps/Soldo`, nessun backend) e **OneDrive** (stesso schema del Worker usato per Google).
 - **Cifratura opzionale** dei backup con passphrase (WebCrypto AES-GCM + PBKDF2), con un avviso chiaro: passphrase persa significa backup illeggibile.
 - **Blocco con PIN** opzionale (è un blocco dell'interfaccia, non una cifratura), accessibilità, lista virtualizzata per lo storico lungo.

@@ -17,6 +17,7 @@
     "skipLibCheck": true
   },
   "include": [
+    "build-info.ts",
     "vite.config.ts",
     "vitest.config.ts",
     "playwright.config.ts",

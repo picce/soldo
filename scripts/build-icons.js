@@ -8,20 +8,85 @@ import process from 'node:process'
 
 /** Icons used in the Light weight (the default). */
 const LIGHT = [
+  // Navigation
   'house',
   'receipt',
   'piggy-bank',
   'chart-pie-slice',
   'gear-six',
+  // Default categories and account (src/db/seed.ts)
+  'shopping-cart',
+  'fork-knife',
+  'bus',
+  'popcorn',
+  'lightning',
+  'first-aid',
+  't-shirt',
+  'gift',
+  'airplane-tilt',
+  'paw-print',
+  'dots-three-outline',
+  'hand-coins',
+  'arrow-counter-clockwise',
+  'wallet',
+  // Quick add and transaction editor
+  'x',
+  'calendar-blank',
+  'note-pencil',
+  'backspace',
+  'trash',
+  'copy',
+  'check',
+  // Home
+  'caret-left',
+  'caret-right',
+  'calendar-dot',
+  // Movimenti
+  'magnifying-glass',
+  'caret-down',
+  // Onboarding
+  'device-mobile',
+  // Settings: backup
+  'export',
+  'file-csv',
+  'file-arrow-up',
+  'warning',
+  // Categories: drag handle, move buttons, archive
+  'dots-six-vertical',
+  'caret-up',
+  'archive',
+  // Icons offered for a category (src/features/categories/icons.ts), besides the defaults
+  'shopping-bag',
+  'coffee',
+  'car',
+  'train',
+  'bicycle',
+  'gas-pump',
+  'pill',
+  'barbell',
+  'heart',
+  'television',
+  'game-controller',
+  'music-notes',
+  'book-open',
+  'graduation-cap',
+  'baby',
+  'briefcase',
 ]
 
-/** Icons also used in the Regular weight (active navigation item, − and + signs). */
+/** Icons also used in the Regular weight (active navigation item, − and + signs, solid states). */
 const REGULAR = [
   'house',
   'receipt',
   'piggy-bank',
   'chart-pie-slice',
   'gear-six',
+  'minus',
+  'plus',
+  // Checkboxes and the solid action under a swiped row
+  'check',
+  'trash',
+  'copy',
 ]
 
 const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)

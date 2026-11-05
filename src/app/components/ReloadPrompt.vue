@@ -2,11 +2,13 @@
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
 const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000
 const OFFLINE_READY_TIMEOUT = 6000
 
 const { t } = useI18n()
+const route = useRoute()
 
 const { needRefresh, offlineReady, updateServiceWorker } = useRegisterSW({
   immediate: true,
@@ -29,9 +31,12 @@ function close() {
   offlineReady.value = false
 }
 
-// The "ready offline" notice is informative only: it goes away by itself.
+// The "ready offline" notice is informative only: it goes away by itself. The welcome
+// page already says that Soldo works offline, and the notice would cover its logo.
 watch(offlineReady, (ready) => {
-  if (ready)
+  if (ready && route.name === 'welcome')
+    offlineReady.value = false
+  else if (ready)
     setTimeout(() => offlineReady.value = false, OFFLINE_READY_TIMEOUT)
 })
 </script>
@@ -68,7 +73,8 @@ watch(offlineReady, (ready) => {
 .reload-prompt {
   position: fixed;
   inset-inline: var(--page-gutter);
-  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem);
+  top: var(--toast-top, auto);
+  bottom: var(--toast-bottom, calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem));
   z-index: 20;
   display: flex;
   flex-direction: column;

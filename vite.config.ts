@@ -6,8 +6,10 @@ import { VolverResolver } from '@volverjs/ui-vue/resolvers/unplugin'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { appDefines } from './build-info'
 
 export default defineConfig({
+  define: appDefines(),
   plugins: [
     vue(),
     // Precompiles the messages in src/i18n/locales and aliases vue-i18n to its runtime build
@@ -46,6 +48,17 @@ export default defineConfig({
         background_color: '#f5f4ef',
         theme_color: '#f5f4ef',
         categories: ['finance', 'productivity'],
+        // Long press on the app icon (docs/specs/released/aggiunta-rapida.md).
+        shortcuts: [
+          {
+            name: 'Nuova uscita',
+            short_name: 'Uscita',
+            url: '/nuovo/uscita',
+            icons: [
+              { src: '/shortcut-expense.png', sizes: '192x192', type: 'image/png' },
+            ],
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
