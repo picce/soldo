@@ -25,7 +25,7 @@ import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
   width: 100%;
   max-width: 40rem;
   margin-inline: auto;
-  padding: calc(var(--spacing-md) + env(safe-area-inset-top)) var(--spacing-md)
-    calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--spacing-md));
+  padding: calc(0.75rem + env(safe-area-inset-top)) var(--page-gutter)
+    calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1.5rem);
 }
 </style>

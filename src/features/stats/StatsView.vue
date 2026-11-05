@@ -6,9 +6,5 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <AppPage :title="t('nav.stats')">
-    <p class="text-16 text-word-2 leading-relaxed">
-      {{ t('pages.stats.intro') }}
-    </p>
-  </AppPage>
+  <AppPage :title="t('nav.stats')" :intro="t('pages.stats.intro')" />
 </template>

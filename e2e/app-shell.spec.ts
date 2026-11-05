@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test('mostra la navigazione e cambia sezione', async ({ page }) => {
+test('shows the navigation and switches section', async ({ page }) => {
   await page.goto('/')
   const nav = page.getByRole('navigation', { name: 'Navigazione principale' })
   await expect(nav).toBeVisible()
@@ -11,7 +11,12 @@ test('mostra la navigazione e cambia sezione', async ({ page }) => {
   await expect(page).toHaveTitle('Movimenti · Soldo')
 })
 
-test('espone il manifest per l\'installazione', async ({ page, request }) => {
+test('shows the logo as the home heading', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.getByRole('heading', { level: 1, name: 'Soldo' })).toBeVisible()
+})
+
+test('exposes the manifest for installation', async ({ page, request }) => {
   await page.goto('/')
   const href = await page.locator('link[rel="manifest"]').getAttribute('href')
   expect(href).toBeTruthy()
@@ -19,10 +24,13 @@ test('espone il manifest per l\'installazione', async ({ page, request }) => {
   const manifest = await (await request.get(href!)).json()
   expect(manifest.name).toBe('Soldo')
   expect(manifest.display).toBe('standalone')
-  expect(manifest.icons.some((icon: { purpose?: string }) => icon.purpose === 'maskable')).toBe(true)
+  expect(manifest.theme_color).toBe('#f5f4ef')
+  const purposes = manifest.icons.map((icon: { purpose?: string }) => icon.purpose ?? 'any')
+  expect(purposes).toContain('any')
+  expect(purposes).toContain('maskable')
 })
 
-test('funziona offline dopo la prima visita', async ({ page, context }) => {
+test('works offline after the first visit', async ({ page, context }) => {
   await page.goto('/')
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready
@@ -33,12 +41,12 @@ test('funziona offline dopo la prima visita', async ({ page, context }) => {
   await page.reload()
   await expect(page.getByRole('navigation', { name: 'Navigazione principale' })).toBeVisible()
 
-  // Un deep link mai visitato deve essere servito dal service worker (navigateFallback).
+  // A deep link never visited must be served by the service worker (navigateFallback).
   await page.goto('/statistiche')
   await expect(page.getByRole('heading', { level: 1, name: 'Statistiche' })).toBeVisible()
 })
 
-test('l\'API del Worker risponde', async ({ request }) => {
+test('the Worker API responds', async ({ request }) => {
   const response = await request.get('/api/health')
   expect(response.ok()).toBe(true)
   expect(await response.json()).toEqual({ ok: true, service: 'soldo' })

@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import { cloudflare } from '@cloudflare/vite-plugin'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import vue from '@vitejs/plugin-vue'
 import { VolverResolver } from '@volverjs/ui-vue/resolvers/unplugin'
 import Components from 'unplugin-vue-components/vite'
@@ -9,13 +10,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [
     vue(),
-    // Auto-import dei soli componenti Volver (Vv*). I componenti locali si importano esplicitamente.
-    // Lo stile dei componenti è importato a mano in src/theme/volver.css, dentro i cascade layer.
+    // Precompiles the messages in src/i18n/locales and aliases vue-i18n to its runtime build
+    // (no message compiler in the bundle).
+    VueI18nPlugin({
+      include: fileURLToPath(new URL('./src/i18n/locales/**', import.meta.url)),
+    }),
+    // Auto-imports Volver components (Vv*) only. Local components are imported explicitly.
+    // Component styles are imported by hand in src/theme/volver.css, inside cascade layers.
     Components({
       dirs: [],
       dts: 'src/components.d.ts',
       resolvers: [
-        VolverResolver({ importStyle: false }),
+        VolverResolver({ importStyle: false, cherryPick: true }),
       ],
     }),
     VitePWA({
@@ -36,8 +42,9 @@ export default defineConfig({
         scope: '/',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
-        theme_color: '#166abd',
+        // Paper color of the Taccuino theme (docs/design/README.md).
+        background_color: '#f5f4ef',
+        theme_color: '#f5f4ef',
         categories: ['finance', 'productivity'],
       },
       workbox: {

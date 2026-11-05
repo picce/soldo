@@ -1,4 +1,5 @@
-import type { RouteRecordRaw, RouterHistory } from 'vue-router'
+import type { RouteLocationNormalized, RouteRecordRaw, RouterHistory } from 'vue-router'
+import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { i18n } from '@/i18n'
 
@@ -42,12 +43,16 @@ export const routes: RouteRecordRaw[] = [
 export function createAppRouter(history: RouterHistory = createWebHistory()) {
   const router = createRouter({ history, routes })
 
-  router.afterEach((to) => {
+  function updateTitle(route: RouteLocationNormalized) {
     const appName = i18n.global.t('app.name')
-    document.title = to.meta.titleKey && to.name !== 'home'
-      ? `${i18n.global.t(to.meta.titleKey)} · ${appName}`
+    document.title = route.meta.titleKey && route.name !== 'home'
+      ? `${i18n.global.t(route.meta.titleKey)} · ${appName}`
       : appName
-  })
+  }
+
+  router.afterEach(to => updateTitle(to))
+  // The title follows the language too, which can change without navigating.
+  watch(i18n.global.locale, () => updateTitle(router.currentRoute.value))
 
   return router
 }

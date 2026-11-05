@@ -1,9 +1,9 @@
 /**
- * Worker Cloudflare di Soldo.
+ * Soldo's Cloudflare Worker.
  *
- * Serve solo le rotte /api/* (vedi `run_worker_first` in wrangler.jsonc); tutto il resto
- * sono static assets della PWA. Il Worker è stateless e non riceve mai dati di spesa:
- * dalla Fase 3 gestirà soltanto lo scambio e il rinnovo dei token OAuth di Google Drive.
+ * It only serves /api/* (see `run_worker_first` in wrangler.jsonc); everything else is the
+ * PWA's static assets. The Worker is stateless and never receives expense data: from Phase 3
+ * it will only exchange and refresh Google Drive OAuth tokens.
  */
 export default {
   async fetch(request) {

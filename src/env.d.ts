@@ -6,7 +6,7 @@ import 'vue-router'
 
 declare module 'vue-router' {
   interface RouteMeta {
-    /** Chiave i18n del titolo della pagina, usata per `document.title`. */
+    /** i18n key of the page title, used for `document.title`. */
     titleKey?: string
   }
 }

@@ -1,0 +1,10 @@
+/*
+ * IBM Plex, self-hosted so the app works offline (docs/design/README.md, "Tipografia").
+ * Latin subset only; the service worker precaches the woff2 files.
+ */
+@import '@fontsource/ibm-plex-sans/latin-400.css';
+@import '@fontsource/ibm-plex-sans/latin-500.css';
+@import '@fontsource/ibm-plex-sans/latin-600.css';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-mono/latin-600.css';

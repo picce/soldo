@@ -1,0 +1,117 @@
+/*
+ * Taccuino design tokens (docs/design/README.md, "Colori").
+ *
+ * This file is not in a cascade layer, so it always wins over Volver's layered CSS.
+ * Light values live on :root; dark values follow the system theme and can be forced with
+ * `class="theme theme--dark"` (or `theme theme--light`) on <html> or on a subtree.
+ */
+:root,
+.theme {
+  --color-paper: #f5f4ef;
+  --color-card: #fff;
+  --color-grid: #e4e6ec;
+  --color-line: #d9d7cf;
+  --color-ink: #161616;
+  --color-ink-2: #5f5e59;
+  --color-pen: #2340c8;
+  --color-on-pen: #fff;
+  --color-income: #1f7a45;
+  --color-category-1: #3a66c4;
+  --color-category-2: #d9663b;
+  --color-category-3: #1f9a86;
+  --color-category-4: #a97e10;
+  --color-category-5: #c2588a;
+  --color-category-6: #5b8c2a;
+  --color-category-7: #7059c9;
+  --color-category-8: #c84444;
+  --color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.theme--light) {
+    --color-paper: #141414;
+    --color-card: #1c1c1c;
+    --color-grid: #1f2128;
+    --color-line: #34342f;
+    --color-ink: #ecebe6;
+    --color-ink-2: #a3a29c;
+    --color-pen: #7c93ff;
+    --color-on-pen: #0f1530;
+    --color-income: #4cc184;
+    --color-category-1: #5c86e0;
+    --color-category-2: #d8653f;
+    --color-category-3: #28a08a;
+    --color-category-4: #b98a1a;
+    --color-category-5: #cc6494;
+    --color-category-6: #6a9a3c;
+    --color-category-7: #8f7be0;
+    --color-category-8: #e06464;
+    --color-scheme: dark;
+  }
+}
+
+.theme.theme--dark {
+  --color-paper: #141414;
+  --color-card: #1c1c1c;
+  --color-grid: #1f2128;
+  --color-line: #34342f;
+  --color-ink: #ecebe6;
+  --color-ink-2: #a3a29c;
+  --color-pen: #7c93ff;
+  --color-on-pen: #0f1530;
+  --color-income: #4cc184;
+  --color-category-1: #5c86e0;
+  --color-category-2: #d8653f;
+  --color-category-3: #28a08a;
+  --color-category-4: #b98a1a;
+  --color-category-5: #cc6494;
+  --color-category-6: #6a9a3c;
+  --color-category-7: #8f7be0;
+  --color-category-8: #e06464;
+  --color-scheme: dark;
+}
+
+/*
+ * Volver tokens mapped onto the Taccuino ones, so Vv components follow both themes.
+ * Declared on .theme too: a forced subtree recomputes them from its own colors.
+ */
+:root,
+.theme {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+  --rounded: 0.5rem;
+
+  --color-brand: var(--color-pen);
+  --color-brand-contrast: var(--color-on-pen);
+  --color-brand-graphic: var(--color-pen);
+  --color-word: var(--color-ink);
+  --color-word-1: var(--color-ink);
+  --color-word-2: var(--color-ink-2);
+  --color-word-3: var(--color-ink-2);
+  --color-surface: var(--color-paper);
+  --color-surface-1: var(--color-card);
+
+  /* Buttons: primary in pen, secondary on card with an ink border; both 1px bordered. */
+  --vv-button-border-radius: var(--rounded);
+  --vv-button-font-weight: 600;
+  --vv-button-text-shadow: none;
+  --vv-button-modifier-primary-background: var(--color-pen);
+  --vv-button-modifier-primary-border-color: var(--color-pen);
+  --vv-button-modifier-primary-color: var(--color-on-pen);
+  --vv-button-modifier-primary-text-shadow: none;
+  --vv-button-modifier-primary-state-hover-background: var(--color-pen);
+  --vv-button-modifier-primary-state-hover-border-color: var(--color-pen);
+  --vv-button-modifier-primary-state-active-background: var(--color-pen);
+  --vv-button-modifier-primary-state-active-border-color: var(--color-pen);
+  --vv-button-modifier-primary-state-pressed-background: var(--color-pen);
+  --vv-button-modifier-primary-state-pressed-border-color: var(--color-pen);
+  --vv-button-modifier-primary-state-focus-visible-outline: 2px solid var(--color-pen);
+  --vv-button-modifier-secondary-background: var(--color-card);
+  --vv-button-modifier-secondary-border-color: var(--color-ink);
+  --vv-button-modifier-secondary-color: var(--color-ink);
+  --vv-button-modifier-secondary-text-shadow: none;
+  --vv-button-modifier-secondary-state-hover-background: var(--color-card);
+  --vv-button-modifier-secondary-state-active-background: var(--color-paper);
+  --vv-button-modifier-secondary-state-pressed-background: var(--color-paper);
+  --vv-button-modifier-secondary-state-focus-visible-outline: 2px solid var(--color-pen);
+}

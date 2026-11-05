@@ -3,22 +3,25 @@ import {
   minimal2023Preset as preset,
 } from '@vite-pwa/assets-generator/config'
 
-// Icone provvisorie: verranno sostituite dal logo definitivo dello studio grafico (Fase 1).
-const BRAND = '#166abd'
-
+// public/logo.svg is the full-bleed "A · Quaderno" icon (docs/design/README.md, "Identità").
+// Its mark already sits inside the maskable safe zone, so no variant adds padding.
 export default defineConfig({
   headLinkOptions: {
     preset: '2023',
   },
   preset: {
     ...preset,
+    transparent: {
+      ...preset.transparent,
+      padding: 0,
+    },
     maskable: {
       ...preset.maskable,
-      resizeOptions: { background: BRAND },
+      padding: 0,
     },
     apple: {
       ...preset.apple,
-      resizeOptions: { background: BRAND },
+      padding: 0,
     },
   },
   images: ['public/logo.svg'],

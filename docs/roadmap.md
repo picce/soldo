@@ -4,9 +4,18 @@
 
 | Fase | Stato |
 |---|---|
-| 0 — Fondamenta | Completata in locale (2026-11-04); manca il collegamento a Cloudflare per il primo deploy |
-| 1 — Studio grafico | Da iniziare |
+| 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
+| 1 — Studio grafico | In chiusura: direzione **C · Taccuino**, mockup del nucleo e icona A · Quaderno approvati il 2026-11-05 ([docs/design](design/README.md)). Tema e lingua inglese implementati su `develop` (vedi le spec attive); manca la pubblicazione su `main` |
 | 2–7 | Da iniziare |
+
+## Spec attive
+
+Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec completate vanno in `docs/specs/released/` ed escono da questa tabella.
+
+| Spec | Ondata | Effort | Dipendenze | Stato |
+|---|---|---|---|---|
+| [Tema Taccuino nell'app](specs/tema-taccuino.md) | Fase 1 | da definire | Nessuna | Parziale |
+| [Lingua inglese](specs/lingua-inglese.md) | Fase 1 | da definire | Nessuna | Parziale |
 
 ## Contesto
 
@@ -29,17 +38,17 @@ Repo: `c:\dev\code\pigeon\soldo` (vuoto, remote `github.com/picce/soldo`). Ambie
 
 | Tema | Scelta | Motivo |
 |---|---|---|
-| Frontend | Vue 3 + Vite + TypeScript, `@volverjs/ui-vue` + `@volverjs/style` con tema personalizzato, vue-router, Pinia, vue-i18n (IT, pronto per EN) | Stack noto, skill Volver disponibili |
+| Frontend | Vue 3 + Vite + TypeScript, `@volverjs/ui-vue` + `@volverjs/style` con tema personalizzato, vue-router, Pinia, vue-i18n (italiano e inglese, messaggi precompilati) | Stack noto, skill Volver disponibili |
 | Form e validazione | `@volverjs/form-vue` + Zod (gli schemi Zod servono anche a validare backup e import) | Un solo modello di validazione |
 | Dati locali | IndexedDB con **Dexie 4** e query reattive (`liveQuery` in un composable `useLiveQuery`) | Local-first, offline in lettura e scrittura |
 | PWA | `vite-plugin-pwa`: precache dell'app shell, aggiornamento "nuova versione disponibile", manifest con icone maskable e shortcut "Nuova spesa", `navigator.storage.persist()` | Installabile, funziona in modalità aereo |
 | Backup | Interfaccia `BackupProvider`. **Google Drive** per primo, poi Dropbox e OneDrive | I dati restano nello spazio dell'utente |
 | Hosting | **Cloudflare**: Workers con static assets, che Cloudflare oggi consiglia al posto di Pages per i nuovi progetti (stesso piano gratuito). La PWA e la funzione per il token Google stanno in un unico deploy | Gratis, banda statica illimitata, uso commerciale consentito. Per crescere: Workers Paid 5 $/mese, più D1/R2/KV se servisse |
 | Database server | **Nessuno** per ora: Neon non serve | Lo rivalutiamo solo se arrivano condivisione o account |
-| Design | Studio grafico dedicato (Fase 1) con mockup in Figma, tradotto in token `@volverjs/style` | Aspetto riconoscibile, non generico |
+| Design | Studio grafico dedicato (Fase 1), tutto nel repository: mockup in [FigCraft](https://github.com/storytold/figcraft) (`design/soldo.figcraft`, editor open source in locale), regole e screenshot in `docs/design/`. Niente Figma. Nel codice: token CSS in `src/theme/tokens.css`, mappati sui token di `@volverjs/style` | Aspetto riconoscibile, non generico; il design è versionato con il codice |
 | Repo | Una sola app Vite (niente Nx/monorepo-starter: Fastify e Postgres non servono) + `worker/` per le API | Semplicità |
 | CI/CD | GitHub Actions (lint, typecheck, unit, e2e, build) + Cloudflare Workers Builds con URL di anteprima per branch | Gratis |
-| Grafici | Componenti SVG fatti in casa (torta/ciambella stile Monefy, barre/trend), seguendo la skill `dataviz` | Leggeri e coerenti con il tema |
+| Grafici | Componenti SVG fatti in casa (barra per categoria, barre/trend), seguendo la skill `dataviz` | Leggeri e coerenti con il tema |
 | Date e importi | Importi in **centesimi interi** (formattati con `Intl.NumberFormat('it-IT')`), date `YYYY-MM-DD` locali, `date-fns` per i periodi | Niente errori di arrotondamento né di fuso orario |
 
 ### Perché serve una funzione serverless per Google Drive
@@ -75,15 +84,15 @@ Lo schema include fin da subito `accounts` con un conto predefinito "Contanti" e
 ```
 src/
   app/          router, layout con bottom nav, plugin (Volver, i18n, PWA)
-  theme/        token e contesto SCSS di @volverjs/style dallo studio grafico
+  theme/        token CSS del Taccuino, font, CSS di Volver in cascade layer
   db/           schema Dexie, migrazioni, repository, seed delle categorie
   domain/       TS puro e testabile: money, periodi, saldi, budget, ricorrenze
   backup/       engine (snapshot, gzip, retention, trigger), formato e migrazioni
     providers/  file, google-drive (poi dropbox, onedrive)
   import/       parser (CSV/XLSX/OFX/QIF/CAMT.053), mappatura, deduplicazione, regole
   features/     home, transactions, accounts, budgets, stats, settings, onboarding, import
-  components/   Donut, Keypad (con calcolatrice), CategoryGrid, PeriodSwitcher, AmountText
-  i18n/
+  components/   CategoryBar, Keypad (con calcolatrice), CategoryGrid, PeriodSwitcher, AmountText
+  i18n/         testi in italiano e inglese (JSON), scelta della lingua
 worker/         Worker Cloudflare: static assets + /api/google/* (poi /api/bank/* se approvato)
 ```
 
@@ -106,10 +115,13 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 ### Fase 1 — Studio grafico ad-hoc
 - **Identità**: logo e icona dell'app (anche maskable e per iOS), tono di voce dei testi.
 - **Linguaggio visivo**: palette chiara e scura, tipografia (font self-hosted, così funziona offline), griglia e spaziature, raggi e ombre, un unico set di icone per le categorie, colori delle categorie distinguibili e accessibili in entrambi i temi (validati con il metodo della skill `dataviz`).
-- **Mockup ad alta fedeltà in Figma** delle schermate del nucleo: Home con ciambella e selettore di periodo, aggiunta rapida (tastierino e categorie), Movimenti, Onboarding, stati vuoti. I mockup li posso preparare io con il connettore Figma, oppure li fa un designer e io li implemento.
-- **Microinterazioni**: transizioni tra periodi, feedback del tastierino (vibrazione su Android), animazione della ciambella.
-- **Traduzione in codice**: token e contesto SCSS di `@volverjs/style`, tema Volver personalizzato, pagina interna `/dev/ui` con tutti i componenti per verificarli.
-- **Peso iniziale**: a fine Fase 0 la shell pesa ~112 kB di JS e ~68 kB di CSS (gzip). Obiettivo: dimezzarlo compilando via SCSS solo le utility e i componenti usati, con una collezione di icone che contenga solo quelle usate, e con i messaggi i18n precompilati.
+- **Direzione visiva**: tre direzioni esplorate, scelta **C · Taccuino** (2026-11-05). Specifiche e immagini in [docs/design](design/README.md).
+- **Mockup delle schermate del nucleo**: Home con rendiconto, barra per categoria e selettore di periodo; aggiunta rapida (tastierino e categorie); Movimenti; Onboarding; stati vuoti. Si disegnano in FigCraft nel file `design/soldo.figcraft`, versionato nel repository, con le stesse variabili (chiaro/scuro) e gli stessi stili di testo. Gli screenshot vanno in `docs/design/render/`. Approvati il 2026-11-05, con l'icona A · Quaderno.
+- **Aggiunta rapida**: importo, poi un tocco sulla categoria salva il movimento. Il tastierino fa anche i conti (+ − × ÷); data, conto e nota sono facoltativi (di base: oggi, il conto predefinito, nessuna nota).
+- **Traduzione in codice**: token CSS del Taccuino mappati su quelli di Volver, font self-hosted, icone Phosphor locali, app shell e icona nel manifest. Spec: [Tema Taccuino nell'app](specs/tema-taccuino.md).
+- **Lingua inglese** (anticipata dalla Fase 5 il 2026-11-05): lingua dal dispositivo, scelta nelle Impostazioni. Spec: [Lingua inglese](specs/lingua-inglese.md).
+- **Peso iniziale**: a fine Fase 0 la shell pesava 113,5 kB di JS e 67,2 kB di CSS (gzip). Senza utility né tema scuro di Volver, con i soli componenti Volver usati, le icone usate e i messaggi precompilati il bundle principale pesa 71,6 kB di JS e 13,2 kB di CSS (misurato il 2026-11-05).
+- **Microinterazioni** e pagina interna `/dev/ui`: spostate in Fase 2, insieme ai componenti a cui servono.
 - Le schermate delle fasi successive (Budget, Conti, Statistiche, Backup, Import) si disegnano **all'inizio di ciascuna fase**, con lo stesso sistema.
 
 **Fatto quando**: mockup approvati, tema applicato all'app shell, icona definitiva nel manifest.
@@ -117,11 +129,14 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 ### Fase 2 — Nucleo local-first (MVP usabile ogni giorno)
 - Schema Dexie v1 completo, seed delle categorie italiane di default (icone e colori dello studio grafico), conto "Contanti".
 - **Aggiunta rapida** stile Monefy: tasti − e + in Home, tastierino con calcolatrice, griglia categorie, salvataggio. Data, nota e conto sono opzionali.
-- **Home**: selettore di periodo (giorno/settimana/mese/anno/personalizzato) con swipe, ciambella per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata.
+- **Home**: selettore di periodo (giorno/settimana/mese/anno/personalizzato) con swipe, rendiconto e barra per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata.
 - **Movimenti**: lista raggruppata per giorno, ricerca e filtri, modifica ed eliminazione con annulla.
 - **Categorie**: CRUD, riordino, archiviazione.
 - **Backup manuale**: esportazione/importazione JSON (formato versionato, validato con Zod) ed esportazione CSV.
 - Onboarding: "Inizia da zero" oppure "Importa file", più l'invito a installare l'app.
+- **Microinterazioni**: transizioni tra periodi, feedback del tastierino (vibrazione su Android), animazione della barra per categoria.
+- Pagina interna `/dev/ui` con tutti i componenti, per verificarli in chiaro e in scuro.
+- Testi di ogni schermata in italiano e in inglese; nomi delle categorie predefinite nella lingua attiva al primo avvio (da confermare nella spec della fase).
 
 **Fatto quando**: si usa ogni giorno dal telefono anche in modalità aereo e i dati sopravvivono a chiusura e riavvio.
 
@@ -148,7 +163,7 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - **Statistiche**: trend mensile di entrate e uscite, andamento per categoria, confronto con il periodo precedente, media giornaliera.
 - Provider **Dropbox** (PKCE con refresh token direttamente dal browser, cartella `Apps/Soldo`, nessun backend) e **OneDrive** (stesso schema del Worker usato per Google).
 - **Cifratura opzionale** dei backup con passphrase (WebCrypto AES-GCM + PBKDF2), con un avviso chiaro: passphrase persa significa backup illeggibile.
-- **Blocco con PIN** opzionale (è un blocco dell'interfaccia, non una cifratura), lingua inglese, accessibilità, lista virtualizzata per lo storico lungo.
+- **Blocco con PIN** opzionale (è un blocco dell'interfaccia, non una cifratura), accessibilità, lista virtualizzata per lo storico lungo.
 - Una passata con la skill `de-slopify` sull'interfaccia, per tenere fede allo studio grafico.
 
 ### Fase 6 — Movimenti dai conti correnti
@@ -190,7 +205,7 @@ Ogni fase si chiude con un deploy funzionante e un checkpoint di revisione insie
 - Account Cloudflare (gratuito); progetto Google Cloud e client OAuth "Web application" (gratuito).
 - **Google in modalità Testing**: massimo 100 utenti di test, login da rifare ogni 7 giorni. Va bene per l'uso personale iniziale.
 - Per aprire l'app ad altri: pubblicazione in Production con verifica del brand (homepage, privacy policy, dominio verificato). Consigliato un dominio proprio (~10–15 €/anno), che è l'unico costo prevedibile ed è rimandabile.
-- Studio grafico: gratuito se i mockup li preparo io in Figma; il costo di un eventuale designer esterno è a parte.
+- Studio grafico: gratuito, perché i mockup sono fatti con FigCraft (open source) e versionati nel repository; il costo di un eventuale designer esterno è a parte.
 - Open Banking: costo da definire nello studio 6b.
 
 ## Rischi
