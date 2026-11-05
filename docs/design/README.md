@@ -187,7 +187,7 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 |---|---|
 | Categorie | vedi la tabella delle categorie predefinite; entrate: `hand-coins` |
 | Navigazione: Home, Movimenti, Budget, Statistiche, Impostazioni | `house`, `receipt`, `piggy-bank`, `chart-pie-slice`, `gear-six` |
-| Home | `wallet`, `caret-down`, `caret-left`, `caret-right`, `minus`, `plus` |
+| Home | `wallet`, `caret-down`, `caret-left`, `caret-right`, `calendar-dot` (Oggi), `minus`, `plus` |
 | Aggiunta rapida | `x`, `calendar-blank`, `wallet`, `note-pencil`, `backspace` |
 | Movimenti | `magnifying-glass`, `x` |
 | Onboarding | `receipt`, `device-mobile`, `cloud-check`, `export` (il Condividi di iOS) |
@@ -198,6 +198,7 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 ### Home
 
 - **Schede del periodo** (Giorno, Settimana, Mese, Anno): solo testo. La scheda attiva è in `inchiostro`, peso 600, sottolineata in `biro` da 2 px. Sotto la riga c'è una linea.
+- **Oggi**: quando il periodo mostrato non contiene oggi, in alto a destra compare il pulsante «Oggi» (come i pulsanti Data e Nota dell'aggiunta rapida, con l'icona `calendar-dot`), che riporta al periodo di oggi. Non è nel mockup, che mostra il mese corrente.
 - **Rendiconto**: scheda su `superficie`. Contiene le righe «Entrate ····· 2.450,00» e «Uscite ····· −1.284,30», con i puntini tratteggiati 1/3 px in `linea`. Sotto c'è una riga piena in `inchiostro`, poi il saldo in Mono 32.
 - **Barra delle categorie**: prende il posto della ciambella delle altre direzioni. È alta 10 px, con i segmenti separati da 2 px e gli estremi arrotondati a 3 px.
 - **Righe categoria**: quadratino da 10 px nel colore della categoria, nome, puntini, importo e percentuale.

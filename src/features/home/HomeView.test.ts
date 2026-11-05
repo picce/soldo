@@ -70,7 +70,8 @@ describe('homeView', () => {
     }, -1).anchor)
 
     const wrapper = await mountHome()
-    await vi.waitFor(() => expect(wrapper.findAll('.category-rows li')).toHaveLength(2))
+    // Totals and category names come from two queries: wait for both.
+    await vi.waitFor(() => expect(wrapper.findAll('.category-rows__name').map(name => name.text())).toEqual(['Spesa', 'Casa']))
 
     expect(summaryLines(wrapper)).toEqual([
       ['Entrate', '2.450,00'],
@@ -106,8 +107,14 @@ describe('homeView', () => {
     const wrapper = await mountHome()
     await vi.waitFor(() => expect(wrapper.findAll('.category-rows li')).toHaveLength(1))
 
+    expect(wrapper.find('button[aria-label="Torna a oggi"]').exists()).toBe(false)
     await wrapper.get('button[aria-label="Periodo precedente"]').trigger('click')
     await vi.waitFor(() => expect(wrapper.find('.home__empty').exists()).toBe(true))
+
+    // Away from today, «Oggi» brings the current period back.
+    await wrapper.get('button[aria-label="Torna a oggi"]').trigger('click')
+    await vi.waitFor(() => expect(wrapper.findAll('.category-rows li')).toHaveLength(1))
+    expect(wrapper.find('button[aria-label="Torna a oggi"]').exists()).toBe(false)
   })
 
   it('links the buttons to a new expense and a new income', async () => {

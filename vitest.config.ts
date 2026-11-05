@@ -30,5 +30,8 @@ export default defineConfig({
     environment: 'happy-dom',
     include: ['src/**/*.test.ts', 'worker/**/*.test.ts'],
     setupFiles: ['fake-indexeddb/auto'],
+    // The first lazy page import of a test file (e.g. the Home behind `/`) can take a few
+    // seconds when every file runs at once on a busy machine: 5 s was not always enough.
+    testTimeout: 15_000,
   },
 })

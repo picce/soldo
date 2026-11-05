@@ -31,7 +31,9 @@
     "month": "Month",
     "year": "Year",
     "previous": "Previous period",
-    "next": "Next period"
+    "next": "Next period",
+    "today": "Today",
+    "backToToday": "Back to today"
   },
   "home": {
     "summary": "Statement",

@@ -31,7 +31,9 @@
     "month": "Mese",
     "year": "Anno",
     "previous": "Periodo precedente",
-    "next": "Periodo successivo"
+    "next": "Periodo successivo",
+    "today": "Oggi",
+    "backToToday": "Torna a oggi"
   },
   "home": {
     "summary": "Rendiconto",

@@ -1,8 +1,8 @@
 import type { Period, PeriodUnit } from '@/domain/periods'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { today } from '@/domain/dates'
-import { isInPeriod, shiftPeriod } from '@/domain/periods'
+import { isInPeriod, periodRange, shiftPeriod } from '@/domain/periods'
 
 /**
  * Period shown by the Home (docs/specs/home-rendiconto.md). It lives in memory while the
@@ -31,5 +31,26 @@ export const usePeriodStore = defineStore('period', () => {
     period.value = shiftPeriod(period.value, step)
   }
 
-  return { period, direction, setUnit, shift }
+  /** True while the period shown includes today: the «Oggi» button is not needed. */
+  const isCurrent = computed(() => isInPeriod(today(), period.value))
+
+  /** Back to the period of the same unit that includes today, sliding from the right side. */
+  function goToToday() {
+    const current = today()
+    if (isInPeriod(current, period.value))
+      return
+    direction.value = current > periodRange(period.value).to
+      ? 1
+      : -1
+    period.value = { unit: period.value.unit, anchor: current }
+  }
+
+  return {
+    period,
+    direction,
+    isCurrent,
+    setUnit,
+    shift,
+    goToToday,
+  }
 })

@@ -40,6 +40,7 @@ const LIGHT = [
   // Home
   'caret-left',
   'caret-right',
+  'calendar-dot',
   // Movimenti
   'magnifying-glass',
   'caret-down',

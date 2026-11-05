@@ -46,7 +46,7 @@ describe('settingsView', () => {
     const wrapper = mountSettings()
     const row = wrapper.get('[aria-labelledby="settings-categories"] a')
     expect(row.attributes('href')).toBe('/impostazioni/categorie')
-    await vi.waitFor(() => expect(row.text()).toContain('11 uscite · 4 entrate'))
+    await vi.waitFor(() => expect(row.text()).toContain('11 uscite · 4 entrate'), { timeout: 5000 })
   })
 
   it('shows the app version', () => {

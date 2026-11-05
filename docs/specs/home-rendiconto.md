@@ -14,6 +14,7 @@ I mockup approvati sono [Home](../design/render/home-chiaro.png) e [Home senza m
 - **Obiettivi**:
   - schede Giorno, Settimana, Mese, Anno; titolo del periodo con le frecce; scorrimento orizzontale per passare al periodo precedente o successivo;
   - il periodo scelto resta finché l'app è aperta (tornando alla Home non si riparte da oggi); all'avvio è il mese corrente;
+  - lontano da oggi compare in alto a destra il pulsante «Oggi», che con un tocco torna al periodo che contiene oggi, con la stessa scheda (aggiunto il 2026-11-05 su richiesta dopo la prova sul telefono);
   - rendiconto: entrate, uscite, riga in inchiostro e saldo con il segno;
   - barra per categoria come nel mockup: segmenti nei colori delle categorie separati da 2 px; con più di otto categorie restano le prime sette e le altre diventano «Altre» in `--color-ink-2` (un gruppo di una sola categoria ne nasconderebbe solo il nome);
   - righe per categoria (quadratino, nome, puntini, importo, percentuale); toccandone una si apre Movimenti filtrato per quella categoria e quel periodo;
@@ -32,6 +33,7 @@ I mockup approvati sono [Home](../design/render/home-chiaro.png) e [Home senza m
 - `src/features/home/useHorizontalSwipe.ts` (nuovo): lo scorrimento orizzontale sul rendiconto e sulle categorie, che hanno `touch-action: pan-y` (lo scorrimento verticale resta al browser).
 - `src/components/PeriodSwitcher.vue` (nuovo): schede (con `role="tablist"`), titolo e frecce da 34 px con area tattile di 44 px; emette il nuovo periodo. Lo scorrimento si riconosce con i pointer event (almeno 60 px in orizzontale e più che in verticale).
 - `src/stores/period.ts` (nuovo, Pinia): periodo corrente in memoria e direzione dell'ultimo spostamento (per l'animazione del titolo). Cambiando scheda, se il periodo mostrato contiene oggi il nuovo periodo contiene oggi; altrimenti parte dal primo giorno del periodo mostrato.
+- Pulsante «Oggi»: un `ActionChip` con l'icona `calendar-dot` nello spazio delle azioni dell'intestazione, nome accessibile «Torna a oggi». Compare solo quando il periodo mostrato non contiene oggi (`isCurrent` nello store); `goToToday` tiene la scheda e anima il titolo nella direzione giusta. Quando in Fase 4 arriverà il selettore del conto, starà accanto a «Oggi».
 - `src/features/home/SummaryCard.vue` (nuovo): le due righe con i puntini (classe `.dot-leader` in `src/theme/app.css`) e il saldo; usa `AmountText`, che ha la variante `large` per il saldo. Le entrate sono verdi anche a zero, come nel mockup della Home vuota.
 - `src/components/CategoryBar.vue` (nuovo): segmenti in `div` con larghezze in percentuale; `role="img"` con `aria-label` che riassume le prime categorie; le righe sotto sono l'equivalente testuale.
 - `src/features/home/CategoryRows.vue` (nuovo): righe con collegamento a `/movimenti?categoria=<id>&dal=<from>&al=<to>`; per «Altre» `categoria` elenca gli id separati da virgole.
@@ -43,9 +45,9 @@ I mockup approvati sono [Home](../design/render/home-chiaro.png) e [Home senza m
 
 - `src/domain/category-share.test.ts`: raggruppamento, percentuali che sommano a 100, colori stabili.
 - `src/components/PeriodSwitcher.test.ts`: schede, frecce, tasti freccia, etichette in `it` ed `en`.
-- `src/stores/period.test.ts`, `src/features/home/useHorizontalSwipe.test.ts`.
+- `src/stores/period.test.ts` (anche il ritorno a oggi dal passato e dal futuro), `src/features/home/useHorizontalSwipe.test.ts`.
 - `src/features/home/HomeView.test.ts`: dati di prova e stato vuoto.
-- `e2e/home.spec.ts` (nuovo): dopo aver aggiunto due uscite e un'entrata, rendiconto e righe mostrano gli importi giusti; il passaggio al mese precedente mostra lo stato vuoto.
+- `e2e/home.spec.ts` (nuovo): dopo aver aggiunto due uscite e un'entrata, rendiconto e righe mostrano gli importi giusti; il passaggio al mese precedente mostra lo stato vuoto e «Oggi» riporta al mese corrente.
 
 ## Fasi di rilascio
 

@@ -36,4 +36,27 @@ describe('period store', () => {
     store.setUnit('week')
     expect(store.period).toEqual({ unit: 'week', anchor: '2020-03-01' })
   })
+
+  it('goes back to today from the past and from the future, keeping the unit', () => {
+    const store = usePeriodStore()
+    expect(store.isCurrent).toBe(true)
+
+    store.period = { unit: 'week', anchor: '2020-03-01' }
+    expect(store.isCurrent).toBe(false)
+    store.goToToday()
+    expect(store.period).toEqual({
+      unit: 'week',
+      anchor: today(),
+    })
+    expect(store.direction).toBe(1)
+    expect(store.isCurrent).toBe(true)
+
+    store.period = { unit: 'year', anchor: '2999-01-01' }
+    store.goToToday()
+    expect(store.period).toEqual({
+      unit: 'year',
+      anchor: today(),
+    })
+    expect(store.direction).toBe(-1)
+  })
 })

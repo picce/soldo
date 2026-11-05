@@ -5,6 +5,7 @@ import type { Period } from '@/domain/periods'
 import { storeToRefs } from 'pinia'
 import { computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ActionChip from '@/components/ActionChip.vue'
 import AppLogo from '@/components/AppLogo.vue'
 import AppPage from '@/components/AppPage.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
@@ -32,7 +33,7 @@ import { useHorizontalSwipe } from './useHorizontalSwipe'
 const { t } = useI18n()
 const intlLocale = useIntlLocale()
 const store = usePeriodStore()
-const { period, direction } = storeToRefs(store)
+const { period, direction, isCurrent } = storeToRefs(store)
 
 // The result carries its period, so the page never mixes the totals of two periods.
 const { data } = useLiveQuery(async () => {
@@ -129,6 +130,15 @@ useHorizontalSwipe(swipeArea, step => store.shift(step))
   <AppPage class="home">
     <template #title>
       <AppLogo />
+    </template>
+    <template #actions>
+      <ActionChip
+        v-if="!isCurrent"
+        icon="calendar-dot"
+        :label="t('period.today')"
+        :aria-label="t('period.backToToday')"
+        @click="store.goToToday()"
+      />
     </template>
 
     <PeriodSwitcher
