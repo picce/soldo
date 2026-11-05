@@ -33,7 +33,7 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 ```
 src/
   app/          router, componenti della shell (BottomNav, ReloadPrompt)
-  components/   componenti riusabili (AppPage, poi Donut, Keypad, ...)
+  components/   componenti riusabili (AppPage, poi CategoryBar, Keypad, ...)
   features/     una cartella per sezione: home, transactions, budgets, stats, settings
   i18n/         messaggi (it.ts) e setup vue-i18n
   theme/        volver.css (design system in cascade layer) e app.css
@@ -45,7 +45,8 @@ e2e/            test Playwright
 ## Convenzioni
 
 - **Volver**: i componenti `Vv*` sono auto-importati (solo JS). Quando usi un componente per la prima volta, aggiungi l'import del suo CSS in `src/theme/volver.css` nel layer `volver.components`. Prima di scrivere props o classi consulta le skill `volverjs-ui-vue` e `volverjs-style`: props e utility inventate falliscono in silenzio.
-- **Icone**: solo nomi del set Volver `normal` già registrato, niente prefissi Iconify remoti (l'app deve funzionare offline). Il set definitivo arriva con lo studio grafico (Fase 1).
+- **Design**: la fonte di verità è [docs/design/README.md](docs/design/README.md) (direzione Taccuino: colori, tipografia, icone, componenti, tono di voce). Il design vive nel repository, non in Figma.
+- **Icone**: solo nomi del set Volver `normal` già registrato, niente prefissi Iconify remoti (l'app deve funzionare offline). Con la Fase 1 il set diventa Phosphor Light, incluso in una collezione locale (vedi docs/design).
 - **Colori e spaziature**: token del design system (`var(--color-…)`, `var(--spacing-…)`), mai hex nei componenti, così il tema scuro continua a funzionare.
 - **CSS del design system in cascade layer**: il CSS dell'app (scoped o in `app.css`) vince sempre senza `!important`.
 - **Componenti locali** importati esplicitamente; alias `@/` → `src/`.
