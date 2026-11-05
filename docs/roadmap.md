@@ -141,7 +141,7 @@ Le spec della fase sono nella tabella «Spec attive».
 - Schema Dexie v1 completo, seed delle categorie di default (icone e colori dello studio grafico), conto "Contanti". I nomi delle voci predefinite seguono la lingua dell'app finché l'utente non le rinomina.
 - **Aggiunta rapida** stile Monefy: tasti − e + in Home, tastierino con calcolatrice, griglia categorie, salvataggio. Data e nota sono opzionali; la scelta del conto compare con la Fase 4, quando i conti sono più di uno.
 - **Home**: selettore di periodo (giorno/settimana/mese/anno) con swipe, rendiconto e barra per categoria, saldo del periodo (entrate − uscite). Toccando una categoria si apre la lista filtrata. Proposta: il periodo personalizzato passa alla Fase 5, con le statistiche.
-- **Movimenti**: lista raggruppata per giorno, ricerca e filtri, modifica ed eliminazione con annulla.
+- **Movimenti**: lista raggruppata per giorno, ricerca e filtri, modifica. Scorrendo una riga verso sinistra la si elimina, verso destra la si duplica con la data di oggi; in entrambi i casi un avviso offre «Annulla» per qualche secondo.
 - **Categorie**: CRUD, riordino, archiviazione.
 - **Backup manuale**: esportazione/importazione JSON (formato versionato, validato con Zod) ed esportazione CSV.
 - Onboarding: "Inizia da zero" oppure "Importa file", più l'invito a installare l'app.

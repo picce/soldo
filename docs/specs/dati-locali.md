@@ -54,7 +54,7 @@ Il segno di un importo dipende da `kind`, mai da `amountCents`. IndexedDB non in
 ### Database e repository
 
 - `src/db/database.ts` (nuovo): `class SoldoDatabase extends Dexie`, nome `soldo`, `version(1).stores(...)` come nella tabella; un'istanza unica `db`.
-- `src/db/repositories/transactions.ts` (nuovo): `addTransaction`, `updateTransaction`, `deleteTransaction` (imposta `deletedAt`), `restoreTransaction`, `listTransactions({ from, to, kind?, categoryIds? })`; tutte escludono gli eliminati, salvo `restore`.
+- `src/db/repositories/transactions.ts` (nuovo): `addTransaction`, `updateTransaction`, `deleteTransaction` (imposta `deletedAt`), `restoreTransaction`, `duplicateTransaction(id, date)`, `listTransactions({ from, to, kind?, categoryIds? })`; tutte escludono gli eliminati, salvo `restore`.
 - `src/db/repositories/categories.ts`, `accounts.ts`, `meta.ts` (nuovi): letture e scritture equivalenti.
 - `src/db/records.ts` (nuovo): `newRecord()` e `touch()` per `id`, `createdAt`, `updatedAt`; l'orologio si può sostituire nei test.
 - `src/db/useLiveQuery.ts` (nuovo): composable che trasforma `liveQuery` di Dexie in un `Ref`, con disiscrizione quando lo scope Vue si chiude.

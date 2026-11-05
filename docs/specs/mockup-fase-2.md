@@ -20,7 +20,8 @@ Le schermate si aggiungono alla pagina Schermate di `design/soldo.figcraft`, con
 
 | Schermata | Contenuto |
 |---|---|
-| Modifica movimento | La Nuova uscita in modalità modifica: titolo «Modifica», categoria attuale evidenziata, pulsante «Salva», «Elimina» in alto a destra |
+| Modifica movimento | La Nuova uscita in modalità modifica: titolo «Modifica», categoria attuale evidenziata, pulsante «Salva», «Duplica» ed «Elimina» |
+| Riga scorsa | Una riga di Movimenti scorsa verso sinistra (Elimina) e una verso destra (Duplica), prima e dopo la soglia, e l'avviso «Duplicato» con «Annulla» |
 | Data | Foglio dal basso con «Oggi», «Ieri» e un campo data |
 | Nota | Foglio dal basso con un campo di testo su più righe e «Fatto» |
 | Filtro categoria | Foglio dal basso con l'elenco delle categorie da spuntare, «Tutte» e «Applica» |
@@ -29,6 +30,8 @@ Le schermate si aggiungono alla pagina Schermate di `design/soldo.figcraft`, con
 | Modifica categoria | Nome, griglia di icone, otto campioni di colore con il nome, «Archivia» o «Ripristina» |
 | Importa backup | Finestra di conferma con l'anteprima (data del file, numero di movimenti e categorie) e l'avviso che i dati attuali vengono sostituiti |
 | Installa su Android | Variante della scheda «Installa Soldo» dell'onboarding con il pulsante «Installa» |
+
+**Colore per eliminare.** La palette riserva il rosso a errori e avvisi e non ha ancora un token per le azioni distruttive. Qui si aggiunge il token `errore` (chiaro e scuro, contrasto almeno 4,5:1 col testo sopra), usato sotto la riga scorsa verso sinistra e per i messaggi di errore; la duplicazione usa `biro`.
 
 Tutte in 390×844, con la versione scura come istanza in modo Scuro. Gli screenshot seguono i nomi già in uso (`<schermata>-chiaro.png`, `<schermata>-scuro.png`).
 

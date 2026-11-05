@@ -2,7 +2,7 @@
 
 > **Stato**: Bozza (non implementata)
 > **Data**: 2026-11-05
-> **Ambito**: Schermata per segnare un'uscita o un'entrata con il minor numero di tocchi (importo, poi categoria), con tastierino calcolatrice, data e nota facoltative; la stessa schermata modifica ed elimina un movimento. Introduce l'avviso con «Annulla» e la pagina interna `/dev/ui`.
+> **Ambito**: Schermata per segnare un'uscita o un'entrata con il minor numero di tocchi (importo, poi categoria), con tastierino calcolatrice, data e nota facoltative; la stessa schermata modifica, duplica ed elimina un movimento. Introduce l'avviso con «Annulla» e la pagina interna `/dev/ui`.
 > **Spec collegate**: richiede [`dati-locali.md`](./dati-locali.md) e [`mockup-fase-2.md`](./mockup-fase-2.md) (modifica, data, nota); usata da [`home-rendiconto.md`](./home-rendiconto.md) e [`movimenti.md`](./movimenti.md)
 
 ## Panoramica
@@ -15,8 +15,8 @@
   - nuova uscita o entrata in tre gesti: «Uscita», cifre, categoria;
   - tastierino con le quattro operazioni, risultato calcolato mentre si scrive, al massimo due decimali;
   - data (di base oggi) e nota facoltative, ognuna in un foglio dal basso;
-  - modifica di un movimento esistente dalla stessa schermata, con «Salva» ed «Elimina»;
-  - avviso «Salvato: −12,40 € · Spesa» al ritorno, ed eliminazione con «Annulla»;
+  - modifica di un movimento esistente dalla stessa schermata, con «Salva», «Duplica» ed «Elimina» (in Movimenti le ultime due si fanno anche scorrendo la riga, vedi [`movimenti.md`](./movimenti.md));
+  - avviso «Salvato: −12,40 € · Spesa» al ritorno; eliminazione e duplicazione con «Annulla»;
   - funziona offline; vibrazione breve sui tasti dove il dispositivo la supporta (Android);
   - scorciatoia «Nuova uscita» nel manifest (tenendo premuta l'icona dell'app);
   - pagina interna `/dev/ui`, solo in sviluppo, con i componenti in chiaro e in scuro.
@@ -39,7 +39,7 @@ Entrambi usano `src/features/transactions/TransactionEditorView.vue` e hanno `me
 ### Comportamento
 
 - **Nuovo movimento**: toccare una categoria salva, se l'importo è maggiore di zero. Con importo zero l'importo vibra (animazione breve, disattivata con `prefers-reduced-motion`) e compare l'indicazione «Scrivi prima l'importo».
-- **Modifica**: la categoria attuale è evidenziata con il bordo `--color-pen`; toccarne un'altra la seleziona senza salvare. «Salva» in alto salva; «Elimina» elimina e torna indietro con l'avviso «Eliminato: … · Annulla».
+- **Modifica**: la categoria attuale è evidenziata con il bordo `--color-pen`; toccarne un'altra la seleziona senza salvare. «Salva» in alto salva; «Duplica» crea una copia con la data di oggi; «Elimina» elimina. Dopo «Duplica» ed «Elimina» si torna indietro con l'avviso e «Annulla».
 - **Uscita/Entrata**: il selettore in alto cambia il tipo e la griglia mostra le categorie di quel tipo.
 - **Calcolatrice**: `src/domain/calculator.ts` (nuovo, funzione pura): stato con l'espressione, tasti cifre, virgola, `+ − × ÷` e cancella; calcolo in centesimi con arrotondamento al centesimo (metà in su); massimo 9 cifre intere; un'operazione dopo un'altra sostituisce la precedente; divisione per zero lascia l'importo invariato. Il risultato è sempre un importo valido, quindi non serve il tasto =.
 
