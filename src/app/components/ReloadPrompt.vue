@@ -68,7 +68,8 @@ watch(offlineReady, (ready) => {
 .reload-prompt {
   position: fixed;
   inset-inline: var(--page-gutter);
-  bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem);
+  top: var(--toast-top, auto);
+  bottom: var(--toast-bottom, calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem));
   z-index: 20;
   display: flex;
   flex-direction: column;

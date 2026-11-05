@@ -37,6 +37,9 @@ const LIGHT = [
   'trash',
   'copy',
   'check',
+  // Home
+  'caret-left',
+  'caret-right',
 ]
 
 /** Icons also used in the Regular weight (active navigation item, − and + signs). */
@@ -46,6 +49,8 @@ const REGULAR = [
   'piggy-bank',
   'chart-pie-slice',
   'gear-six',
+  'minus',
+  'plus',
 ]
 
 const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)

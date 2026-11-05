@@ -38,6 +38,7 @@ const { toast } = useToast()
 .app-toast-region {
   position: fixed;
   inset-inline: var(--page-gutter);
+  top: var(--toast-top, auto);
   bottom: var(--toast-bottom, calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 0.75rem));
   z-index: 30;
   max-width: 38rem;

@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppToast from '@/app/components/AppToast.vue'
 import BottomNav from '@/app/components/BottomNav.vue'
 import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
+import { dismissToast } from '@/app/toast'
 
 const route = useRoute()
 const fullscreen = computed(() => route.meta.fullscreen === true)
+
+// A notice of the page left behind ("Salvato…") does not follow into a full-screen editor.
+watch(fullscreen, (isFullscreen) => {
+  if (isFullscreen)
+    dismissToast()
+})
 </script>
 
 <template>
@@ -39,9 +46,10 @@ const fullscreen = computed(() => route.meta.fullscreen === true)
     calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + 1.5rem);
 }
 
-/* Full-screen pages lay out their own margins, edge to edge. */
+/* Full-screen pages lay out their own margins, edge to edge; notices go on top, off the keypad. */
 .app-shell--fullscreen {
-  --toast-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+  --toast-top: calc(env(safe-area-inset-top) + 0.75rem);
+  --toast-bottom: auto;
 }
 
 .app-shell--fullscreen .app-shell__main {

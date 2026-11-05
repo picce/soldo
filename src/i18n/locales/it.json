@@ -15,9 +15,6 @@
     "settings": "Impostazioni"
   },
   "pages": {
-    "home": {
-      "intro": "Qui vedrai il riepilogo del periodo, con le spese per categoria e i tasti per aggiungere un'uscita o un'entrata."
-    },
     "transactions": {
       "intro": "Qui troverai tutti i tuoi movimenti, raggruppati per giorno, con ricerca e filtri."
     },
@@ -30,6 +27,35 @@
     "settings": {
       "intro": "Qui gestirai categorie, conti, backup e preferenze."
     }
+  },
+  "period": {
+    "label": "Periodo",
+    "day": "Giorno",
+    "week": "Settimana",
+    "month": "Mese",
+    "year": "Anno",
+    "previous": "Periodo precedente",
+    "next": "Periodo successivo"
+  },
+  "home": {
+    "summary": "Rendiconto",
+    "income": "Entrate",
+    "expenses": "Uscite",
+    "balance": "Saldo",
+    "byCategory": "Uscite per categoria",
+    "other": "Altre",
+    "barLabel": "Uscite per categoria: {list}",
+    "empty": {
+      "day": "Nessun movimento il {date}.",
+      "week": "Nessun movimento nella settimana {date}.",
+      "month": "Nessun movimento a {date}.",
+      "year": "Nessun movimento nel {date}."
+    },
+    "emptyHint": "Tocca «Uscita» qui sotto per segnare la prima spesa.",
+    "noExpenses": "Nessuna uscita in questo periodo.",
+    "actions": "Aggiungi un movimento",
+    "addExpense": "Uscita",
+    "addIncome": "Entrata"
   },
   "settings": {
     "language": {

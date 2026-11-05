@@ -17,7 +17,7 @@ I mockup approvati sono [Movimenti](../design/render/movimenti-chiaro.png) e [Ri
   - ricerca mentre si scrive su note e nomi delle categorie, senza distinguere maiuscole e accenti;
   - filtri Tutti, Uscite, Entrate e Categoria (foglio con le categorie da spuntare);
   - filtro di periodo quando si arriva dalla Home, mostrato come pulsante rimovibile («Novembre 2026 ×»);
-  - i filtri stanno nell'URL (`?q=`, `?tipo=`, `?categoria=`, `?dal=`, `?al=`), così il tasto indietro e il ricaricamento li conservano;
+  - i filtri stanno nell'URL (`?q=`, `?tipo=`, `?categoria=`, `?dal=`, `?al=`), così il tasto indietro e il ricaricamento li conservano; `categoria` può elencare più id separati da virgole (la riga «Altre» della Home);
   - toccando una riga si apre la modifica;
   - **scorrendo una riga verso sinistra la si elimina subito**: la riga esce dall'elenco e compare l'avviso «Eliminato: −1,80 € · Ristoranti» con «Annulla» per 5 secondi;
   - **scorrendo verso destra la si duplica** con la data di oggi (stessi tipo, importo, categoria, conto e nota): avviso «Duplicato: −1,80 € · Ristoranti» con «Annulla», che elimina la copia;

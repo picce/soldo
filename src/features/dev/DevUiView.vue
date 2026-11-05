@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import type { Category, CategoryPreset, PaletteColor } from '@/db/schema'
+import type { Period } from '@/domain/periods'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
 import ActionChip from '@/components/ActionChip.vue'
 import AmountText from '@/components/AmountText.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
+import CategoryBar from '@/components/CategoryBar.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
 import Keypad from '@/components/Keypad.vue'
+import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
+import { shiftPeriod } from '@/domain/periods'
 
 /**
  * Internal page, registered only in development (/dev/ui): every app component, in the
@@ -48,6 +52,12 @@ const categories: Category[] = [
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
 const sheetOpen = ref(false)
+const period = ref<Period>({ unit: 'month', anchor: '2026-11-05' })
+const segments = categories.slice(0, 6).map((category, index) => ({
+  key: category.id,
+  color: `var(--color-category-${category.color})`,
+  share: [0.32, 0.27, 0.15, 0.11, 0.08, 0.07][index] ?? 0,
+}))
 
 function toast() {
   showToast({
@@ -113,6 +123,21 @@ function toast() {
         <VvButton :label="t('editor.save')" modifiers="primary" />
         <VvButton :label="t('dateSheet.confirm')" modifiers="primary" disabled />
       </p>
+
+      <h3 class="dev-ui__name type-note">
+        PeriodSwitcher
+      </h3>
+      <PeriodSwitcher
+        :period="period"
+        @update:unit="period = { unit: $event, anchor: period.anchor }"
+        @shift="period = shiftPeriod(period, $event)"
+      />
+
+      <h3 class="dev-ui__name type-note">
+        CategoryBar
+      </h3>
+      <CategoryBar :segments="segments" label="CategoryBar" />
+      <CategoryBar :segments="[]" label="CategoryBar" />
 
       <h3 class="dev-ui__name type-note">
         CategoryGrid

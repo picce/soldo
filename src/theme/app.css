@@ -4,6 +4,8 @@
  */
 :root {
   --bottom-nav-height: 3.5rem;
+  /* Action bar of the Home: a 52 px button with 12 px around it and a 1 px line. */
+  --action-bar-height: 4.8125rem;
   --page-gutter: 1.25rem;
   --grid-step: 20px;
 }
@@ -81,6 +83,21 @@ body {
   font-size: 0.9375rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+}
+
+/* Dotted leader between a label and its amount (Home): 1 px dots every 4 px, in `linea`. */
+.dot-leader {
+  flex: 1;
+  min-width: 1rem;
+  height: 1px;
+  align-self: center;
+  background-image: linear-gradient(to right, var(--color-line) 1px, transparent 1px);
+  background-size: 4px 1px;
+}
+
+/* On pages with the action bar (Home), notices sit above it. */
+.app-shell:has(.action-bar) {
+  --toast-bottom: calc(var(--bottom-nav-height) + var(--action-bar-height) + env(safe-area-inset-bottom) + 0.75rem);
 }
 
 /* Text for screen readers only. */

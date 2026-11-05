@@ -15,9 +15,6 @@
     "settings": "Settings"
   },
   "pages": {
-    "home": {
-      "intro": "Here you will see the summary of the period, with spending by category and the buttons to add an expense or an income."
-    },
     "transactions": {
       "intro": "Here you will find all your transactions, grouped by day, with search and filters."
     },
@@ -30,6 +27,35 @@
     "settings": {
       "intro": "Here you will manage categories, accounts, backup and preferences."
     }
+  },
+  "period": {
+    "label": "Period",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year",
+    "previous": "Previous period",
+    "next": "Next period"
+  },
+  "home": {
+    "summary": "Statement",
+    "income": "Income",
+    "expenses": "Expenses",
+    "balance": "Balance",
+    "byCategory": "Expenses by category",
+    "other": "Others",
+    "barLabel": "Expenses by category: {list}",
+    "empty": {
+      "day": "No transactions on {date}.",
+      "week": "No transactions in the week of {date}.",
+      "month": "No transactions in {date}.",
+      "year": "No transactions in {date}."
+    },
+    "emptyHint": "Tap “Expense” below to record your first one.",
+    "noExpenses": "No expenses in this period.",
+    "actions": "Add a transaction",
+    "addExpense": "Expense",
+    "addIncome": "Income"
   },
   "settings": {
     "language": {
