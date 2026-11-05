@@ -3,14 +3,12 @@ import type { CalculatorKey, CalculatorState } from '@/domain/calculator'
 import { computed, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
-import { categoryName } from '@/db/names'
 import { getDefaultAccount } from '@/db/repositories/accounts'
 import { getCategory, listCategories } from '@/db/repositories/categories'
 import {
   addTransaction,
   deleteTransaction,
   getTransaction,
-  restoreTransaction,
   updateTransaction,
 } from '@/db/repositories/transactions'
 import { useLiveQuery } from '@/db/useLiveQuery'
@@ -23,8 +21,7 @@ import {
   pressKey,
 } from '@/domain/calculator'
 import { today } from '@/domain/dates'
-import { formatAmount } from '@/domain/money'
-import { intlLocale } from '@/i18n/locale'
+import { showDeleted, showDuplicated, showSaved } from './notices'
 
 export type EditorKind = 'expense' | 'income'
 
@@ -118,18 +115,6 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     return null
   }
 
-  function toastParts(transaction: Pick<Transaction, 'kind' | 'amountCents'>, category?: Category) {
-    const signed = transaction.kind === 'expense'
-      ? -transaction.amountCents
-      : transaction.amountCents
-    return {
-      amount: formatAmount(signed, intlLocale(), { sign: 'always', currency: true }),
-      category: category
-        ? categoryName(category)
-        : '',
-    }
-  }
-
   /** Runs one write at a time (a double tap must not save twice) and reports failures. */
   async function run(action: () => Promise<void>) {
     if (busy)
@@ -170,9 +155,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
         categoryId: category.id,
         note: note.value,
       })
-      showToast({
-        message: t('toast.saved', toastParts(saved, category)),
-      })
+      showSaved(saved, category)
       options.onDone()
     })
   }
@@ -206,9 +189,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
       return
     void run(async () => {
       await updateTransaction(transaction.id, edited.fields)
-      showToast({
-        message: t('toast.saved', toastParts(edited.fields, edited.category)),
-      })
+      showSaved(edited.fields, edited.category)
       options.onDone()
     })
   }
@@ -225,13 +206,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
         date: today(),
         accountId: transaction.accountId,
       })
-      showToast({
-        message: t('toast.duplicated', toastParts(copy, edited.category)),
-        action: {
-          label: t('common.undo'),
-          run: () => deleteTransaction(copy.id),
-        },
-      })
+      showDuplicated(copy, edited.category)
       options.onDone()
     })
   }
@@ -245,13 +220,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
       const category = transaction.categoryId
         ? await getCategory(transaction.categoryId)
         : undefined
-      showToast({
-        message: t('toast.deleted', toastParts(transaction, category)),
-        action: {
-          label: t('common.undo'),
-          run: () => restoreTransaction(transaction.id),
-        },
-      })
+      showDeleted(transaction, category)
       options.onDone()
     })
   }

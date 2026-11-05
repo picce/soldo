@@ -15,9 +15,6 @@
     "settings": "Settings"
   },
   "pages": {
-    "transactions": {
-      "intro": "Here you will find all your transactions, grouped by day, with search and filters."
-    },
     "budget": {
       "intro": "Here you will set a monthly budget, overall or per category, and see how much is left."
     },
@@ -56,6 +53,32 @@
     "actions": "Add a transaction",
     "addExpense": "Expense",
     "addIncome": "Income"
+  },
+  "transactions": {
+    "search": "Search notes and categories",
+    "clearSearch": "Clear the search",
+    "filters": "Filters",
+    "all": "All",
+    "expenses": "Expenses",
+    "income": "Income",
+    "category": "Category",
+    "categoryCount": "Category ({count})",
+    "removePeriod": "Remove the {period} filter",
+    "swipeDelete": "Delete",
+    "swipeDuplicate": "Duplicate",
+    "emptyTitle": "No transactions yet.",
+    "emptyHint": "Tap “Expense” on the Home to record your first one.",
+    "noMatchTitle": "No transactions match these filters.",
+    "noMatchHint": "Remove a filter to see the other transactions.",
+    "noResultsTitle": "No results for “{query}”.",
+    "noResultsHint": "The search covers notes and categories of every month."
+  },
+  "categoryFilter": {
+    "title": "Categories",
+    "all": "All categories",
+    "reset": "Reset",
+    "apply": "Apply",
+    "applyCount": "Apply ({count})"
   },
   "settings": {
     "language": {

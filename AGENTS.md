@@ -35,13 +35,13 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 src/
   app/          router, componenti della shell (BottomNav, ReloadPrompt, AppToast) e avvisi (toast.ts: showToast)
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
-  components/   componenti riusabili (AppPage, AppIcon, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar)
+  components/   componenti riusabili (AppPage, AppIcon, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow)
   features/     una cartella per sezione: home, transactions, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
   stores/       stato Pinia condiviso tra pagine (period.ts: il periodo della Home)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
-  domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice
+  domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice, ricerca, giorni
   test/         supporto ai test unitari (plugins.ts: i18n e Volver con le icone locali)
   backup/ import/   arrivano nelle fasi successive (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)

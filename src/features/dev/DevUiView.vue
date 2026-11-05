@@ -9,9 +9,12 @@ import AmountText from '@/components/AmountText.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
+import FilterChip from '@/components/FilterChip.vue'
 import Keypad from '@/components/Keypad.vue'
 import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
+import SearchField from '@/components/SearchField.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
+import SwipeRow from '@/components/SwipeRow.vue'
 import { shiftPeriod } from '@/domain/periods'
 
 /**
@@ -51,6 +54,8 @@ const categories: Category[] = [
 
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
+const search = ref('')
+const lastSwipe = ref('')
 const sheetOpen = ref(false)
 const period = ref<Period>({ unit: 'month', anchor: '2026-11-05' })
 const segments = categories.slice(0, 6).map((category, index) => ({
@@ -123,6 +128,34 @@ function toast() {
         <VvButton :label="t('editor.save')" modifiers="primary" />
         <VvButton :label="t('dateSheet.confirm')" modifiers="primary" disabled />
       </p>
+
+      <h3 class="dev-ui__name type-note">
+        SearchField
+      </h3>
+      <SearchField v-model="search" :placeholder="t('transactions.search')" />
+
+      <h3 class="dev-ui__name type-note">
+        FilterChip
+      </h3>
+      <p class="dev-ui__row">
+        <FilterChip :label="t('transactions.all')" pressed />
+        <FilterChip :label="t('transactions.expenses')" />
+        <FilterChip :label="t('transactions.category')" icon="caret-down" />
+      </p>
+
+      <h3 class="dev-ui__name type-note">
+        SwipeRow {{ lastSwipe }}
+      </h3>
+      <SwipeRow
+        class="dev-ui__swipe"
+        :left-action="{ label: t('transactions.swipeDelete'), icon: 'trash', tone: 'danger' }"
+        :right-action="{ label: t('transactions.swipeDuplicate'), icon: 'copy', tone: 'pen' }"
+        @swipe="lastSwipe = $event"
+      >
+        <p class="dev-ui__swipe-content type-body">
+          {{ t('transactions.swipeDelete') }} ← → {{ t('transactions.swipeDuplicate') }}
+        </p>
+      </SwipeRow>
 
       <h3 class="dev-ui__name type-note">
         PeriodSwitcher
@@ -200,6 +233,16 @@ function toast() {
   align-items: center;
   gap: 0.75rem;
   margin: 0;
+}
+
+.dev-ui__swipe {
+  border: 1px solid var(--color-line);
+  border-radius: var(--rounded);
+}
+
+.dev-ui__swipe-content {
+  margin: 0;
+  padding: 1rem;
 }
 
 .dev-ui__spaced {

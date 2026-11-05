@@ -15,9 +15,6 @@
     "settings": "Impostazioni"
   },
   "pages": {
-    "transactions": {
-      "intro": "Qui troverai tutti i tuoi movimenti, raggruppati per giorno, con ricerca e filtri."
-    },
     "budget": {
       "intro": "Qui potrai impostare un budget mensile, totale o per categoria, e vedere quanto ti resta."
     },
@@ -56,6 +53,32 @@
     "actions": "Aggiungi un movimento",
     "addExpense": "Uscita",
     "addIncome": "Entrata"
+  },
+  "transactions": {
+    "search": "Cerca nelle note e nelle categorie",
+    "clearSearch": "Svuota la ricerca",
+    "filters": "Filtri",
+    "all": "Tutti",
+    "expenses": "Uscite",
+    "income": "Entrate",
+    "category": "Categoria",
+    "categoryCount": "Categoria ({count})",
+    "removePeriod": "Togli il filtro {period}",
+    "swipeDelete": "Elimina",
+    "swipeDuplicate": "Duplica",
+    "emptyTitle": "Nessun movimento.",
+    "emptyHint": "Tocca «Uscita» nella Home per segnare la prima spesa.",
+    "noMatchTitle": "Nessun movimento con questi filtri.",
+    "noMatchHint": "Togli un filtro per vedere gli altri movimenti.",
+    "noResultsTitle": "Nessun risultato per «{query}».",
+    "noResultsHint": "La ricerca include note e categorie di tutti i mesi."
+  },
+  "categoryFilter": {
+    "title": "Categorie",
+    "all": "Tutte le categorie",
+    "reset": "Azzera",
+    "apply": "Applica",
+    "applyCount": "Applica ({count})"
   },
   "settings": {
     "language": {

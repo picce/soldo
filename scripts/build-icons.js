@@ -40,9 +40,12 @@ const LIGHT = [
   // Home
   'caret-left',
   'caret-right',
+  // Movimenti
+  'magnifying-glass',
+  'caret-down',
 ]
 
-/** Icons also used in the Regular weight (active navigation item, − and + signs). */
+/** Icons also used in the Regular weight (active navigation item, − and + signs, solid states). */
 const REGULAR = [
   'house',
   'receipt',
@@ -51,6 +54,10 @@ const REGULAR = [
   'gear-six',
   'minus',
   'plus',
+  // Checkboxes and the solid action under a swiped row
+  'check',
+  'trash',
+  'copy',
 ]
 
 const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)

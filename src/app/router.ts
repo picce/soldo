@@ -79,7 +79,15 @@ export const routes: RouteRecordRaw[] = [
 ]
 
 export function createAppRouter(history: RouterHistory = createWebHistory()) {
-  const router = createRouter({ history, routes })
+  const router = createRouter({
+    history,
+    routes,
+    // Back from the edit screen, the list returns where it was: the rows come from
+    // IndexedDB, so the position is restored once they have had a moment to render.
+    scrollBehavior: (_to, _from, saved) => saved
+      ? new Promise(resolve => setTimeout(resolve, 120, saved))
+      : { top: 0 },
+  })
 
   function updateTitle(route: RouteLocationNormalized) {
     const appName = i18n.global.t('app.name')
