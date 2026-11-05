@@ -4,7 +4,7 @@ import { ref } from 'vue'
 import { isIos, isStandalone } from '@/app/install'
 
 /**
- * Gestures that close a sheet or go back a page (docs/specs/sensazione-nativa.md). The
+ * Gestures that close a sheet or go back a page (docs/specs/released/sensazione-nativa.md). The
  * dragged element follows the finger; on release it either completes the gesture or goes
  * back to its place.
  */

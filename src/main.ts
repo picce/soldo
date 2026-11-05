@@ -27,7 +27,7 @@ document.addEventListener('touchstart', () => {}, { passive: true })
 // Until the first start is done, every page leads to the welcome (docs/specs/released/onboarding.md).
 const router = createAppRouter()
 requireOnboarding(router)
-// Pages slide, rise and fade into each other (docs/specs/sensazione-nativa.md).
+// Pages slide, rise and fade into each other (docs/specs/released/sensazione-nativa.md).
 animatePageChanges(router)
 
 const app = createApp(App)

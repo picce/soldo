@@ -4,7 +4,7 @@ import { prefersReducedMotion } from '@/app/motion'
 import { scrollRestored } from '@/app/scroll'
 
 /**
- * How a page gives way to the next (docs/specs/sensazione-nativa.md); the animations are
+ * How a page gives way to the next (docs/specs/released/sensazione-nativa.md); the animations are
  * in src/theme/motion.css, keyed on `data-page-transition` of <html>.
  */
 export type PageTransition = 'fade' | 'push' | 'pop' | 'modal-open' | 'modal-close'

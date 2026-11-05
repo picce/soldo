@@ -7,6 +7,7 @@
 | 0 — Fondamenta | Completata e pubblicata (2026-11-04): produzione da `main`, anteprima da `develop` |
 | 1 — Studio grafico | Completata e pubblicata (2026-11-05): direzione **C · Taccuino** ([docs/design](design/README.md)), tema nell'app, icona A · Quaderno e lingua inglese (spec in [docs/specs/released](specs/released/)) |
 | 2 — Nucleo local-first | Completata e pubblicata con la versione 0.2.0 (2026-11-05): aggiunta rapida, Home, Movimenti, categorie, backup manuale e CSV, onboarding (spec in [docs/specs/released](specs/released/)) |
+| Prima della Fase 3 | Pubblicata con la versione 0.3.0 (2026-11-05): [sensazione da app nativa](specs/released/sensazione-nativa.md), cioè risposta al tocco, transizioni tra le pagine, gesti, liste e cifre animate |
 | 3–7 | Da iniziare |
 
 ## Spec attive
@@ -15,7 +16,9 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
-| [Sensazione da app nativa: movimento, gesti e risposta al tocco](specs/sensazione-nativa.md) | Prima della Fase 3 | da definire | Nessuna | Parziale |
+| | | | | |
+
+Al momento non ci sono spec attive.
 
 ## Contesto
 

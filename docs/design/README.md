@@ -181,7 +181,7 @@ Gli importi si formattano con `Intl.NumberFormat('it-IT')`, quindi `1.284,30 €
 
 ## Movimento
 
-Il movimento spiega da dove arriva una cosa e dove va, e conferma ogni tocco. È breve e sobrio come il resto: niente rimbalzi, niente effetti decorativi. Con «Riduci movimento» attivo nel sistema (`prefers-reduced-motion`) le animazioni si spengono e i cambi sono immediati. Nel file di design non si disegna: valgono queste regole ([spec](../specs/sensazione-nativa.md)).
+Il movimento spiega da dove arriva una cosa e dove va, e conferma ogni tocco. È breve e sobrio come il resto: niente rimbalzi, niente effetti decorativi. Con «Riduci movimento» attivo nel sistema (`prefers-reduced-motion`) le animazioni si spengono e i cambi sono immediati. Nel file di design non si disegna: valgono queste regole ([spec](../specs/released/sensazione-nativa.md)).
 
 | Token | Valore | Uso |
 |---|---|---|

@@ -1,9 +1,9 @@
 # Sensazione da app nativa: movimento, gesti e risposta al tocco
 
-> **Stato**: Parziale (implementata, in prova sull'anteprima di `develop`)
+> **Stato**: Rilasciata
 > **Data**: 2026-11-05
 > **Ambito**: Transizioni tra le pagine, risposta visibile a ogni tocco (e al passaggio del mouse sul computer), gesti come lo scorrimento per tornare indietro e per chiudere i fogli, liste che si animano quando una riga entra o esce. Soldo deve sembrare un'app del telefono, non un sito.
-> **Spec collegate**: rifinisce le schermate di [`aggiunta-rapida.md`](./released/aggiunta-rapida.md), [`home-rendiconto.md`](./released/home-rendiconto.md), [`movimenti.md`](./released/movimenti.md), [`gestione-categorie.md`](./released/gestione-categorie.md) e [`onboarding.md`](./released/onboarding.md); le regole visive restano quelle di [`docs/design`](../design/README.md)
+> **Spec collegate**: rifinisce le schermate di [`aggiunta-rapida.md`](./aggiunta-rapida.md), [`home-rendiconto.md`](./home-rendiconto.md), [`movimenti.md`](./movimenti.md), [`gestione-categorie.md`](./gestione-categorie.md) e [`onboarding.md`](./onboarding.md); le regole visive restano quelle di [`docs/design`](../../design/README.md)
 
 ## Panoramica
 
@@ -51,7 +51,7 @@ Nel browser la barra dell'indirizzo resta: solo l'app installata si apre a scher
 
 ### Regole del movimento
 
-Nuova sezione «Movimento» in [`docs/design/README.md`](../design/README.md), scritta prima del codice. Nel file di design le animazioni non si disegnano: bastano le regole scritte.
+Nuova sezione «Movimento» in [`docs/design/README.md`](../../design/README.md), scritta prima del codice. Nel file di design le animazioni non si disegnano: bastano le regole scritte.
 
 | Token | Valore | Uso |
 |---|---|---|
