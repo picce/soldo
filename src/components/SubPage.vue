@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
+import { useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { needsEdgeSwipe, useEdgeSwipeBack } from '@/app/gestures'
 import { goBack } from '@/app/navigation'
 import IconButton from '@/components/IconButton.vue'
 
 /**
  * Page opened from another one, without the bottom navigation (route meta `fullscreen`):
  * Indietro and the title on top, the content, and an optional bar of actions that stays
- * at the bottom of the screen (mockups "Categorie" and "Modifica categoria").
+ * at the bottom of the screen (mockups "Categorie" and "Modifica categoria"). On an
+ * installed iPhone app a swipe from the left edge goes back too.
  */
-defineProps<{
+const props = defineProps<{
   title: string
   /** Where Indietro goes when the page was opened directly, with no history behind it. */
   back: RouteLocationRaw
@@ -18,10 +21,19 @@ defineProps<{
 
 const { t } = useI18n()
 const router = useRouter()
+
+const page = useTemplateRef<HTMLElement>('page')
+const edgeSwipe = needsEdgeSwipe()
+const { offset, dragging } = useEdgeSwipeBack(page, () => goBack(router, props.back), edgeSwipe)
 </script>
 
 <template>
-  <div class="sub-page">
+  <div
+    ref="page"
+    class="sub-page"
+    :class="{ 'sub-page--edge-swipe': edgeSwipe, 'sub-page--dragging': dragging }"
+    :style="offset ? { translate: `${offset}px 0` } : undefined"
+  >
     <header class="sub-page__header">
       <IconButton icon="caret-left" :label="t('common.back')" class="sub-page__back" @click="goBack(router, back)" />
       <h1 class="sub-page__title type-title">
@@ -45,6 +57,22 @@ const router = useRouter()
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+}
+
+/* Swipe back from the edge: sideways moves are the page's, the vertical ones scroll. */
+.sub-page--edge-swipe {
+  touch-action: pan-y;
+  transition: translate var(--motion-base) var(--motion-ease);
+}
+
+.sub-page--dragging {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sub-page--edge-swipe {
+    transition: none;
+  }
 }
 
 .sub-page__header,

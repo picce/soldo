@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { collapse, expand } from '@/components/list-motion'
 import { addDays, formatDate, today } from '@/domain/dates'
 import { formatAmount } from '@/domain/money'
 import { useIntlLocale } from '@/i18n/locale'
 
-/** A day of the list: «OGGI · GIOVEDÌ 5 NOVEMBRE», the day's total, and its rows in a card. */
+/**
+ * A day of the list: «OGGI · GIOVEDÌ 5 NOVEMBRE», the day's total, and its rows in a card.
+ * The rows (keyed `<li>`) open and close in height as they come and go.
+ */
 const props = defineProps<{
   date: string
   totalCents: number
@@ -44,9 +48,9 @@ const headingId = computed(() => `day-${props.date}`)
       </h2>
       <span class="type-note">{{ total }}</span>
     </div>
-    <ul class="day-group__rows">
+    <TransitionGroup tag="ul" class="day-group__rows" :css="false" @enter="expand" @leave="collapse">
       <slot />
-    </ul>
+    </TransitionGroup>
   </section>
 </template>
 

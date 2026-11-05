@@ -2,9 +2,10 @@
 import type { EditorKind, EditorTarget } from './useTransactionEditor'
 import type { CalculatorKey } from '@/domain/calculator'
 import { useEventListener } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { needsEdgeSwipe, useEdgeSwipeBack } from '@/app/gestures'
 import { goBack } from '@/app/navigation'
 import ActionChip from '@/components/ActionChip.vue'
 import AppIcon from '@/components/AppIcon.vue'
@@ -72,6 +73,11 @@ const {
 
 const dateOpen = ref(false)
 const noteOpen = ref(false)
+
+// On an installed iPhone app a swipe from the left edge closes, like Chiudi.
+const page = useTemplateRef<HTMLElement>('page')
+const edgeSwipe = needsEdgeSwipe()
+const { offset, dragging } = useEdgeSwipeBack(page, close, edgeSwipe)
 
 const kindOptions = computed<{ value: EditorKind, label: string }[]>(() => [
   {
@@ -154,7 +160,12 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div class="editor" :class="{ 'editor--edit': isEdit }">
+  <div
+    ref="page"
+    class="editor"
+    :class="{ 'editor--edit': isEdit, 'editor--edge-swipe': edgeSwipe, 'editor--dragging': dragging }"
+    :style="offset ? { translate: `${offset}px 0` } : undefined"
+  >
     <h1 class="sr-only">
       {{ title }}
     </h1>
@@ -265,6 +276,22 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   max-width: 40rem;
   margin-inline: auto;
   padding-top: calc(0.75rem + env(safe-area-inset-top));
+}
+
+/* Swipe back from the edge: sideways moves are the page's, the vertical ones scroll. */
+.editor--edge-swipe {
+  touch-action: pan-y;
+  transition: translate var(--motion-base) var(--motion-ease);
+}
+
+.editor--dragging {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor--edge-swipe {
+    transition: none;
+  }
 }
 
 .editor__top {

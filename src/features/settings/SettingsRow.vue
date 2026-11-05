@@ -42,10 +42,23 @@ defineProps<{
   text-align: start;
   text-decoration: none;
   cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
 }
 
 .settings-row:disabled {
   cursor: progress;
+}
+
+@media (hover: hover) {
+  .settings-row:not(:disabled):hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.settings-row:not(:disabled):active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .settings-row:focus-visible {

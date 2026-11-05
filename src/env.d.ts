@@ -18,5 +18,13 @@ declare module 'vue-router' {
     titleKey?: string | ((route: RouteLocationNormalized) => string)
     /** Full-screen page (the transaction editor): no bottom navigation. */
     fullscreen?: boolean
+    /**
+     * Level of the page, which picks the page transition (src/app/page-transitions.ts):
+     * 0 for the sections of the navigation (the default), 1 for a page opened from one of
+     * them, 2 for a page opened from that one.
+     */
+    depth?: number
+    /** Page that opens over the others, from the bottom: quick add and transaction edit. */
+    modal?: boolean
   }
 }

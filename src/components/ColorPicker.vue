@@ -78,6 +78,19 @@ const name = useId()
   aspect-ratio: 1;
   border-radius: 0.25rem;
   color: var(--color-card);
+  transition: scale var(--motion-press) var(--motion-ease);
+}
+
+/* Pressed at once and a little smaller, released in a moment (docs/design/README.md, "Movimento"). */
+.color-picker__option:active .color-picker__swatch {
+  scale: 0.9;
+  transition-duration: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-picker__option:active .color-picker__swatch {
+    scale: none;
+  }
 }
 
 .color-picker__swatch .app-icon {

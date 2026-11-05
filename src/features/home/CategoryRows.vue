@@ -40,19 +40,35 @@ defineProps<{
   list-style: none;
 }
 
+/* The pressed background reaches a little past the text, into the page margin. */
 .category-rows__link {
   display: flex;
   align-items: center;
   gap: 0.625rem;
   min-height: 2.25rem;
+  margin-inline: -0.5rem;
+  padding-inline: 0.5rem;
+  border-radius: 0.375rem;
   color: var(--color-ink);
   text-decoration: none;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .category-rows__link:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.category-rows__link:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .category-rows__link:focus-visible {
   outline: 2px solid var(--color-pen);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline-offset: 0;
 }
 
 .category-rows__square {

@@ -3,12 +3,14 @@ import type { FormatAmountOptions } from '@/domain/money'
 import { computed } from 'vue'
 import { formatAmount } from '@/domain/money'
 import { useIntlLocale } from '@/i18n/locale'
+import { useTweenedNumber } from './useTweenedNumber'
 
 /**
  * An amount in IBM Plex Mono with tabular figures, formatted for the app language
  * (`−12,40`, `+2.450,00 €`). `cents` carries the sign: negative for expenses.
  * With `colored`, positive amounts use the income color, as in the transaction rows;
- * `large` is the balance of the Home (Mono 32).
+ * `large` is the balance of the Home (Mono 32). With `animated`, a new amount runs from
+ * the old one instead of replacing it (the statement of the Home).
  */
 const props = withDefaults(defineProps<{
   cents: number
@@ -16,16 +18,19 @@ const props = withDefaults(defineProps<{
   currency?: boolean
   colored?: boolean
   large?: boolean
+  animated?: boolean
 }>(), {
   sign: 'auto',
   currency: false,
   colored: false,
   large: false,
+  animated: false,
 })
 
 const intlLocale = useIntlLocale()
+const shown = useTweenedNumber(() => props.cents, () => props.animated)
 
-const text = computed(() => formatAmount(props.cents, intlLocale.value, {
+const text = computed(() => formatAmount(Math.round(shown.value), intlLocale.value, {
   sign: props.sign,
   currency: props.currency,
 }))

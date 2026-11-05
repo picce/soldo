@@ -58,6 +58,40 @@ describe('swipeRow', () => {
     ])
   })
 
+  it('stays out on its action after a delete, until the list removes it', async () => {
+    const { wrapper, pointer } = mountRow()
+    const content = () => (wrapper.get('.swipe-row__content').element as HTMLElement).style.translate
+    pointer('pointerdown', 280)
+    pointer('pointermove', 240)
+    pointer('pointermove', 100)
+    pointer('pointerup', 100)
+    vi.advanceTimersByTime(200)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('swipe')).toEqual([
+      ['left'],
+    ])
+    expect(content()).toBe(`${-ROW_WIDTH}px 0`)
+
+    // Still in the page a second later (the deletion failed): it comes back.
+    vi.advanceTimersByTime(1000)
+    await wrapper.vm.$nextTick()
+    expect(content()).toBe('')
+  })
+
+  it('goes back after a duplicate, which keeps the row', async () => {
+    const { wrapper, pointer } = mountRow()
+    pointer('pointerdown', 20)
+    pointer('pointermove', 60)
+    pointer('pointermove', 200)
+    pointer('pointerup', 200)
+    vi.advanceTimersByTime(200)
+    await wrapper.vm.$nextTick()
+    expect(wrapper.emitted('swipe')).toEqual([
+      ['right'],
+    ])
+    expect((wrapper.get('.swipe-row__content').element as HTMLElement).style.translate).toBe('')
+  })
+
   it('goes back below the threshold', async () => {
     const { wrapper, pointer } = mountRow()
     pointer('pointerdown', 20)

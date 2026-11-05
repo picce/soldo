@@ -86,6 +86,24 @@
   /* Veil under sheets and dialogs, the same in both themes (black at 40%). */
   --color-scrim: rgb(0 0 0 / 40%);
 
+  /*
+   * Interaction states (docs/design/README.md, "Movimento"): mixed with the ink, so they
+   * darken in the light theme and lighten in the dark one.
+   */
+  --color-hover: color-mix(in oklab, var(--color-card), var(--color-ink) 5%);
+  --color-pressed: color-mix(in oklab, var(--color-card), var(--color-ink) 10%);
+  --color-pen-hover: color-mix(in oklab, var(--color-pen), var(--color-ink) 12%);
+  --color-pen-pressed: color-mix(in oklab, var(--color-pen), var(--color-ink) 22%);
+  --color-danger-pressed: color-mix(in oklab, var(--color-danger), var(--color-ink) 22%);
+
+  /* Motion: durations and curves (docs/design/README.md, "Movimento"). */
+  --motion-press: 150ms;
+  --motion-quick: 150ms;
+  --motion-base: 200ms;
+  --motion-page: 250ms;
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+
   --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
   --rounded: 0.5rem;
@@ -110,8 +128,8 @@
   --vv-button-modifier-primary-text-shadow: none;
   --vv-button-modifier-primary-state-hover-background: var(--color-pen);
   --vv-button-modifier-primary-state-hover-border-color: var(--color-pen);
-  --vv-button-modifier-primary-state-active-background: var(--color-pen);
-  --vv-button-modifier-primary-state-active-border-color: var(--color-pen);
+  --vv-button-modifier-primary-state-active-background: var(--color-pen-pressed);
+  --vv-button-modifier-primary-state-active-border-color: var(--color-pen-pressed);
   --vv-button-modifier-primary-state-pressed-background: var(--color-pen);
   --vv-button-modifier-primary-state-pressed-border-color: var(--color-pen);
   --vv-button-modifier-primary-state-focus-visible-outline: 2px solid var(--color-pen);
@@ -120,7 +138,7 @@
   --vv-button-modifier-secondary-color: var(--color-ink);
   --vv-button-modifier-secondary-text-shadow: none;
   --vv-button-modifier-secondary-state-hover-background: var(--color-card);
-  --vv-button-modifier-secondary-state-active-background: var(--color-paper);
+  --vv-button-modifier-secondary-state-active-background: var(--color-pressed);
   --vv-button-modifier-secondary-state-pressed-background: var(--color-paper);
   --vv-button-modifier-secondary-state-focus-visible-outline: 2px solid var(--color-pen);
   /* Destructive action (Ripristina a backup): filled in the error color. */
@@ -131,8 +149,18 @@
   --vv-button-modifier-danger-state-hover-background: var(--color-danger);
   --vv-button-modifier-danger-state-hover-border-color: var(--color-danger);
   --vv-button-modifier-danger-state-hover-color: var(--color-on-danger);
-  --vv-button-modifier-danger-state-active-background: var(--color-danger);
-  --vv-button-modifier-danger-state-active-border-color: var(--color-danger);
+  --vv-button-modifier-danger-state-active-background: var(--color-danger-pressed);
+  --vv-button-modifier-danger-state-active-border-color: var(--color-danger-pressed);
   --vv-button-modifier-danger-state-active-color: var(--color-on-danger);
   --vv-button-modifier-danger-state-focus-visible-outline: 2px solid var(--color-pen);
+}
+
+/* Hover only where there is a pointer: on a phone it would stay lit after the tap. */
+@media (hover: hover) {
+  :root,
+  .theme {
+    --vv-button-modifier-primary-state-hover-background: var(--color-pen-hover);
+    --vv-button-modifier-primary-state-hover-border-color: var(--color-pen-hover);
+    --vv-button-modifier-secondary-state-hover-background: var(--color-hover);
+  }
 }

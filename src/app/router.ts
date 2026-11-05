@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, Router, RouteRecordRaw, RouterHistory } from 'vue-router'
 import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { restoreScroll } from '@/app/scroll'
 import { i18n } from '@/i18n'
 
 export const routes: RouteRecordRaw[] = [
@@ -38,7 +39,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/impostazioni/categorie',
     name: 'categories',
     component: () => import('@/features/categories/CategoriesView.vue'),
-    meta: { titleKey: 'categories.title', fullscreen: true },
+    meta: { titleKey: 'categories.title', fullscreen: true, depth: 1 },
   },
   {
     path: '/impostazioni/categorie/:id',
@@ -57,6 +58,7 @@ export const routes: RouteRecordRaw[] = [
         ? 'categoryEdit.new'
         : 'categoryEdit.edit',
       fullscreen: true,
+      depth: 2,
     },
   },
   {
@@ -76,6 +78,7 @@ export const routes: RouteRecordRaw[] = [
         ? 'editor.newIncome'
         : 'editor.newExpense',
       fullscreen: true,
+      modal: true,
     },
   },
   {
@@ -85,7 +88,7 @@ export const routes: RouteRecordRaw[] = [
     props: route => ({
       target: { mode: 'edit', id: route.params.id },
     }),
-    meta: { titleKey: 'editor.edit', fullscreen: true },
+    meta: { titleKey: 'editor.edit', fullscreen: true, modal: true },
   },
   {
     path: '/benvenuto',
@@ -113,11 +116,8 @@ export function createAppRouter(history: RouterHistory = createWebHistory()) {
   const router = createRouter({
     history,
     routes,
-    // Back from the edit screen, the list returns where it was: the rows come from
-    // IndexedDB, so the position is restored once they have had a moment to render.
-    scrollBehavior: (_to, _from, saved) => saved
-      ? new Promise(resolve => setTimeout(resolve, 120, saved))
-      : { top: 0 },
+    // Back from the edit screen, the list returns where it was, once its rows are drawn.
+    scrollBehavior: restoreScroll,
   })
 
   function updateTitle(route: RouteLocationNormalized) {

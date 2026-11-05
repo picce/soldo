@@ -111,8 +111,7 @@ function press(key: CalculatorKey) {
   font-size: 1.5rem;
   font-weight: 400;
   cursor: pointer;
-  touch-action: manipulation;
-  user-select: none;
+  transition: background-color var(--motion-press) var(--motion-ease);
 }
 
 .keypad__key--operator {
@@ -120,8 +119,16 @@ function press(key: CalculatorKey) {
   color: var(--color-ink-2);
 }
 
+@media (hover: hover) {
+  .keypad__key:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
 .keypad__key:active {
-  background: var(--color-grid);
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .keypad__key:focus-visible {

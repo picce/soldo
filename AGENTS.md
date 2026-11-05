@@ -33,13 +33,13 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 
 ```
 src/
-  app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts
+  app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts; movimento: page-transitions.ts (transizioni tra le pagine), gestures.ts (trascinare un foglio, tornare indietro dal bordo), scroll.ts, motion.ts
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
-  components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker)
+  components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker); list-motion.ts (righe che si aprono e si chiudono) e useTweenedNumber.ts (cifre che scorrono)
   features/     una cartella per sezione: onboarding, home, transactions, categories, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
   stores/       stato Pinia condiviso tra pagine (period.ts: il periodo della Home)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
-  theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css
+  theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css, motion.css (transizioni tra le pagine)
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
   domain/       funzioni pure: importi, date, periodi, riepiloghi, calcolatrice, ricerca, giorni
   test/         supporto ai test unitari (plugins.ts: i18n e Volver con le icone locali)
@@ -62,13 +62,14 @@ e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il pri
 - **Volver**: i componenti `Vv*` sono auto-importati uno per uno (resolver con `cherryPick`, solo JS). Quando usi un componente per la prima volta, aggiungi l'import del suo CSS in `src/theme/volver.css` nel layer `volver.components`. Le utility e il tema scuro di Volver non sono caricati: niente classi utility (`p-md`, `text-16`, …), si usa CSS scoped con i token. Prima di scrivere props consulta la skill `volverjs-ui-vue`: props inventate falliscono in silenzio.
 - **Design**: le regole sono in [docs/design/README.md](docs/design/README.md) (direzione Taccuino: colori, tipografia, icone, componenti, tono di voce), i mockup in `design/soldo.figcraft` (FigCraft 0.15.1, editor open source in locale; con `figcraft-cli` si esportano gli screenshot in `docs/design/render/`). Il design vive nel repository, non in Figma.
 - **Icone**: `AppIcon` con il nome Phosphor (`<AppIcon name="house" />`, peso Light; `weight="regular"` per lo stato attivo). Per un'icona nuova aggiungila in `scripts/build-icons.js` e lancia `pnpm icons`. Niente prefissi Iconify remoti: l'app deve funzionare offline.
+- **Movimento e tocco**: durate e curve dai token `--motion-*`, stati dai token `--color-hover`, `--color-pressed`, `--color-pen-hover`, `--color-pen-pressed` ([docs/design/README.md](docs/design/README.md), «Movimento»). Ogni controllo nuovo ha lo stato premuto (`:active` con `transition-duration: 0s`, così il ritorno dura `--motion-press`) e quello `:hover` dentro `@media (hover: hover)`; ogni animazione si spegne con `prefers-reduced-motion` (in script: `prefersReducedMotion()` di `src/app/motion.ts`). Una pagina nuova dichiara in `meta` `depth` o `modal`, che scelgono la sua transizione.
 - **Colori e testo**: token di `src/theme/tokens.css` (`--color-paper`, `--color-card`, `--color-line`, `--color-ink`, `--color-ink-2`, `--color-pen`, `--color-income`, `--color-category-1…8`), mai hex nei componenti, così il tema scuro continua a funzionare. Gli stili di testo condivisi sono le classi `.type-*` di `src/theme/app.css`.
 - **CSS del design system in cascade layer**: il CSS dell'app (scoped o in `app.css`) vince sempre senza `!important`.
 - **Componenti locali** importati esplicitamente; alias `@/` → `src/`. Ogni componente nuovo va anche nella pagina `/dev/ui` (`src/features/dev/DevUiView.vue`), in chiaro e in scuro (tranne le impaginazioni di pagina, AppPage e SubPage).
 - **Pagine secondarie** (aperte da un'altra, come Categorie dalle Impostazioni): `SubPage` e `meta.fullscreen` nel percorso, così la barra di navigazione non c'è e «Indietro» torna da dove si è venuti.
 - **Test dei componenti**: montali con `global: { plugins: testPlugins() }` (`src/test/plugins.ts`), così le icone restano locali.
 - **Accessibilità**: ogni controllo ha un nome accessibile; i test e2e cercano gli elementi per ruolo e nome.
-- **Test e2e**: importano `test` ed `expect` da `e2e/fixtures.ts`, la cui `page` è già passata da «Inizia da zero»; solo `e2e/onboarding.spec.ts` parte dalla schermata di benvenuto.
+- **Test e2e**: importano `test` ed `expect` da `e2e/fixtures.ts`, la cui `page` è già passata da «Inizia da zero»; solo `e2e/onboarding.spec.ts` parte dalla schermata di benvenuto. Durante una transizione di pagina il dito (o il mouse) non raggiunge la pagina: prima di un trascinamento subito dopo una navigazione, `pageSettled(page)` di `e2e/fixtures.ts`.
 
 ## Deploy
 

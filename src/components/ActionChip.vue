@@ -36,7 +36,7 @@ defineProps<{
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  touch-action: manipulation;
+  transition: background-color var(--motion-press) var(--motion-ease);
 }
 
 /* 44 px touch target around the 36 px chip. */
@@ -46,8 +46,16 @@ defineProps<{
   inset: -0.25rem 0;
 }
 
+@media (hover: hover) {
+  .action-chip:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
 .action-chip:active {
-  background: var(--color-paper);
+  background: var(--color-pressed);
+  transition-duration: 0s;
 }
 
 .action-chip:focus-visible {
