@@ -19,7 +19,9 @@ import { formatDate, today } from '@/domain/dates'
 import { formatAmount } from '@/domain/money'
 import { periodLabel, periodRange } from '@/domain/periods'
 import { summarize } from '@/domain/summary'
+import AccountSelector from '@/features/accounts/AccountSelector.vue'
 import { useIntlLocale } from '@/i18n/locale'
+import { useAccountFilterStore } from '@/stores/account-filter'
 import { usePeriodStore } from '@/stores/period'
 import CategorySection from './CategorySection.vue'
 import HomeActions from './HomeActions.vue'
@@ -34,12 +36,19 @@ const { t } = useI18n()
 const intlLocale = useIntlLocale()
 const store = usePeriodStore()
 const { period, direction, isCurrent } = storeToRefs(store)
+const { accountId } = storeToRefs(useAccountFilterStore())
 
 // The result carries its period, so the page never mixes the totals of two periods.
 const { data } = useLiveQuery(async () => {
   const shown: Period = period.value
-  return { period: shown, transactions: await listTransactions(periodRange(shown)) }
-}, [period])
+  return {
+    period: shown,
+    transactions: await listTransactions({
+      ...periodRange(shown),
+      accountId: accountId.value ?? undefined,
+    }),
+  }
+}, [period, accountId])
 
 const { data: categories } = useLiveQuery(() => listCategories({ includeArchived: true }))
 
@@ -139,13 +148,17 @@ useHorizontalSwipe(swipeArea, step => store.shift(step))
       <AppLogo />
     </template>
     <template #actions>
-      <ActionChip
-        v-if="!isCurrent"
-        icon="calendar-dot"
-        :label="t('period.today')"
-        :aria-label="t('period.backToToday')"
-        @click="store.goToToday()"
-      />
+      <div class="home__actions">
+        <ActionChip
+          v-if="!isCurrent"
+          icon="calendar-dot"
+          class="home__today"
+          :label="t('period.today')"
+          :aria-label="t('period.backToToday')"
+          @click="store.goToToday()"
+        />
+        <AccountSelector />
+      </div>
     </template>
 
     <PeriodSwitcher
@@ -210,6 +223,17 @@ useHorizontalSwipe(swipeArea, step => store.shift(step))
 <style scoped>
 .home {
   padding-bottom: var(--action-bar-height);
+}
+
+.home__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.home__today {
+  flex-shrink: 0;
 }
 
 .home__period {

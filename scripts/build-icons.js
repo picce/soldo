@@ -29,6 +29,14 @@ const LIGHT = [
   'hand-coins',
   'arrow-counter-clockwise',
   'wallet',
+  // Accounts, payment methods and transfers
+  'credit-card',
+  'bank',
+  'coins',
+  'vault',
+  'money',
+  'arrows-left-right',
+  'arrows-down-up',
   // Quick add and transaction editor
   'x',
   'calendar-blank',

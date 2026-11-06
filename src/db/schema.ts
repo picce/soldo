@@ -1,9 +1,9 @@
 /**
- * Records stored in IndexedDB (docs/specs/released/dati-locali.md). Schema v1 already holds every
- * table of the roadmap, so later phases add behaviour without destructive migrations.
+ * Records stored in IndexedDB (docs/specs/released/dati-locali.md). Schema v1 holds the tables of
+ * the roadmap; v2 adds the payment methods (docs/specs/conti-pagamenti-trasferimenti.md).
  */
 
-export const SCHEMA_VERSION = 1
+export const SCHEMA_VERSION = 2
 
 export const DEFAULT_CURRENCY = 'EUR'
 
@@ -40,6 +40,28 @@ export interface Account extends BaseRecord {
   currency: string
   archived: boolean
   order: number
+}
+
+export const PAYMENT_PRESETS = [
+  'cash',
+  'card',
+  'satispay',
+  'bankTransfer',
+  'other',
+] as const
+export type PaymentPreset = typeof PAYMENT_PRESETS[number]
+
+/** How an expense is paid, tied to the account it is charged to. */
+export interface PaymentMethod extends BaseRecord {
+  /** Name chosen by the user. Without it, the name is the translation of `preset`. */
+  name?: string
+  preset?: PaymentPreset
+  /** Phosphor icon name (scripts/build-icons.js). */
+  icon: string
+  /** Account the expenses paid this way are charged to. */
+  accountId: string
+  order: number
+  archived: boolean
 }
 
 export const CATEGORY_KINDS = ['expense', 'income'] as const
@@ -102,8 +124,10 @@ export interface Transaction extends BaseRecord {
   /** Local calendar date, `YYYY-MM-DD`. */
   date: string
   accountId: string
-  /** Destination account, transfers only (Phase 4). */
+  /** Destination account, transfers only. */
   toAccountId?: string
+  /** Expenses only. Expenses saved before Phase 4 have none. */
+  paymentMethodId?: string
   /** Null for transfers. */
   categoryId: string | null
   note: string

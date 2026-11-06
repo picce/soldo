@@ -4,6 +4,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { restoreScroll } from '@/app/scroll'
 import { i18n } from '@/i18n'
 
+/** Kinds of the quick add as written in the URL, with the title of the page. */
+const NEW_KINDS: Record<string, { kind: 'expense' | 'income' | 'transfer', titleKey: string }> = {
+  uscita: { kind: 'expense', titleKey: 'editor.newExpense' },
+  entrata: { kind: 'income', titleKey: 'editor.newIncome' },
+  trasferimento: { kind: 'transfer', titleKey: 'editor.newTransfer' },
+}
+
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -62,21 +69,63 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: '/nuovo/:kind(uscita|entrata)',
+    path: '/impostazioni/conti',
+    name: 'accounts',
+    component: () => import('@/features/accounts/AccountsView.vue'),
+    meta: { titleKey: 'accounts.title', fullscreen: true, depth: 1 },
+  },
+  {
+    path: '/impostazioni/conti/:id',
+    name: 'account-edit',
+    component: () => import('@/features/accounts/AccountEditView.vue'),
+    props: route => ({
+      id: route.params.id === 'nuovo'
+        ? null
+        : route.params.id,
+    }),
+    meta: {
+      titleKey: route => route.params.id === 'nuovo'
+        ? 'accountEdit.new'
+        : 'accountEdit.edit',
+      fullscreen: true,
+      depth: 2,
+    },
+  },
+  {
+    path: '/impostazioni/pagamenti',
+    name: 'payment-methods',
+    component: () => import('@/features/payments/PaymentMethodsView.vue'),
+    meta: { titleKey: 'payments.title', fullscreen: true, depth: 1 },
+  },
+  {
+    path: '/impostazioni/pagamenti/:id',
+    name: 'payment-method-edit',
+    component: () => import('@/features/payments/PaymentMethodEditView.vue'),
+    props: route => ({
+      id: route.params.id === 'nuovo'
+        ? null
+        : route.params.id,
+    }),
+    meta: {
+      titleKey: route => route.params.id === 'nuovo'
+        ? 'paymentEdit.new'
+        : 'paymentEdit.edit',
+      fullscreen: true,
+      depth: 2,
+    },
+  },
+  {
+    path: '/nuovo/:kind(uscita|entrata|trasferimento)',
     name: 'transaction-new',
     component: () => import('@/features/transactions/TransactionEditorView.vue'),
     props: route => ({
       target: {
         mode: 'new',
-        kind: route.params.kind === 'entrata'
-          ? 'income'
-          : 'expense',
+        kind: NEW_KINDS[route.params.kind as string]?.kind ?? 'expense',
       },
     }),
     meta: {
-      titleKey: route => route.params.kind === 'entrata'
-        ? 'editor.newIncome'
-        : 'editor.newExpense',
+      titleKey: route => NEW_KINDS[route.params.kind as string]?.titleKey ?? 'editor.newExpense',
       fullscreen: true,
       modal: true,
     },

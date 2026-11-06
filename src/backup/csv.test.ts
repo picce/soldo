@@ -31,6 +31,7 @@ function options(locale: 'it' | 'en'): CsvOptions {
         'Importo',
         'Categoria',
         'Conto',
+        'Pagamento',
         'Nota',
       ],
       kinds: { expense: 'Uscita', income: 'Entrata', transfer: 'Trasferimento' },
@@ -38,7 +39,12 @@ function options(locale: 'it' | 'en'): CsvOptions {
     categoryName: item => item.categoryId === 'groceries'
       ? 'Spesa'
       : 'Stipendio',
-    accountName: () => 'Contanti',
+    accountName: item => item.kind === 'transfer'
+      ? 'Banca → Contanti'
+      : 'Contanti',
+    paymentName: item => item.paymentMethodId
+      ? 'Carta'
+      : '',
   }
 }
 
@@ -61,9 +67,9 @@ describe('transactionsToCsv', () => {
 
     expect(csv.startsWith(BOM)).toBe(true)
     expect(lines(csv)).toEqual([
-      'Data;Tipo;Importo;Categoria;Conto;Nota',
-      '2026-11-01;Entrata;2450,00;Stipendio;Contanti;',
-      '2026-11-05;Uscita;-12,40;Spesa;Contanti;Esselunga',
+      'Data;Tipo;Importo;Categoria;Conto;Pagamento;Nota',
+      '2026-11-01;Entrata;2450,00;Stipendio;Contanti;;',
+      '2026-11-05;Uscita;-12,40;Spesa;Contanti;;Esselunga',
       '',
     ])
   })
@@ -72,7 +78,7 @@ describe('transactionsToCsv', () => {
     const csv = transactionsToCsv([
       transaction({ amountCents: 5 }),
     ], options('en'))
-    expect(lines(csv)[1]).toBe('2026-11-05,Uscita,-0.05,Spesa,Contanti,')
+    expect(lines(csv)[1]).toBe('2026-11-05,Uscita,-0.05,Spesa,Contanti,,')
   })
 
   it('quotes separators, quotes and line breaks', () => {
@@ -88,10 +94,25 @@ describe('transactionsToCsv', () => {
     ], options('it'))).toContain(';a, b\r\n')
   })
 
+  it('writes the payment method of an expense and both accounts of a transfer', () => {
+    const csv = transactionsToCsv([
+      transaction({ paymentMethodId: 'card' }),
+      transaction({
+        kind: 'transfer',
+        amountCents: 10000,
+        categoryId: null,
+        toAccountId: 'cash',
+        createdAt: '2026-11-05T11:00:00.000Z',
+      }),
+    ], options('it'))
+    expect(lines(csv)[1]).toBe('2026-11-05;Uscita;-12,40;Spesa;Contanti;Carta;')
+    expect(lines(csv)[2]).toBe('2026-11-05;Trasferimento;100,00;Stipendio;Banca → Contanti;;')
+  })
+
   it('keeps notes from turning into spreadsheet formulas', () => {
     const csv = transactionsToCsv([
       transaction({ note: '=1+1' }),
     ], options('it'))
-    expect(lines(csv)[1]).toBe('2026-11-05;Uscita;-12,40;Spesa;Contanti;\'=1+1')
+    expect(lines(csv)[1]).toBe('2026-11-05;Uscita;-12,40;Spesa;Contanti;;\'=1+1')
   })
 })

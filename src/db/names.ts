@@ -1,4 +1,4 @@
-import type { Account, Category } from './schema'
+import type { Account, Category, PaymentMethod } from './schema'
 import { i18n } from '@/i18n'
 
 /**
@@ -19,4 +19,21 @@ export function accountName(account: Pick<Account, 'name' | 'preset'>): string {
   return account.preset
     ? i18n.global.t(`presets.accounts.${account.preset}`)
     : ''
+}
+
+export function paymentMethodName(method: Pick<PaymentMethod, 'name' | 'preset'>): string {
+  if (method.name)
+    return method.name
+  return method.preset
+    ? i18n.global.t(`presets.payments.${method.preset}`)
+    : ''
+}
+
+/** Both sides of a transfer: «Banca → Contanti». */
+export function transferRoute(from?: Pick<Account, 'name' | 'preset'>, to?: Pick<Account, 'name' | 'preset'>): string {
+  return `${from
+    ? accountName(from)
+    : ''} → ${to
+    ? accountName(to)
+    : ''}`
 }

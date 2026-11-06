@@ -5,6 +5,7 @@ import { accountName, categoryName } from './names'
 import { getDefaultAccount } from './repositories/accounts'
 import { addCategory, listCategories } from './repositories/categories'
 import { getMeta } from './repositories/meta'
+import { SCHEMA_VERSION } from './schema'
 import { seedDefaults } from './seed'
 
 beforeEach(async () => {
@@ -43,7 +44,16 @@ describe('seedDefaults', () => {
 
     const account = await getDefaultAccount()
     expect(account && accountName(account)).toBe('Contanti')
-    expect(await getMeta('schemaVersion')).toBe(1)
+    expect(await getMeta('schemaVersion')).toBe(SCHEMA_VERSION)
+    const methods = await db.paymentMethods.orderBy('order').toArray()
+    expect(methods.map(method => method.preset)).toEqual([
+      'cash',
+      'card',
+      'satispay',
+      'bankTransfer',
+      'other',
+    ])
+    expect(new Set(methods.map(method => method.accountId))).toEqual(new Set([account!.id]))
   })
 
   it('runs only once', async () => {

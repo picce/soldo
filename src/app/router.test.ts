@@ -47,6 +47,8 @@ describe('router', () => {
     expect(router.currentRoute.value.meta.fullscreen).toBe(true)
     await router.push('/nuovo/uscita')
     expect(document.title).toBe('Nuova uscita · Soldo')
+    await router.push('/nuovo/trasferimento')
+    expect(document.title).toBe('Nuovo trasferimento · Soldo')
     await router.push('/nuovo/altro')
     expect(router.currentRoute.value.name).toBe('home')
   })

@@ -107,14 +107,24 @@
     "noMatchTitle": "No transactions match these filters.",
     "noMatchHint": "Remove a filter to see the other transactions.",
     "noResultsTitle": "No results for “{query}”.",
-    "noResultsHint": "The search covers notes and categories of every month."
+    "noResultsHint": "The search covers notes and categories of every month.",
+    "transfers": "Transfers",
+    "transfer": "Transfer",
+    "payment": "Payment",
+    "paymentCount": "Payment ({count})"
   },
-  "categoryFilter": {
-    "title": "Categories",
-    "all": "All categories",
+  "filterSheet": {
     "reset": "Reset",
     "apply": "Apply",
     "applyCount": "Apply ({count})"
+  },
+  "categoryFilter": {
+    "title": "Categories",
+    "all": "All categories"
+  },
+  "paymentFilter": {
+    "title": "Payment methods",
+    "all": "All payment methods"
   },
   "settings": {
     "language": {
@@ -123,6 +133,13 @@
       "it": "Italiano",
       "en": "English",
       "hint": "Automatic uses the language of your device."
+    },
+    "accounts": {
+      "label": "Accounts and payments",
+      "accounts": "Accounts",
+      "accountsCount": "no accounts | {n} account | {n} accounts",
+      "payments": "Payment methods",
+      "paymentsCount": "no methods | {n} method | {n} methods"
     },
     "categories": {
       "label": "Categories",
@@ -148,6 +165,109 @@
       "privacyDetail": "Where your data lives and what Soldo sees"
     }
   },
+  "sortable": {
+    "moveUp": "Move up: {name}",
+    "moveDown": "Move down: {name}",
+    "moved": "{name}: position {position} of {count}"
+  },
+  "accounts": {
+    "title": "Accounts",
+    "list": "Accounts",
+    "total": "Total",
+    "default": "Default",
+    "archived": "Archived ({count})",
+    "hint": "The first one is the default account: to change it, drag another one to the top.",
+    "new": "New account"
+  },
+  "accountEdit": {
+    "new": "New account",
+    "edit": "Edit account",
+    "name": "Name",
+    "defaultName": "Default name: it follows the language until you change it.",
+    "nameRequired": "Write a name.",
+    "nameTaken": "There is already an account with this name.",
+    "icon": "Icon",
+    "color": "Color",
+    "initialBalance": "Initial balance",
+    "balanceSign": "Sign of the initial balance",
+    "positive": "In credit",
+    "negative": "Overdrawn",
+    "balanceHint": "What the account held before its first transaction.",
+    "invalidBalance": "Write a valid amount, for example 1,200.00.",
+    "save": "Save",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "delete": "Delete account",
+    "movements": "See transactions",
+    "usage": "Used in {n} transaction: to remove it, archive it. | Used in {n} transactions: to remove it, archive it.",
+    "unused": "No transactions on this account.",
+    "lastAccount": "It is the only active account: to archive it, create another one first.",
+    "archivedNote": "Archived: it is not offered any more, but it stays in the transactions.",
+    "added": "Added: {name}",
+    "archivedToast": "Archived: {name}",
+    "archivedMovedToast": "Archived: {name}. Its payment methods move to {successor}.",
+    "unarchivedToast": "Restored: {name}",
+    "deletedToast": "Deleted: {name}",
+    "deletedMovedToast": "Deleted: {name}. Its payment methods move to {successor}."
+  },
+  "accountIcons": {
+    "wallet": "Wallet",
+    "creditCard": "Card",
+    "bank": "Bank",
+    "piggyBank": "Piggy bank",
+    "coins": "Coins",
+    "vault": "Safe"
+  },
+  "accountSelector": {
+    "label": "Account: {name}",
+    "title": "Account",
+    "all": "All accounts",
+    "manage": "Manage accounts"
+  },
+  "accountSheet": {
+    "title": "Account"
+  },
+  "payments": {
+    "title": "Payment methods",
+    "list": "Payment methods",
+    "archived": "Archived ({count})",
+    "hint": "Each expense starts from the last method used and comes out of the account shown here.",
+    "new": "New payment method"
+  },
+  "paymentEdit": {
+    "new": "New payment method",
+    "edit": "Edit payment method",
+    "name": "Name",
+    "defaultName": "Default name: it follows the language until you change it.",
+    "nameRequired": "Write a name.",
+    "nameTaken": "There is already a payment method with this name.",
+    "icon": "Icon",
+    "account": "Linked account",
+    "accountHint": "The next expenses paid this way come out of this account. Those already made stay where they are.",
+    "save": "Save",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "delete": "Delete payment method",
+    "usage": "Used in {n} expense: to remove it, archive it. | Used in {n} expenses: to remove it, archive it.",
+    "lastMethod": "It is the only active payment method: to archive it, create another one first.",
+    "archivedNote": "Archived: it is not offered any more, but it stays in the transactions.",
+    "added": "Added: {name}",
+    "archivedToast": "Archived: {name}",
+    "unarchivedToast": "Restored: {name}",
+    "deletedToast": "Deleted: {name}"
+  },
+  "paymentIcons": {
+    "wallet": "Wallet",
+    "creditCard": "Card",
+    "deviceMobile": "Phone",
+    "bank": "Bank",
+    "money": "Banknote",
+    "dotsThreeOutline": "Three dots"
+  },
+  "paymentSheet": {
+    "title": "Payment",
+    "manage": "Manage payment methods"
+  },
   "categories": {
     "title": "Categories",
     "kind": "Category type",
@@ -155,9 +275,6 @@
     "income": "Income",
     "listExpense": "Expense categories",
     "listIncome": "Income categories",
-    "moveUp": "Move up: {name}",
-    "moveDown": "Move down: {name}",
-    "moved": "{name}: position {position} of {count}",
     "archived": "Archived ({count})",
     "empty": "No active categories. Add one below.",
     "new": "New category"
@@ -301,6 +418,7 @@
     "amount": "Amount",
     "category": "Category",
     "account": "Account",
+    "payment": "Payment",
     "note": "Note",
     "expense": "Expense",
     "income": "Income",
@@ -334,7 +452,18 @@
     "noteChip": "Note: {note}",
     "save": "Save",
     "duplicate": "Duplicate",
-    "delete": "Delete transaction"
+    "delete": "Delete transaction",
+    "transfer": "Transfer",
+    "newTransfer": "New transfer",
+    "payment": "Payment",
+    "paymentChip": "Payment: {payment}",
+    "accountChip": "Account: {account}",
+    "from": "From",
+    "to": "To",
+    "fromTitle": "From which account",
+    "toTitle": "To which account",
+    "swap": "Swap",
+    "chooseAccounts": "Choose two different accounts"
   },
   "dateSheet": {
     "title": "Date",
@@ -383,6 +512,13 @@
     },
     "accounts": {
       "cash": "Cash"
+    },
+    "payments": {
+      "cash": "Cash",
+      "card": "Card",
+      "satispay": "Satispay",
+      "bankTransfer": "Bank transfer",
+      "other": "Other"
     }
   }
 }

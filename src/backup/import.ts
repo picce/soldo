@@ -1,5 +1,8 @@
 import type { BackupFile } from './format'
+import type { Account } from '@/db/schema'
 import { db } from '@/db/database'
+import { defaultPaymentMethods, firstActiveAccount } from '@/db/payment-defaults'
+import { SCHEMA_VERSION } from '@/db/schema'
 import { backupFileSchema } from './format'
 import { gunzip, isGzip, sha256Hex } from './pack'
 import { BACKUP_FORMAT } from './version'
@@ -29,6 +32,27 @@ function alive<T extends { deletedAt: string | null }>(rows: T[]): number {
 
 const NOT_SOLDO: BackupReading = { ok: false, error: 'notSoldo' }
 
+/**
+ * Format 1 had no payment methods: the file gets the default ones, on its first account, as the
+ * database does when it upgrades. A file with broken data fails the check that follows.
+ */
+function upgradeFormat1(raw: object): object {
+  const data = (raw as { data?: { accounts?: unknown } }).data
+  if (typeof data !== 'object' || data === null || !Array.isArray(data.accounts))
+    return raw
+  const account = firstActiveAccount(data.accounts as Account[])
+  return {
+    ...raw,
+    format: BACKUP_FORMAT,
+    data: {
+      ...data,
+      paymentMethods: account
+        ? defaultPaymentMethods(account.id)
+        : [],
+    },
+  }
+}
+
 /** Reads and checks a backup file, plain JSON or compressed, without touching the database. */
 export async function readBackup(file: File): Promise<BackupReading> {
   if (file.size > MAX_FILE_BYTES)
@@ -52,7 +76,6 @@ export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: 
   }
   if (typeof raw !== 'object' || raw === null || (raw as { app?: unknown }).app !== 'soldo')
     return NOT_SOLDO
-  // Format 1 is the only one so far: older formats would be upgraded here.
   const format = (raw as { format?: unknown }).format
   if (typeof format === 'number' && format > BACKUP_FORMAT)
     return { ok: false, error: 'newerFormat' }
@@ -60,7 +83,9 @@ export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: 
   if (checksum && await sha256Hex(JSON.stringify((raw as { data?: unknown }).data)) !== checksum)
     return { ok: false, error: 'invalid' }
 
-  const parsed = backupFileSchema.safeParse(raw)
+  const parsed = backupFileSchema.safeParse(format === 1
+    ? upgradeFormat1(raw)
+    : raw)
   if (!parsed.success)
     return { ok: false, error: 'invalid' }
   const backup = parsed.data
@@ -88,6 +113,7 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
     await Promise.all(db.tables.map(table => table.clear()))
     await Promise.all([
       db.accounts.bulkAdd(data.accounts),
+      db.paymentMethods.bulkAdd(data.paymentMethods),
       db.categories.bulkAdd(data.categories),
       db.transactions.bulkAdd(data.transactions),
       db.budgets.bulkAdd(data.budgets),
@@ -95,6 +121,9 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
       db.settings.bulkAdd(data.settings),
       db.meta.bulkAdd(data.meta),
     ])
-    await db.meta.put({ key: 'lastExportAt', value: backup.exportedAt })
+    await db.meta.bulkPut([
+      { key: 'lastExportAt', value: backup.exportedAt },
+      { key: 'schemaVersion', value: SCHEMA_VERSION },
+    ])
   })
 }
