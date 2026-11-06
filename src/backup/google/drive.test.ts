@@ -56,7 +56,7 @@ describe('google drive provider', () => {
       parents: [folders[0]!.id],
       appProperties: {
         soldo: 'backup',
-        format: '1',
+        format: '2',
         day: '2026-11-04',
         transactions: '12',
       },

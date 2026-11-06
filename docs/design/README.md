@@ -36,6 +36,23 @@ Le schermate che i mockup del nucleo non coprivano ([spec](../specs/released/moc
 | Importa backup | <img src="render/importa-backup-chiaro.png" width="220" alt="Importa backup in chiaro"> | <img src="render/importa-backup-scuro.png" width="220" alt="Importa backup in scuro"> |
 | Onboarding su Android | <img src="render/onboarding-android-chiaro.png" width="220" alt="Onboarding su Android in chiaro"> | <img src="render/onboarding-android-scuro.png" width="220" alt="Onboarding su Android in scuro"> |
 
+### Fase 4
+
+Conti, pagamenti e trasferimenti ([spec](../specs/released/conti-pagamenti-trasferimenti.md)), approvati il 2026-11-06. **Non sono ancora in `design/soldo.figcraft`**: disegnati in HTML con gli stessi token, font e icone ([mockup-fase-4/](mockup-fase-4/)), vanno riportati nel file alla prima sessione in locale.
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Impostazioni | <img src="render/impostazioni-conti-chiaro.png" width="220" alt="Impostazioni in chiaro"> | <img src="render/impostazioni-conti-scuro.png" width="220" alt="Impostazioni in scuro"> |
+| Conti | <img src="render/conti-chiaro.png" width="220" alt="Conti in chiaro"> | <img src="render/conti-scuro.png" width="220" alt="Conti in scuro"> |
+| Modifica conto | <img src="render/modifica-conto-chiaro.png" width="220" alt="Modifica conto in chiaro"> | <img src="render/modifica-conto-scuro.png" width="220" alt="Modifica conto in scuro"> |
+| Tipi di pagamento | <img src="render/tipi-pagamento-chiaro.png" width="220" alt="Tipi di pagamento in chiaro"> | <img src="render/tipi-pagamento-scuro.png" width="220" alt="Tipi di pagamento in scuro"> |
+| Modifica pagamento | <img src="render/modifica-pagamento-chiaro.png" width="220" alt="Modifica pagamento in chiaro"> | <img src="render/modifica-pagamento-scuro.png" width="220" alt="Modifica pagamento in scuro"> |
+| Selettore del conto | <img src="render/foglio-conto-chiaro.png" width="220" alt="Selettore del conto in chiaro"> | <img src="render/foglio-conto-scuro.png" width="220" alt="Selettore del conto in scuro"> |
+| Foglio del pagamento | <img src="render/foglio-pagamento-chiaro.png" width="220" alt="Foglio del pagamento in chiaro"> | <img src="render/foglio-pagamento-scuro.png" width="220" alt="Foglio del pagamento in scuro"> |
+| Nuovo trasferimento | <img src="render/nuovo-trasferimento-chiaro.png" width="220" alt="Nuovo trasferimento in chiaro"> | <img src="render/nuovo-trasferimento-scuro.png" width="220" alt="Nuovo trasferimento in scuro"> |
+| Riga del trasferimento | <img src="render/movimenti-trasferimento-chiaro.png" width="220" alt="Riga del trasferimento in chiaro"> | <img src="render/movimenti-trasferimento-scuro.png" width="220" alt="Riga del trasferimento in scuro"> |
+| Home a 360 px | <img src="render/home-360-chiaro.png" width="220" alt="Home a 360 px in chiaro"> | <img src="render/home-360-scuro.png" width="220" alt="Home a 360 px in scuro"> |
+
 Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
 
 ## File di design
@@ -263,6 +280,15 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 - **Categorie**: maniglia `dots-six-vertical` in `testo-2` a sinistra; la riga trascinata ha il contorno `biro` e le altre scorrono per farle posto. Con la tastiera, al posto della maniglia compaiono le frecce `caret-up` e `caret-down` (Sposta su, Sposta giù). Le righe sono alte almeno 44 px. Il cestino in alto nella modifica c'è solo per le categorie mai usate.
 - **Caselle di spunta**: 22 px, raggio 4; spuntate piene in `biro` con `check` in `su-biro`.
 - **Scelta di icona e colore**: griglia di 6 icone per riga e otto campioni di colore; la scelta ha il bordo `biro` (icona) o `inchiostro` (colore) da 2 px, e il nome del colore compare accanto al titolo.
+
+### Conti e pagamenti
+
+- **Selettore del conto**: icona `wallet`, nome del conto e `caret-down` nello stile Comando, in alto a destra in Home e Movimenti. Si vede solo con almeno due conti attivi. Nella Home sta accanto a «Oggi»; a 360 px un nome lungo si accorcia con i puntini.
+- **Foglio di scelta** (selettore, pagamento, conto): righe in una scheda, un tocco sceglie e chiude, la scelta ha `check` in `biro`. Saldi nello stile Importo.
+- **Elenco dei conti**: maniglia, quadratino del colore, icona, nome, saldo e freccia; sopra, il totale con la riga a puntini. Il primo dell'elenco dice «Predefinito».
+- **Pagamento**: pulsante tra Data e Nota sulle uscite. Sotto il nome di un pagamento c'è il suo conto, salvo che i due nomi coincidano («Contanti»). Solo icone generiche, mai i loghi dei marchi.
+- **Saldo iniziale**: campo in Mono con accanto «In attivo / In rosso», perché il tastierino numerico dell'iPhone non ha il meno.
+- **Trasferimento**: terzo segmento del selettore in alto, con almeno due conti attivi. Righe «Da» e «A», «Scambia» accanto a Data e Nota, «Salva» sotto le righe. In Movimenti: icona `arrows-left-right` in `testo-2`, «Banca → Contanti» e importo senza segno in `inchiostro`.
 
 ### Onboarding
 

@@ -9,7 +9,8 @@
 | 2 — Nucleo local-first | Completata e pubblicata con la versione 0.2.0 (2026-11-05): aggiunta rapida, Home, Movimenti, categorie, backup manuale e CSV, onboarding (spec in [docs/specs/released](specs/released/)) |
 | Prima della Fase 3 | Pubblicata con la versione 0.3.0 (2026-11-05): [sensazione da app nativa](specs/released/sensazione-nativa.md), cioè risposta al tocco, transizioni tra le pagine, gesti, liste e cifre animate |
 | 3 — Backup su Google Drive | Pubblicata con la versione 0.4.0 (2026-11-05), da attivare: serve la configurazione di Google ([docs/google-drive.md](google-drive.md)), poi la prova con un Drive vero chiude la [spec](specs/backup-google-drive.md) |
-| 4–7 | Da iniziare |
+| 4 — Conti, trasferimenti, budget, ricorrenze | In corso: [conti, pagamenti e trasferimenti](specs/released/conti-pagamenti-trasferimenti.md) pubblicati con la versione 0.5.0 (2026-11-06); budget e ricorrenze da fare. `design/soldo.figcraft` da allineare ai mockup in `docs/design/mockup-fase-4/` |
+| 5–7 | Da iniziare |
 
 ## Spec attive
 
@@ -18,6 +19,8 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
+| Budget mensili | Fase 4 | da definire | Nessuna | Da scrivere |
+| Ricorrenze | Fase 4 | da definire | Conti, pagamenti e trasferimenti | Da scrivere |
 
 ## Contesto
 
@@ -159,6 +162,7 @@ Le spec della fase sono nella tabella «Spec attive».
 
 ### Fase 4 — Conti, trasferimenti, budget, ricorrenze
 - **Conti**: CRUD, saldo iniziale, saldo corrente calcolato, filtro per conto in Home, vista "tutti i conti".
+- **Tipi di pagamento**: elenco modificabile (Contanti, Carta, Satispay, Bonifico, Altro), ognuno legato a un conto; sulle uscite si sceglie il pagamento, si parte dall'ultimo usato e il conto viene di conseguenza. Aggiunti il 2026-11-06.
 - **Trasferimenti**: `kind: transfer` con `accountId` → `toAccountId`, esclusi dalle statistiche di entrate e uscite.
 - **Budget mensili**: budget totale e per categoria, barre di avanzamento, avvisi in-app all'80% e al 100%, "ripeti ogni mese", navigazione tra i mesi.
 - **Ricorrenze**: regole (frequenza e intervallo, inizio e fine), generazione delle occorrenze scadute all'avvio con **ID deterministico** (regola + data), così non si creano duplicati. Elenco dei prossimi addebiti, modifica e stop della serie.

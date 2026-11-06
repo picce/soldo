@@ -59,7 +59,7 @@ test('rows move with the keyboard buttons and with the handle', async ({ page })
 
   // Dragging Ristoranti by its handle to the top, once the page has slid in.
   await pageSettled(page)
-  const handle = list.locator('li').nth(2).locator('.category-row__handle')
+  const handle = list.locator('li').nth(2).locator('.sortable-row__handle')
   const box = (await handle.boundingBox())!
   const top = (await list.locator('li').first().boundingBox())!
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)

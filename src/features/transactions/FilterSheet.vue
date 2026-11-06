@@ -1,17 +1,26 @@
 <script setup lang="ts">
-import type { Category } from '@/db/schema'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/AppIcon.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
-import { categoryName } from '@/db/names'
+
+export interface FilterItem {
+  id: string
+  label: string
+  icon: string
+  /** Palette color of the icon, 1 to 8; without it the icon follows the text. */
+  color?: number
+}
 
 /**
- * Category filter of Movimenti (mockup "Filtro categoria"). The choice applies with
- * «Applica»; «Azzera» removes the filter. No category ticked means all of them.
+ * A filter of Movimenti with many choices: categories (mockup "Filtro categoria") and payment
+ * methods. The choice applies with «Applica»; «Azzera» removes the filter. Nothing ticked means
+ * all of them.
  */
 const props = defineProps<{
-  categories: Category[]
+  title: string
+  allLabel: string
+  items: FilterItem[]
   selected: string[]
 }>()
 
@@ -26,7 +35,7 @@ const draft = ref<string[]>([])
 
 watch(open, (isOpen) => {
   if (isOpen)
-    draft.value = props.selected.filter(id => props.categories.some(category => category.id === id))
+    draft.value = props.selected.filter(id => props.items.some(item => item.id === id))
 })
 
 const allChecked = computed(() => draft.value.length === 0)
@@ -37,7 +46,7 @@ function toggle(id: string) {
     : [...draft.value, id]
 }
 
-/** «Tutte le categorie» cannot be unticked by itself: it is ticked by clearing the others. */
+/** «Tutte» cannot be unticked by itself: it is ticked by clearing the others. */
 function selectAll(event: Event) {
   draft.value = []
   ;(event.target as HTMLInputElement).checked = true
@@ -50,46 +59,46 @@ function apply(ids: string[]) {
 </script>
 
 <template>
-  <BottomSheet v-model="open" :title="t('categoryFilter.title')">
-    <label class="category-filter__all">
+  <BottomSheet v-model="open" :title="title">
+    <label class="filter-sheet__all">
       <input
         type="checkbox"
-        class="category-filter__input"
+        class="filter-sheet__input"
         :checked="allChecked"
         @change="selectAll"
       >
-      <span class="category-filter__box" aria-hidden="true">
+      <span class="filter-sheet__box" aria-hidden="true">
         <AppIcon v-if="allChecked" name="check" weight="regular" />
       </span>
-      <span class="type-body-strong">{{ t('categoryFilter.all') }}</span>
+      <span class="type-body-strong">{{ allLabel }}</span>
     </label>
-    <ul class="category-filter__list">
-      <li v-for="category in categories" :key="category.id">
-        <label class="category-filter__row">
+    <ul class="filter-sheet__list">
+      <li v-for="item in items" :key="item.id">
+        <label class="filter-sheet__row">
           <input
             type="checkbox"
-            class="category-filter__input"
-            :checked="draft.includes(category.id)"
-            @change="toggle(category.id)"
+            class="filter-sheet__input"
+            :checked="draft.includes(item.id)"
+            @change="toggle(item.id)"
           >
-          <span class="category-filter__box" aria-hidden="true">
-            <AppIcon v-if="draft.includes(category.id)" name="check" weight="regular" />
+          <span class="filter-sheet__box" aria-hidden="true">
+            <AppIcon v-if="draft.includes(item.id)" name="check" weight="regular" />
           </span>
           <AppIcon
-            :name="category.icon"
-            class="category-filter__icon"
-            :style="{ color: `var(--color-category-${category.color})` }"
+            :name="item.icon"
+            class="filter-sheet__icon"
+            :style="item.color ? { color: `var(--color-category-${item.color})` } : undefined"
           />
-          <span class="type-body">{{ categoryName(category) }}</span>
+          <span class="type-body">{{ item.label }}</span>
         </label>
       </li>
     </ul>
     <template #footer>
-      <VvButton :label="t('categoryFilter.reset')" modifiers="secondary" class="category-filter__button" @click="apply([])" />
+      <VvButton :label="t('filterSheet.reset')" modifiers="secondary" class="filter-sheet__button" @click="apply([])" />
       <VvButton
-        :label="draft.length ? t('categoryFilter.applyCount', { count: draft.length }) : t('categoryFilter.apply')"
+        :label="draft.length ? t('filterSheet.applyCount', { count: draft.length }) : t('filterSheet.apply')"
         modifiers="primary"
-        class="category-filter__button"
+        class="filter-sheet__button"
         @click="apply(draft)"
       />
     </template>
@@ -97,8 +106,8 @@ function apply(ids: string[]) {
 </template>
 
 <style scoped>
-.category-filter__all,
-.category-filter__row {
+.filter-sheet__all,
+.filter-sheet__row {
   position: relative;
   display: flex;
   align-items: center;
@@ -107,11 +116,11 @@ function apply(ids: string[]) {
   cursor: pointer;
 }
 
-.category-filter__all {
+.filter-sheet__all {
   margin-bottom: 0.75rem;
 }
 
-.category-filter__list {
+.filter-sheet__list {
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -121,36 +130,36 @@ function apply(ids: string[]) {
   border-radius: var(--rounded);
 }
 
-.category-filter__list li + li {
+.filter-sheet__list li + li {
   border-top: 1px solid var(--color-line);
 }
 
-.category-filter__row {
+.filter-sheet__row {
   padding: 0.25rem 1rem;
   transition: background-color var(--motion-press) var(--motion-ease);
 }
 
 @media (hover: hover) {
-  .category-filter__row:hover {
+  .filter-sheet__row:hover {
     background: var(--color-hover);
   }
 }
 
 /* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
-.category-filter__row:active {
+.filter-sheet__row:active {
   background: var(--color-pressed);
   transition-duration: 0s;
 }
 
 /* The real checkbox stays in the page for keyboard and screen readers; the box draws it. */
-.category-filter__input {
+.filter-sheet__input {
   position: absolute;
   opacity: 0;
   width: 1px;
   height: 1px;
 }
 
-.category-filter__box {
+.filter-sheet__box {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -163,25 +172,25 @@ function apply(ids: string[]) {
   color: var(--color-on-pen);
 }
 
-.category-filter__input:checked + .category-filter__box {
+.filter-sheet__input:checked + .filter-sheet__box {
   background: var(--color-pen);
   border-color: var(--color-pen);
 }
 
-.category-filter__input:focus-visible + .category-filter__box {
+.filter-sheet__input:focus-visible + .filter-sheet__box {
   outline: 2px solid var(--color-pen);
   outline-offset: 2px;
 }
 
-.category-filter__box .app-icon {
+.filter-sheet__box .app-icon {
   --app-icon-size: 1rem;
 }
 
-.category-filter__icon {
+.filter-sheet__icon {
   --app-icon-size: 1.375rem;
 }
 
-.category-filter__button {
+.filter-sheet__button {
   flex: 1;
   min-height: 3.25rem;
 }

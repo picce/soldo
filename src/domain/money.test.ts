@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { currencyPlacement, formatAmount, isValidAmountCents, MINUS } from './money'
+import { currencyPlacement, formatAmount, isValidAmountCents, MINUS, parseAmount } from './money'
 
 /** Intl puts a no-break space between the amount and the euro symbol in Italian. */
 const NO_BREAK_SPACE = String.fromCharCode(0xA0)
@@ -38,5 +38,35 @@ describe('currencyPlacement', () => {
   it('puts the euro after the number in Italian and before it in English', () => {
     expect(currencyPlacement('it-IT')).toEqual({ position: 'after', symbol: '€' })
     expect(currencyPlacement('en-GB')).toEqual({ position: 'before', symbol: '€' })
+  })
+})
+
+describe('parseAmount', () => {
+  it.each([
+    ['1.234,56', 123456],
+    ['1234,56', 123456],
+    ['1234.56', 123456],
+    ['1,234.56', 123456],
+    ['12,5', 1250],
+    ['1234', 123400],
+    ['1.234', 123400],
+    ['1.234.567', 123456700],
+    [' 0,05 ', 5],
+    ['0', 0],
+  ])('reads %s', (text, cents) => {
+    expect(parseAmount(text)).toBe(cents)
+  })
+
+  it.each([
+    '',
+    'abc',
+    '-5',
+    '12,',
+    '1,2,3',
+    '12.34.56',
+    '1.23,45',
+    '99999999999999999',
+  ])('refuses «%s»', (text) => {
+    expect(parseAmount(text)).toBeNull()
   })
 })

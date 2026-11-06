@@ -72,3 +72,10 @@ test('opens the privacy page from the settings', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: 'Privacy di Soldo' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 1, name: 'Soldo privacy' })).toBeVisible()
 })
+
+test('goes back from the privacy page to the app', async ({ page }) => {
+  await page.goto('/privacy')
+  await page.getByRole('link', { name: 'Torna a Soldo' }).click()
+  await expect(page).toHaveURL(/\/impostazioni$/)
+  await expect(page.getByRole('heading', { level: 1, name: 'Impostazioni' })).toBeVisible()
+})

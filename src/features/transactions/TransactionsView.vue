@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { FilterItem } from './FilterSheet.vue'
 import type { SwipeAction } from '@/components/SwipeRow.vue'
-import type { Account, Category, Transaction } from '@/db/schema'
+import type { Account, Category, PaymentMethod, Transaction } from '@/db/schema'
 import type { DateRange, PeriodUnit } from '@/domain/periods'
 import { useIntersectionObserver, watchDebounced } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/AppIcon.vue'
@@ -11,18 +13,21 @@ import FilterChip from '@/components/FilterChip.vue'
 import { collapse, expand } from '@/components/list-motion'
 import SearchField from '@/components/SearchField.vue'
 import SwipeRow from '@/components/SwipeRow.vue'
-import { accountName, categoryName } from '@/db/names'
+import { accountName, categoryName, paymentMethodName, transferRoute } from '@/db/names'
 import { listAccounts } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
+import { listPaymentMethods } from '@/db/repositories/payment-methods'
 import { deleteTransaction, duplicateTransaction, listTransactions } from '@/db/repositories/transactions'
 import { useLiveQuery } from '@/db/useLiveQuery'
 import { formatDate, today } from '@/domain/dates'
 import { groupByDay } from '@/domain/days'
 import { periodLabel, periodRange } from '@/domain/periods'
 import { matchesSearch } from '@/domain/search'
+import AccountSelector from '@/features/accounts/AccountSelector.vue'
 import { useIntlLocale } from '@/i18n/locale'
-import CategoryFilterSheet from './CategoryFilterSheet.vue'
+import { useAccountFilterStore } from '@/stores/account-filter'
 import DayGroup from './DayGroup.vue'
+import FilterSheet from './FilterSheet.vue'
 import { showDeleted, showDuplicated } from './notices'
 import TransactionRow from './TransactionRow.vue'
 import { useTransactionFilters } from './useTransactionFilters'
@@ -36,6 +41,7 @@ import { useTransactionFilters } from './useTransactionFilters'
 const { t } = useI18n()
 const intlLocale = useIntlLocale()
 const filters = useTransactionFilters()
+const { accountId } = storeToRefs(useAccountFilterStore())
 
 /** Days drawn at first; scrolling to the end adds as many again. */
 const DAYS_PER_PAGE = 30
@@ -55,14 +61,18 @@ const { data: transactions } = useLiveQuery(
     kinds: filters.kind.value
       ? [filters.kind.value]
       : undefined,
+    accountId: accountId.value ?? undefined,
   }),
-  [filters.range, filters.kind],
+  [filters.range, filters.kind, accountId],
 )
 const { data: categories } = useLiveQuery(() => listCategories({ includeArchived: true }))
-const { data: accounts } = useLiveQuery(() => listAccounts())
+// Archived too: their transactions keep showing the name.
+const { data: accounts } = useLiveQuery(() => listAccounts({ includeArchived: true }))
+const { data: paymentMethods } = useLiveQuery(() => listPaymentMethods({ includeArchived: true }))
 
 const categoriesById = computed(() => new Map<string, Category>((categories.value ?? []).map(item => [item.id, item])))
 const accountsById = computed(() => new Map<string, Account>((accounts.value ?? []).map(item => [item.id, item])))
+const paymentMethodsById = computed(() => new Map<string, PaymentMethod>((paymentMethods.value ?? []).map(item => [item.id, item])))
 
 function categoryOf(transaction: Transaction) {
   return transaction.categoryId
@@ -70,23 +80,53 @@ function categoryOf(transaction: Transaction) {
     : undefined
 }
 
+function routeOf(transaction: Transaction) {
+  return transferRoute(accountsById.value.get(transaction.accountId), accountsById.value.get(transaction.toAccountId ?? ''))
+}
+
 function accountOf(transaction: Transaction) {
+  if (transaction.kind === 'transfer')
+    return routeOf(transaction)
   const account = accountsById.value.get(transaction.accountId)
   return account
     ? accountName(account)
     : ''
 }
 
+function paymentOf(transaction: Transaction) {
+  const method = transaction.paymentMethodId
+    ? paymentMethodsById.value.get(transaction.paymentMethodId)
+    : undefined
+  return method
+    ? paymentMethodName(method)
+    : ''
+}
+
+/** What a notice says the transaction is about: its category, or the accounts of a transfer. */
+function subjectOf(transaction: Transaction) {
+  return transaction.kind === 'transfer'
+    ? routeOf(transaction)
+    : categoryOf(transaction)
+}
+
 const visible = computed(() => {
   const ids = filters.categoryIds.value
+  const payments = filters.paymentIds.value
   return (transactions.value ?? []).filter((transaction) => {
     if (ids.length && !(transaction.categoryId && ids.includes(transaction.categoryId)))
+      return false
+    if (payments.length && !(transaction.paymentMethodId && payments.includes(transaction.paymentMethodId)))
       return false
     const category = categoryOf(transaction)
     return matchesSearch(filters.search.value, [
       transaction.note,
       category
         ? categoryName(category)
+        : '',
+      paymentOf(transaction),
+      // Only for transfers: with «Contanti» as the default account, searching it would find all.
+      transaction.kind === 'transfer'
+        ? `${t('transactions.transfer')} ${routeOf(transaction)}`
         : '',
     ])
   })
@@ -100,7 +140,9 @@ watch([
   filters.search,
   filters.kind,
   filters.categoryIds,
+  filters.paymentIds,
   filters.range,
+  accountId,
 ], () => {
   dayLimit.value = DAYS_PER_PAGE
 })
@@ -129,12 +171,14 @@ const listKey = computed(() => JSON.stringify([
   filters.search.value,
   filters.kind.value,
   filters.categoryIds.value,
+  filters.paymentIds.value,
   filters.range.value,
+  accountId.value,
 ]))
 
 // Category filter: only the categories of the chosen kind; archived ones only if picked.
 const filterOpen = ref(false)
-const filterCategories = computed(() => {
+const filterCategories = computed<FilterItem[]>(() => {
   const kind = filters.kind.value
   const picked = filters.categoryIds.value
   return [
@@ -146,7 +190,28 @@ const filterCategories = computed(() => {
       : a.kind === 'expense'
         ? -1
         : 1))
+    .map(category => ({
+      id: category.id,
+      label: categoryName(category),
+      icon: category.icon,
+      color: category.color,
+    }))
 })
+
+// Payment method filter: the active ones; archived ones only if picked.
+const paymentFilterOpen = ref(false)
+const filterPayments = computed<FilterItem[]>(() => (paymentMethods.value ?? [])
+  .filter(method => !method.archived || filters.paymentIds.value.includes(method.id))
+  .map(method => ({
+    id: method.id,
+    label: paymentMethodName(method),
+    icon: method.icon,
+  })))
+
+/** With a single account there is nothing to transfer, unless the history says otherwise. */
+const showsTransfers = computed(() => (accounts.value ?? []).filter(account => !account.archived).length >= 2
+  || filters.kind.value === 'transfer'
+  || (transactions.value ?? []).some(transaction => transaction.kind === 'transfer'))
 
 const UNITS: PeriodUnit[] = ['day', 'week', 'month', 'year']
 
@@ -177,14 +242,14 @@ const SWIPE_DUPLICATE = computed<SwipeAction>(() => ({
 }))
 
 async function onSwipe(transaction: Transaction, direction: 'left' | 'right') {
-  const category = categoryOf(transaction)
+  const subject = subjectOf(transaction)
   if (direction === 'left') {
     await deleteTransaction(transaction.id)
-    showDeleted(transaction, category)
+    showDeleted(transaction, subject)
   }
   else {
     const copy = await duplicateTransaction(transaction.id, today())
-    showDuplicated(copy, category)
+    showDuplicated(copy, subject)
   }
 }
 
@@ -198,7 +263,7 @@ const empty = computed(() => {
       icon: true,
     }
   }
-  if (filters.active.value) {
+  if (filters.active.value || accountId.value) {
     return {
       title: t('transactions.noMatchTitle'),
       hint: t('transactions.noMatchHint'),
@@ -215,6 +280,10 @@ const empty = computed(() => {
 
 <template>
   <AppPage :title="t('nav.transactions')">
+    <template #actions>
+      <AccountSelector />
+    </template>
+
     <SearchField v-model="searchText" :placeholder="t('transactions.search')" />
 
     <div class="transactions__filters" role="group" :aria-label="t('transactions.filters')">
@@ -230,6 +299,13 @@ const empty = computed(() => {
         @click="filters.setKind('income')"
       />
       <FilterChip
+        v-if="showsTransfers"
+        :label="t('transactions.transfers')"
+        :pressed="filters.kind.value === 'transfer'"
+        @click="filters.setKind('transfer')"
+      />
+      <FilterChip
+        v-if="filters.kind.value !== 'transfer'"
         :label="filters.categoryIds.value.length
           ? t('transactions.categoryCount', { count: filters.categoryIds.value.length })
           : t('transactions.category')"
@@ -237,6 +313,16 @@ const empty = computed(() => {
         icon="caret-down"
         aria-haspopup="dialog"
         @click="filterOpen = true"
+      />
+      <FilterChip
+        v-if="filters.kind.value !== 'transfer' && filters.kind.value !== 'income'"
+        :label="filters.paymentIds.value.length
+          ? t('transactions.paymentCount', { count: filters.paymentIds.value.length })
+          : t('transactions.payment')"
+        :pressed="filters.paymentIds.value.length > 0"
+        icon="caret-down"
+        aria-haspopup="dialog"
+        @click="paymentFilterOpen = true"
       />
       <FilterChip
         v-if="periodChip"
@@ -278,6 +364,7 @@ const empty = computed(() => {
                 :transaction="transaction"
                 :category="categoryOf(transaction)"
                 :account="accountOf(transaction)"
+                :payment="paymentOf(transaction)"
               />
             </SwipeRow>
           </li>
@@ -286,11 +373,21 @@ const empty = computed(() => {
       <div ref="sentinel" class="transactions__sentinel" aria-hidden="true" />
     </template>
 
-    <CategoryFilterSheet
+    <FilterSheet
       v-model:open="filterOpen"
-      :categories="filterCategories"
+      :title="t('categoryFilter.title')"
+      :all-label="t('categoryFilter.all')"
+      :items="filterCategories"
       :selected="filters.categoryIds.value"
       @apply="filters.setCategories"
+    />
+    <FilterSheet
+      v-model:open="paymentFilterOpen"
+      :title="t('paymentFilter.title')"
+      :all-label="t('paymentFilter.all')"
+      :items="filterPayments"
+      :selected="filters.paymentIds.value"
+      @apply="filters.setPayments"
     />
   </AppPage>
 </template>

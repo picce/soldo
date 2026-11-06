@@ -1,6 +1,6 @@
 import type { BackupFile } from './format'
 import { db } from '@/db/database'
-import { accountName, categoryName } from '@/db/names'
+import { accountName, categoryName, paymentMethodName, transferRoute } from '@/db/names'
 import { now } from '@/db/records'
 import { setMeta } from '@/db/repositories/meta'
 import { SCHEMA_VERSION } from '@/db/schema'
@@ -16,8 +16,9 @@ import { BACKUP_FORMAT } from './version'
 /** Snapshot of every table, deleted rows included, read in one transaction. */
 export async function createBackup(): Promise<BackupFile> {
   return db.transaction('r', db.tables, async () => {
-    const [accounts, categories, transactions, budgets, recurrences, settings, meta] = await Promise.all([
+    const [accounts, paymentMethods, categories, transactions, budgets, recurrences, settings, meta] = await Promise.all([
       db.accounts.toArray(),
+      db.paymentMethods.toArray(),
       db.categories.toArray(),
       db.transactions.toArray(),
       db.budgets.toArray(),
@@ -33,6 +34,7 @@ export async function createBackup(): Promise<BackupFile> {
       schemaVersion: SCHEMA_VERSION,
       data: {
         accounts,
+        paymentMethods,
         categories,
         transactions,
         budgets,
@@ -66,13 +68,15 @@ export async function exportBackup(): Promise<'done' | 'cancelled'> {
 
 /** The transactions as a CSV file in the app language (not a backup: it cannot be imported). */
 export async function exportTransactionsCsv(): Promise<'done' | 'cancelled'> {
-  const [transactions, categories, accounts] = await Promise.all([
+  const [transactions, categories, accounts, paymentMethods] = await Promise.all([
     db.transactions.toArray(),
     db.categories.toArray(),
     db.accounts.toArray(),
+    db.paymentMethods.toArray(),
   ])
   const categoriesById = new Map(categories.map(category => [category.id, category]))
   const accountsById = new Map(accounts.map(account => [account.id, account]))
+  const paymentMethodsById = new Map(paymentMethods.map(method => [method.id, method]))
   const { t, locale } = i18n.global
   const csv = transactionsToCsv(transactions, {
     locale: locale.value,
@@ -83,6 +87,7 @@ export async function exportTransactionsCsv(): Promise<'done' | 'cancelled'> {
         t('csv.amount'),
         t('csv.category'),
         t('csv.account'),
+        t('csv.payment'),
         t('csv.note'),
       ],
       kinds: {
@@ -101,8 +106,18 @@ export async function exportTransactionsCsv(): Promise<'done' | 'cancelled'> {
     },
     accountName: (transaction) => {
       const account = accountsById.get(transaction.accountId)
+      if (transaction.kind === 'transfer')
+        return transferRoute(account, accountsById.get(transaction.toAccountId ?? ''))
       return account
         ? accountName(account)
+        : ''
+    },
+    paymentName: (transaction) => {
+      const method = transaction.paymentMethodId
+        ? paymentMethodsById.get(transaction.paymentMethodId)
+        : undefined
+      return method
+        ? paymentMethodName(method)
         : ''
     },
   })

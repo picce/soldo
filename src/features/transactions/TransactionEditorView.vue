@@ -8,11 +8,13 @@ import { useRouter } from 'vue-router'
 import { needsEdgeSwipe, useEdgeSwipeBack } from '@/app/gestures'
 import { goBack } from '@/app/navigation'
 import ActionChip from '@/components/ActionChip.vue'
+import AmountText from '@/components/AmountText.vue'
 import AppIcon from '@/components/AppIcon.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
 import IconButton from '@/components/IconButton.vue'
 import Keypad from '@/components/Keypad.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
+import { accountName } from '@/db/names'
 import {
   formatExpression,
   formatOperand,
@@ -23,6 +25,9 @@ import {
 } from '@/domain/calculator'
 import { addDays, formatDate, today } from '@/domain/dates'
 import { currencyPlacement, formatAmount, MINUS } from '@/domain/money'
+import AccountSheet from '@/features/accounts/AccountSheet.vue'
+import { useAccountBalances } from '@/features/accounts/useAccountBalances'
+import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 import { useIntlLocale } from '@/i18n/locale'
 import DateSheet from './DateSheet.vue'
 import NoteSheet from './NoteSheet.vue'
@@ -30,7 +35,9 @@ import { useTransactionEditor } from './useTransactionEditor'
 
 /**
  * Quick add and edit of a transaction (docs/specs/released/aggiunta-rapida.md): amount on the
- * keypad, then a tap on the category saves. Editing adds Salva, Duplica and Elimina.
+ * keypad, then a tap on the category saves. Editing adds Salva, Duplica and Elimina. An expense
+ * also says how it is paid, an income on which account, and a transfer between which two
+ * (docs/specs/released/conti-pagamenti-trasferimenti.md).
  */
 const props = defineProps<{
   target: EditorTarget
@@ -61,8 +68,26 @@ const {
   selectedId,
   hint,
   shakeCount,
+  canTransfer,
+  accountRows,
+  accountChoices,
+  paymentChoices,
+  showsAccountChoice,
+  paymentMethodId,
+  accountId,
+  fromAccountId,
+  toAccountId,
+  fromAccount,
+  toAccount,
+  paymentLabel,
+  accountLabel,
   press,
   selectCategory,
+  selectPaymentMethod,
+  selectAccount,
+  selectFrom,
+  selectTo,
+  swapAccounts,
   save,
   duplicate,
   remove,
@@ -73,29 +98,57 @@ const {
 
 const dateOpen = ref(false)
 const noteOpen = ref(false)
+const paymentOpen = ref(false)
+const accountOpen = ref(false)
+const fromOpen = ref(false)
+const toOpen = ref(false)
+const sheetOpen = computed(() => dateOpen.value || noteOpen.value || paymentOpen.value || accountOpen.value || fromOpen.value || toOpen.value)
+
+// Next to «Da» and «A», only while a transfer is on screen: the balances read every transaction.
+const isTransfer = computed(() => kind.value === 'transfer')
+const balances = useAccountBalances(accountRows, isTransfer)
+function balanceOf(id: string | null) {
+  return id
+    ? balances.value.get(id)
+    : undefined
+}
 
 // On an installed iPhone app a swipe from the left edge closes, like Chiudi.
 const page = useTemplateRef<HTMLElement>('page')
 const edgeSwipe = needsEdgeSwipe()
 const { offset, dragging } = useEdgeSwipeBack(page, close, edgeSwipe)
 
-const kindOptions = computed<{ value: EditorKind, label: string }[]>(() => [
-  {
-    value: 'expense',
-    label: t('editor.expense'),
-  },
-  {
-    value: 'income',
-    label: t('editor.income'),
-  },
-])
+const kindOptions = computed<{ value: EditorKind, label: string }[]>(() => {
+  const transfer = {
+    value: 'transfer' as const,
+    label: t('editor.transfer'),
+  }
+  // A saved transfer stays one, and an expense or an income cannot turn into one.
+  if (isEdit && kind.value === 'transfer')
+    return [transfer]
+  return [
+    {
+      value: 'expense',
+      label: t('editor.expense'),
+    },
+    {
+      value: 'income',
+      label: t('editor.income'),
+    },
+    ...(canTransfer.value || kind.value === 'transfer'
+      ? [transfer]
+      : []),
+  ]
+})
 
 const title = computed(() => {
   if (isEdit)
     return t('editor.edit')
-  return kind.value === 'expense'
-    ? t('editor.newExpense')
-    : t('editor.newIncome')
+  return {
+    expense: t('editor.newExpense'),
+    income: t('editor.newIncome'),
+    transfer: t('editor.newTransfer'),
+  }[kind.value]
 })
 
 const showsExpression = computed(() => hasOperator(calculator.value))
@@ -111,7 +164,7 @@ const numberText = computed(() => {
 })
 
 const sign = computed(() => {
-  if (amountCents.value <= 0)
+  if (amountCents.value <= 0 || kind.value === 'transfer')
     return ''
   return kind.value === 'expense'
     ? MINUS
@@ -144,7 +197,7 @@ const KEYBOARD_KEYS: Record<string, CalculatorKey> = {
 }
 
 useEventListener(window, 'keydown', (event: KeyboardEvent) => {
-  if (event.ctrlKey || event.metaKey || event.altKey || dateOpen.value || noteOpen.value)
+  if (event.ctrlKey || event.metaKey || event.altKey || sheetOpen.value)
     return
   const element = event.target as HTMLElement | null
   if (element?.closest('input, textarea, dialog'))
@@ -169,7 +222,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     <h1 class="sr-only">
       {{ title }}
     </h1>
-    <header class="editor__top">
+    <header class="editor__top" :class="{ 'editor__top--wide': kindOptions.length > 2 }">
       <IconButton icon="x" :label="t('common.close')" @click="close" />
       <SegmentedControl v-model="kind" :options="kindOptions" :aria-label="t('editor.kind')" class="editor__kind" />
       <IconButton
@@ -222,15 +275,64 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           @click="dateOpen = true"
         />
         <ActionChip
+          v-if="kind === 'expense'"
+          icon="credit-card"
+          class="editor__money-chip"
+          :label="paymentLabel || t('editor.payment')"
+          :aria-label="paymentLabel ? t('editor.paymentChip', { payment: paymentLabel }) : undefined"
+          aria-haspopup="dialog"
+          @click="paymentOpen = true"
+        />
+        <ActionChip
+          v-else-if="kind === 'income' && showsAccountChoice"
+          icon="wallet"
+          class="editor__money-chip"
+          :label="accountLabel"
+          :aria-label="t('editor.accountChip', { account: accountLabel })"
+          aria-haspopup="dialog"
+          @click="accountOpen = true"
+        />
+        <ActionChip
           icon="note-pencil"
           :label="note || t('editor.note')"
           :aria-label="note ? t('editor.noteChip', { note }) : undefined"
           class="editor__note-chip"
           @click="noteOpen = true"
         />
+        <ActionChip
+          v-if="kind === 'transfer'"
+          icon="arrows-down-up"
+          class="editor__swap-chip"
+          :label="t('editor.swap')"
+          @click="swapAccounts"
+        />
       </div>
 
-      <section class="editor__categories" aria-labelledby="editor-categories-title">
+      <section v-if="kind === 'transfer'" class="editor__transfer" :aria-label="t('editor.transfer')">
+        <div class="editor__sides">
+          <button type="button" class="editor__side" aria-haspopup="dialog" @click="fromOpen = true">
+            <span class="editor__side-label type-label">{{ t('editor.from') }}</span>
+            <AppIcon v-if="fromAccount" :name="fromAccount.icon" :style="{ color: `var(--color-category-${fromAccount.color})` }" />
+            <span class="editor__side-name type-body">{{ fromAccount ? accountName(fromAccount) : '' }}</span>
+            <AmountText v-if="balanceOf(fromAccountId) !== undefined" :cents="balanceOf(fromAccountId)!" class="editor__side-balance" />
+            <AppIcon name="caret-right" class="editor__side-caret" />
+          </button>
+          <button type="button" class="editor__side" aria-haspopup="dialog" @click="toOpen = true">
+            <span class="editor__side-label type-label">{{ t('editor.to') }}</span>
+            <AppIcon v-if="toAccount" :name="toAccount.icon" :style="{ color: `var(--color-category-${toAccount.color})` }" />
+            <span class="editor__side-name type-body">{{ toAccount ? accountName(toAccount) : '' }}</span>
+            <AmountText v-if="balanceOf(toAccountId) !== undefined" :cents="balanceOf(toAccountId)!" class="editor__side-balance" />
+            <AppIcon name="caret-right" class="editor__side-caret" />
+          </button>
+        </div>
+        <VvButton v-if="!isEdit" :label="t('editor.save')" modifiers="primary" class="editor__transfer-save" @click="save">
+          <template #before>
+            <AppIcon name="check" class="editor__action-icon" />
+          </template>
+        </VvButton>
+      </section>
+
+      <section v-else class="editor__categories" aria-labelledby="editor-categories-title">
         <div class="editor__categories-head">
           <h2 id="editor-categories-title" class="editor__categories-title type-label">
             {{ t('editor.category') }}
@@ -265,6 +367,16 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
     <DateSheet v-model:open="dateOpen" v-model:date="date" />
     <NoteSheet v-model:open="noteOpen" v-model:note="note" />
+    <PaymentMethodSheet
+      v-model:open="paymentOpen"
+      :methods="paymentChoices"
+      :accounts="accountRows ?? []"
+      :selected="paymentMethodId"
+      @select="selectPaymentMethod"
+    />
+    <AccountSheet v-model:open="accountOpen" :accounts="accountChoices" :selected="accountId" @select="selectAccount" />
+    <AccountSheet v-model:open="fromOpen" :title="t('editor.fromTitle')" :accounts="accountChoices.filter(account => account.id !== toAccountId)" :selected="fromAccountId" @select="selectFrom" />
+    <AccountSheet v-model:open="toOpen" :title="t('editor.toTitle')" :accounts="accountChoices.filter(account => account.id !== fromAccountId)" :selected="toAccountId" @select="selectTo" />
   </div>
 </template>
 
@@ -304,6 +416,21 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 .editor__kind {
   justify-self: center;
+}
+
+/* Three kinds take the whole row, down to 360 px. */
+.editor__top--wide {
+  grid-template-columns: 2.75rem 1fr;
+}
+
+.editor__top--wide .editor__kind {
+  justify-self: stretch;
+  min-width: 0;
+}
+
+.editor__top--wide .editor__kind :deep(.segmented-control__segment) {
+  flex: 1 1 auto;
+  padding-inline: 0.5rem;
 }
 
 .editor__delete {
@@ -396,6 +523,102 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 .editor__note-chip {
   flex-shrink: 1;
+}
+
+.editor__money-chip {
+  flex-shrink: 1;
+}
+
+.editor__swap-chip {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+}
+
+.editor__transfer {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1rem var(--page-gutter);
+}
+
+.editor__sides {
+  overflow: hidden;
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: var(--rounded);
+}
+
+.editor__side {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.875rem;
+  background: none;
+  border: 0;
+  color: var(--color-ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--motion-press) var(--motion-ease);
+}
+
+.editor__side + .editor__side {
+  border-top: 1px solid var(--color-line);
+}
+
+@media (hover: hover) {
+  .editor__side:hover {
+    background: var(--color-hover);
+  }
+}
+
+/* Pressed at once, released in a moment (docs/design/README.md, "Movimento"). */
+.editor__side:active {
+  background: var(--color-pressed);
+  transition-duration: 0s;
+}
+
+.editor__side:focus-visible {
+  outline: 2px solid var(--color-pen);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor__side {
+    transition: none;
+  }
+}
+
+.editor__side-label {
+  width: 1.25rem;
+  color: var(--color-ink-2);
+}
+
+.editor__side-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor__side-balance {
+  color: var(--color-ink-2);
+}
+
+.editor__side-caret {
+  --app-icon-size: 1.125rem;
+
+  color: var(--color-ink-2);
+}
+
+.editor__transfer-save {
+  width: 100%;
+  min-height: 3.25rem;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
 }
 
 .editor__categories {

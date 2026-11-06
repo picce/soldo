@@ -4,4 +4,4 @@
  * files before checking them. Here and not in format.ts, so exporting does not load the
  * validation library.
  */
-export const BACKUP_FORMAT = 1
+export const BACKUP_FORMAT = 2

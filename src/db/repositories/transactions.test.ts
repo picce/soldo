@@ -109,4 +109,53 @@ describe('transactions repository', () => {
     await deleteTransaction(original.id)
     await expect(duplicateTransaction(original.id, '2026-11-07')).rejects.toThrow()
   })
+
+  describe('by kind', () => {
+    const transfer = (overrides: Partial<NewTransaction> = {}) => expense({
+      kind: 'transfer',
+      categoryId: null,
+      accountId: 'bank',
+      toAccountId: 'cash',
+      ...overrides,
+    })
+
+    it('saves a transfer and refuses a broken one', async () => {
+      expect((await addTransaction(transfer())).toAccountId).toBe('cash')
+      await expect(addTransaction(transfer({ toAccountId: undefined }))).rejects.toThrow(RangeError)
+      await expect(addTransaction(transfer({ toAccountId: 'bank' }))).rejects.toThrow(RangeError)
+      await expect(addTransaction(transfer({ categoryId: 'groceries' }))).rejects.toThrow(RangeError)
+    })
+
+    it('allows a destination only on a transfer and a payment method only on an expense', async () => {
+      await expect(addTransaction(expense({ toAccountId: 'bank' }))).rejects.toThrow(RangeError)
+      await expect(addTransaction(expense({ kind: 'income', paymentMethodId: 'card' }))).rejects.toThrow(RangeError)
+      await expect(addTransaction(transfer({ paymentMethodId: 'card' }))).rejects.toThrow(RangeError)
+      expect((await addTransaction(expense({ paymentMethodId: 'card' }))).paymentMethodId).toBe('card')
+    })
+
+    it('checks the whole transaction when changing it, and can take a method away', async () => {
+      const saved = await addTransaction(expense({ paymentMethodId: 'card' }))
+      await expect(updateTransaction(saved.id, { kind: 'income' })).rejects.toThrow(RangeError)
+      await updateTransaction(saved.id, { kind: 'income', paymentMethodId: undefined })
+      const stored = await getTransaction(saved.id)
+      expect(stored?.kind).toBe('income')
+      expect(stored).not.toHaveProperty('paymentMethodId')
+    })
+
+    it('duplicates the destination and the payment method', async () => {
+      const sent = await addTransaction(transfer())
+      expect((await duplicateTransaction(sent.id, '2026-11-06')).toAccountId).toBe('cash')
+      const paid = await addTransaction(expense({ paymentMethodId: 'card' }))
+      expect((await duplicateTransaction(paid.id, '2026-11-06')).paymentMethodId).toBe('card')
+    })
+
+    it('lists the transactions of an account, transfers from and to it included', async () => {
+      const onBank = await addTransaction(expense({ accountId: 'bank' }))
+      await addTransaction(expense({ accountId: 'other' }))
+      const sent = await addTransaction(transfer({ accountId: 'bank', toAccountId: 'cash' }))
+      const received = await addTransaction(transfer({ accountId: 'cash', toAccountId: 'bank' }))
+      const ids = (await listTransactions({ accountId: 'bank' })).map(item => item.id)
+      expect(ids.sort()).toEqual([onBank.id, sent.id, received.id].sort())
+    })
+  })
 })

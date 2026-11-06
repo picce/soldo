@@ -16,6 +16,8 @@ export interface TransactionQuery {
   to?: string
   kinds?: TransactionKind[]
   categoryIds?: string[]
+  /** Transactions of the account, transfers from and to it included. */
+  accountId?: string
 }
 
 function validate(fields: Partial<TransactionFields>) {
@@ -23,6 +25,21 @@ function validate(fields: Partial<TransactionFields>) {
     throw new RangeError(`Invalid amount: ${fields.amountCents}`)
   if (fields.date !== undefined && !isIsoDate(fields.date))
     throw new RangeError(`Invalid date: ${fields.date}`)
+}
+
+/** What each kind may hold: only transfers have a destination, only expenses a payment method. */
+function validateKind({ kind, accountId, toAccountId, categoryId, paymentMethodId }: TransactionFields) {
+  if (kind === 'transfer') {
+    if (!toAccountId || toAccountId === accountId)
+      throw new RangeError('A transfer needs two different accounts')
+    if (categoryId !== null)
+      throw new RangeError('A transfer has no category')
+  }
+  else if (toAccountId) {
+    throw new RangeError('Only a transfer has a destination account')
+  }
+  if (paymentMethodId && kind !== 'expense')
+    throw new RangeError('Only an expense has a payment method')
 }
 
 export async function addTransaction(input: NewTransaction): Promise<Transaction> {
@@ -33,6 +50,7 @@ export async function addTransaction(input: NewTransaction): Promise<Transaction
     source: 'manual',
     ...input,
   }
+  validateKind(transaction)
   await db.transactions.add(transaction)
   return transaction
 }
@@ -47,9 +65,18 @@ export async function getTransaction(id: string): Promise<Transaction | undefine
 
 export async function updateTransaction(id: string, changes: Partial<TransactionFields>): Promise<void> {
   validate(changes)
-  await db.transactions.update(id, {
-    ...changes,
-    updatedAt: now(),
+  await db.transaction('rw', db.transactions, async () => {
+    const current = await db.transactions.get(id)
+    if (current) {
+      validateKind({
+        ...current,
+        ...changes,
+      })
+    }
+    await db.transactions.update(id, {
+      ...changes,
+      updatedAt: now(),
+    })
   })
 }
 
@@ -71,7 +98,7 @@ export async function duplicateTransaction(id: string, date: string): Promise<Tr
   const original = await getTransaction(id)
   if (!original)
     throw new Error(`Transaction not found: ${id}`)
-  const { kind, amountCents, currency, accountId, toAccountId, categoryId, note } = original
+  const { kind, amountCents, currency, accountId, toAccountId, paymentMethodId, categoryId, note } = original
   return addTransaction({
     kind,
     amountCents,
@@ -79,6 +106,7 @@ export async function duplicateTransaction(id: string, date: string): Promise<Tr
     date,
     accountId,
     toAccountId,
+    paymentMethodId,
     categoryId,
     note,
   })
@@ -86,7 +114,7 @@ export async function duplicateTransaction(id: string, date: string): Promise<Tr
 
 /** Transactions not deleted, newest first (by date, then by creation). */
 export async function listTransactions(query: TransactionQuery = {}): Promise<Transaction[]> {
-  const { from, to, kinds, categoryIds } = query
+  const { from, to, kinds, categoryIds, accountId } = query
   const collection = from || to
     ? db.transactions.where('date').between(from ?? '0000-01-01', to ?? '9999-12-31', true, true)
     : db.transactions.toCollection()
@@ -94,7 +122,8 @@ export async function listTransactions(query: TransactionQuery = {}): Promise<Tr
     .filter(transaction =>
       transaction.deletedAt === null
       && (!kinds || kinds.includes(transaction.kind))
-      && (!categoryIds || (transaction.categoryId !== null && categoryIds.includes(transaction.categoryId))),
+      && (!categoryIds || (transaction.categoryId !== null && categoryIds.includes(transaction.categoryId)))
+      && (!accountId || transaction.accountId === accountId || transaction.toAccountId === accountId),
     )
     .toArray()
   return rows.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt))

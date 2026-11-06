@@ -1,4 +1,4 @@
-import type { Account, Budget, Category, KeyValue, Recurrence, Transaction } from '@/db/schema'
+import type { Account, Budget, Category, KeyValue, PaymentMethod, Recurrence, Transaction } from '@/db/schema'
 import { z } from 'zod'
 import {
   ACCOUNT_PRESETS,
@@ -6,6 +6,7 @@ import {
   CATEGORY_KINDS,
   EXPENSE_PRESETS,
   INCOME_PRESETS,
+  PAYMENT_PRESETS,
   RECURRENCE_FREQUENCIES,
   TRANSACTION_KINDS,
   TRANSACTION_SOURCES,
@@ -45,6 +46,16 @@ const accountSchema: z.ZodType<Account> = z.object({
   order: z.number(),
 })
 
+const paymentMethodSchema: z.ZodType<PaymentMethod> = z.object({
+  ...baseRecord,
+  name: z.string().optional(),
+  preset: z.enum(PAYMENT_PRESETS).optional(),
+  icon: z.string(),
+  accountId: z.string(),
+  order: z.number(),
+  archived: z.boolean(),
+})
+
 const categorySchema: z.ZodType<Category> = z.object({
   ...baseRecord,
   kind: z.enum(CATEGORY_KINDS),
@@ -67,6 +78,7 @@ const transactionSchema: z.ZodType<Transaction> = z.object({
   date: calendarDate,
   accountId: z.string(),
   toAccountId: z.string().optional(),
+  paymentMethodId: z.string().optional(),
   categoryId: z.string().nullable(),
   note: z.string(),
   recurrenceId: z.string().optional(),
@@ -108,6 +120,7 @@ const keyValueSchema: z.ZodType<KeyValue> = z.object({
 
 export const backupDataSchema = z.object({
   accounts: z.array(accountSchema),
+  paymentMethods: z.array(paymentMethodSchema),
   categories: z.array(categorySchema),
   transactions: z.array(transactionSchema),
   budgets: z.array(budgetSchema),
