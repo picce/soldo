@@ -301,6 +301,7 @@
     "amount": "Amount",
     "category": "Category",
     "account": "Account",
+    "payment": "Payment",
     "note": "Note",
     "expense": "Expense",
     "income": "Income",
@@ -383,6 +384,13 @@
     },
     "accounts": {
       "cash": "Cash"
+    },
+    "payments": {
+      "cash": "Cash",
+      "card": "Card",
+      "satispay": "Satispay",
+      "bankTransfer": "Bank transfer",
+      "other": "Other"
     }
   }
 }

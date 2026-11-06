@@ -48,7 +48,7 @@ test.describe('without the share sheet', () => {
     const backup = await download(page, 'Esporta backup')
     expect(backup.name).toMatch(/^soldo-backup-\d{4}-\d{2}-\d{2}\.json$/)
     const content = JSON.parse(await readFile(backup.path, 'utf8'))
-    expect(content).toMatchObject({ app: 'soldo', format: 1 })
+    expect(content).toMatchObject({ app: 'soldo', format: 2 })
     expect(content.data.transactions).toHaveLength(1)
     await expect(page.getByRole('status').filter({ hasText: 'Backup esportato.' })).toBeVisible()
     await expect(page.getByText('ultimo: ora')).toBeVisible()

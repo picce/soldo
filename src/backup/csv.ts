@@ -2,7 +2,7 @@ import type { Transaction } from '@/db/schema'
 
 /** Column titles and words that change with the language. */
 export interface CsvLabels {
-  headers: [date: string, kind: string, amount: string, category: string, account: string, note: string]
+  headers: [date: string, kind: string, amount: string, category: string, account: string, payment: string, note: string]
   kinds: Record<Transaction['kind'], string>
 }
 
@@ -12,6 +12,7 @@ export interface CsvOptions {
   labels: CsvLabels
   categoryName: (transaction: Transaction) => string
   accountName: (transaction: Transaction) => string
+  paymentName: (transaction: Transaction) => string
 }
 
 /** Byte order mark: tells Excel that the file is UTF-8, so accented letters survive. */
@@ -63,6 +64,7 @@ export function transactionsToCsv(transactions: Transaction[], options: CsvOptio
       field(amount(transaction, decimal), separator, false),
       field(options.categoryName(transaction), separator),
       field(options.accountName(transaction), separator),
+      field(options.paymentName(transaction), separator),
       field(transaction.note, separator),
     ].join(separator))
   const header = options.labels.headers.map(title => field(title, separator)).join(separator)

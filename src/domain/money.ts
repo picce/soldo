@@ -49,3 +49,31 @@ export function currencyPlacement(intlLocale: string): { position: 'before' | 'a
     symbol: parts[currencyIndex]?.value ?? '€',
   }
 }
+
+/**
+ * Reads an amount typed by hand, without a sign: `1.234,56`, `1234.56`, `1,234.56`, `12,5`, `1234`.
+ * The last separator is the decimal one when one or two digits follow it; with three it groups
+ * thousands (`1.234` is 123400 cents, as an Italian would write it). Null when it is not an amount.
+ */
+export function parseAmount(text: string): number | null {
+  const clean = text.trim().replace(/\s/g, '')
+  if (!/^\d[\d.,]*$/.test(clean))
+    return null
+  const last = Math.max(clean.lastIndexOf(','), clean.lastIndexOf('.'))
+  const digitsAfter = last < 0
+    ? 0
+    : clean.length - last - 1
+  const hasDecimals = digitsAfter === 1 || digitsAfter === 2
+  const whole = hasDecimals
+    ? clean.slice(0, last)
+    : clean
+  const decimals = hasDecimals
+    ? clean.slice(last + 1)
+    : ''
+  if (/[.,]$/.test(clean) || (/[.,]/.test(whole) && !/^\d{1,3}(?:[.,]\d{3})+$/.test(whole)))
+    return null
+  const cents = Number(whole.replace(/[.,]/g, '')) * 100 + Number(decimals.padEnd(2, '0'))
+  return Number.isSafeInteger(cents)
+    ? cents
+    : null
+}

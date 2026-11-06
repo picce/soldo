@@ -301,6 +301,7 @@
     "amount": "Importo",
     "category": "Categoria",
     "account": "Conto",
+    "payment": "Pagamento",
     "note": "Nota",
     "expense": "Uscita",
     "income": "Entrata",
@@ -383,6 +384,13 @@
     },
     "accounts": {
       "cash": "Contanti"
+    },
+    "payments": {
+      "cash": "Contanti",
+      "card": "Carta",
+      "satispay": "Satispay",
+      "bankTransfer": "Bonifico",
+      "other": "Altro"
     }
   }
 }

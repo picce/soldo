@@ -1,6 +1,8 @@
 import type { EntityTable } from 'dexie'
-import type { Account, Budget, Category, KeyValue, Recurrence, Transaction } from './schema'
+import type { Account, Budget, Category, KeyValue, PaymentMethod, Recurrence, Transaction } from './schema'
 import Dexie from 'dexie'
+import { defaultPaymentMethods, firstActiveAccount } from './payment-defaults'
+import { SCHEMA_VERSION } from './schema'
 
 /**
  * The IndexedDB database (docs/specs/released/dati-locali.md, "Schema"). IndexedDB cannot index
@@ -9,6 +11,7 @@ import Dexie from 'dexie'
 export class SoldoDatabase extends Dexie {
   // `declare`: with useDefineForClassFields, a plain field would shadow the table Dexie sets up.
   declare accounts: EntityTable<Account, 'id'>
+  declare paymentMethods: EntityTable<PaymentMethod, 'id'>
   declare categories: EntityTable<Category, 'id'>
   declare transactions: EntityTable<Transaction, 'id'>
   declare budgets: EntityTable<Budget, 'id'>
@@ -26,6 +29,17 @@ export class SoldoDatabase extends Dexie {
       recurrences: 'id',
       settings: 'key',
       meta: 'key',
+    })
+    // Whoever already has data gets the default payment methods on their first account; a new
+    // database skips upgrades, and seedDefaults creates them. Transactions stay as they are.
+    this.version(2).stores({
+      paymentMethods: 'id, order',
+    }).upgrade(async (tx) => {
+      const account = firstActiveAccount(await tx.table<Account>('accounts').toArray())
+      if (!account)
+        return
+      await tx.table<PaymentMethod>('paymentMethods').bulkAdd(defaultPaymentMethods(account.id))
+      await tx.table<KeyValue>('meta').put({ key: 'schemaVersion', value: SCHEMA_VERSION })
     })
   }
 }

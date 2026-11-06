@@ -5,11 +5,13 @@ import { setClock } from '@/db/records'
 import { getDefaultAccount } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
 import { getMeta } from '@/db/repositories/meta'
+import { listPaymentMethods } from '@/db/repositories/payment-methods'
 import { addTransaction, deleteTransaction, listTransactions } from '@/db/repositories/transactions'
+import { SCHEMA_VERSION } from '@/db/schema'
 import { seedDefaults } from '@/db/seed'
 import { createBackup } from './export'
-import { readBackup, restoreBackup } from './import'
-import { gzip } from './pack'
+import { readBackup, readBackupBytes, restoreBackup } from './import'
+import { gzip, sha256Hex } from './pack'
 
 let tick = 0
 
@@ -64,7 +66,7 @@ describe('backup', () => {
   it('reads its own export and previews what it holds', async () => {
     await addSome()
     const backup = await createBackup()
-    expect(backup).toMatchObject({ app: 'soldo', format: 1, schemaVersion: 1 })
+    expect(backup).toMatchObject({ app: 'soldo', format: 2, schemaVersion: 2 })
     expect(backup.data.transactions).toHaveLength(3)
 
     const reading = await readBackup(asFile(backup))
@@ -91,11 +93,108 @@ describe('backup', () => {
     await restoreBackup(backup)
 
     const after = await snapshot()
-    const withoutMeta = (tables: unknown[][]) => tables.slice(0, -1)
+    const withoutMeta = (tables: unknown[][]) => tables.filter((_, index) => db.tables[index]!.name !== 'meta')
     expect(withoutMeta(after)).toEqual(withoutMeta(before))
     expect(await listTransactions()).toHaveLength(2)
     // The device now holds the data of that file: it counts as the last backup.
     expect(await getMeta('lastExportAt')).toBe(backup.exportedAt)
+  })
+
+  it('keeps payment methods and the method of each expense through a backup', async () => {
+    const [method] = await listPaymentMethods()
+    const account = await getDefaultAccount()
+    const [groceries] = await listCategories({ kind: 'expense' })
+    const saved = await addTransaction({
+      kind: 'expense',
+      amountCents: 500,
+      accountId: account!.id,
+      categoryId: groceries!.id,
+      date: '2026-11-02',
+      note: '',
+      paymentMethodId: method!.id,
+    })
+    const reading = await readBackup(asFile(await createBackup()))
+    await Promise.all(db.tables.map(table => table.clear()))
+    await restoreBackup(reading.ok
+      ? reading.backup
+      : expect.fail('not read'))
+    expect(await listPaymentMethods()).toHaveLength(5)
+    expect((await db.transactions.get(saved.id))?.paymentMethodId).toBe(method!.id)
+  })
+
+  describe('of format 1', () => {
+    /** A backup as the app wrote it before the payment methods. */
+    async function format1() {
+      await addSome()
+      const { data: { paymentMethods: _, ...data }, ...backup } = await createBackup()
+      return {
+        ...backup,
+        format: 1,
+        schemaVersion: 1,
+        data,
+      }
+    }
+
+    it('gets the default payment methods, on its first active account', async () => {
+      const old = await format1()
+      const accounts = old.data.accounts
+      const reading = await readBackup(asFile({
+        ...old,
+        data: {
+          ...old.data,
+          accounts: [
+            {
+              ...accounts[0]!,
+              id: 'closed',
+              order: 0,
+              archived: true,
+            },
+            { ...accounts[0]!, id: 'bank', order: 1 },
+          ],
+        },
+      }))
+      expect(reading.ok).toBe(true)
+      if (reading.ok) {
+        expect(reading.backup.format).toBe(2)
+        expect(reading.backup.data.paymentMethods.map(method => method.preset)).toEqual([
+          'cash',
+          'card',
+          'satispay',
+          'bankTransfer',
+          'other',
+        ])
+        expect(new Set(reading.backup.data.paymentMethods.map(method => method.accountId))).toEqual(new Set(['bank']))
+      }
+    })
+
+    it('restores, with transactions as they were and the current schema version', async () => {
+      const old = await format1()
+      const reading = await readBackup(asFile(old))
+      await Promise.all(db.tables.map(table => table.clear()))
+      await restoreBackup(reading.ok
+        ? reading.backup
+        : expect.fail('not read'))
+      expect(await listTransactions()).toHaveLength(2)
+      expect(await listPaymentMethods()).toHaveLength(5)
+      expect(await getMeta('schemaVersion')).toBe(SCHEMA_VERSION)
+    })
+
+    it('still passes the checksum Drive keeps for it', async () => {
+      const old = await format1()
+      const bytes = new TextEncoder().encode(JSON.stringify(old))
+      const checksum = await sha256Hex(JSON.stringify(old.data))
+      const reading = await readBackupBytes(bytes, 'old.json', checksum)
+      expect(reading.ok).toBe(true)
+    })
+
+    it('is refused when its data is broken', async () => {
+      const old = await format1()
+      expect(await readBackup(asFile({
+        ...old,
+        data: { ...old.data, accounts: 'nope' },
+      })))
+        .toEqual({ ok: false, error: 'invalid' })
+    })
   })
 
   it('refuses files that are not Soldo backups', async () => {
@@ -106,7 +205,7 @@ describe('backup', () => {
 
   it('refuses a backup of a newer format', async () => {
     const backup = await createBackup()
-    expect(await readBackup(asFile({ ...backup, format: 2 }))).toEqual({ ok: false, error: 'newerFormat' })
+    expect(await readBackup(asFile({ ...backup, format: 3 }))).toEqual({ ok: false, error: 'newerFormat' })
   })
 
   it('refuses invalid records', async () => {

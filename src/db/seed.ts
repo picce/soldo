@@ -1,5 +1,6 @@
 import type { Account, BaseRecord, Category, CategoryPreset, PaletteColor } from './schema'
 import { db } from './database'
+import { defaultPaymentMethods } from './payment-defaults'
 import { newRecord } from './records'
 import { DEFAULT_CURRENCY, SCHEMA_VERSION } from './schema'
 
@@ -52,23 +53,26 @@ function categories(kind: Category['kind'], seeds: CategorySeed[]): Category[] {
 }
 
 /**
- * Creates the default categories and the "Contanti" account, once: with categories already
- * in the database it does nothing and returns false.
+ * Creates the default categories, the "Contanti" account and the payment methods, once: with
+ * categories already in the database it does nothing and returns false.
  */
 export async function seedDefaults(): Promise<boolean> {
-  return db.transaction('rw', db.categories, db.accounts, db.meta, async () => {
+  return db.transaction('rw', db.categories, db.accounts, db.paymentMethods, db.meta, async () => {
     if (await db.categories.count())
       return false
     await db.categories.bulkAdd([
       ...categories('expense', EXPENSE_CATEGORIES),
       ...categories('income', INCOME_CATEGORIES),
     ])
-    if (!(await db.accounts.count())) {
-      await db.accounts.add({
+    let accountId = (await db.accounts.orderBy('order').first())?.id
+    if (!accountId) {
+      accountId = await db.accounts.add({
         ...newRecord(),
         ...CASH_ACCOUNT,
       })
     }
+    if (!(await db.paymentMethods.count()))
+      await db.paymentMethods.bulkAdd(defaultPaymentMethods(accountId))
     await db.meta.put({ key: 'schemaVersion', value: SCHEMA_VERSION })
     return true
   })
