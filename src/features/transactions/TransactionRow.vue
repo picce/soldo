@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Category, Transaction } from '@/db/schema'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import AmountText from '@/components/AmountText.vue'
 import AppIcon from '@/components/AppIcon.vue'
 import { categoryName } from '@/db/names'
@@ -8,24 +9,36 @@ import { signedCents } from '@/domain/days'
 
 /**
  * A transaction in the list (mockup "Movimenti"): icon in the category color, the note
- * (or the category, without a note), category and account below, the amount on the right.
- * It opens the edit screen.
+ * (or the category, without a note), category and payment method or account below, the amount on
+ * the right. A transfer has its own icon, its two accounts and an amount with no sign. It opens
+ * the edit screen.
  */
 const props = defineProps<{
   transaction: Transaction
   category?: Category
+  /** Name of the account; for a transfer, both sides («Banca → Contanti»). */
   account: string
+  /** Name of the payment method of an expense: it says more than the account it comes from. */
+  payment?: string
 }>()
 
+const { t } = useI18n()
+
+const isTransfer = computed(() => props.transaction.kind === 'transfer')
 const name = computed(() => props.category
   ? categoryName(props.category)
   : '')
-const title = computed(() => props.transaction.note || name.value)
+const title = computed(() => props.transaction.note || (isTransfer.value
+  ? t('transactions.transfer')
+  : name.value))
 const detail = computed(() => [
   props.transaction.note ? name.value : '',
-  props.account,
+  props.payment || props.account,
 ].filter(Boolean).join(' · '))
-const cents = computed(() => signedCents(props.transaction))
+// A transfer has no sign and no color: it moves money without adding or taking any.
+const cents = computed(() => isTransfer.value
+  ? props.transaction.amountCents
+  : signedCents(props.transaction))
 </script>
 
 <template>
@@ -35,15 +48,17 @@ const cents = computed(() => signedCents(props.transaction))
     draggable="false"
   >
     <AppIcon
-      :name="category?.icon ?? 'receipt'"
+      :name="isTransfer ? 'arrows-left-right' : category?.icon ?? 'receipt'"
       class="transaction-row__icon"
+      :class="{ 'transaction-row__icon--transfer': isTransfer }"
       :style="{ color: category ? `var(--color-category-${category.color})` : undefined }"
     />
     <span class="transaction-row__text">
       <span class="transaction-row__title type-body">{{ title }}</span>
       <span v-if="detail" class="transaction-row__detail type-small">{{ detail }}</span>
     </span>
-    <AmountText :cents="cents" :sign="cents > 0 ? 'always' : 'auto'" colored />
+    <AmountText v-if="isTransfer" :cents="cents" />
+    <AmountText v-else :cents="cents" :sign="cents > 0 ? 'always' : 'auto'" colored />
   </RouterLink>
 </template>
 
@@ -78,6 +93,10 @@ const cents = computed(() => signedCents(props.transaction))
 
 .transaction-row__icon {
   --app-icon-size: 1.375rem;
+}
+
+.transaction-row__icon--transfer {
+  color: var(--color-ink-2);
 }
 
 .transaction-row__text {

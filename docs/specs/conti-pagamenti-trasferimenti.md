@@ -1,6 +1,6 @@
 # Conti, pagamenti e trasferimenti
 
-> **Stato**: Bozza
+> **Stato**: Implementata sul branch `feature/conti-pagamenti-trasferimenti`, da pubblicare con la versione 0.5.0
 > **Data**: 2026-11-06
 > **Ambito**: Prima parte della Fase 4. Dalle Impostazioni si gestiscono i conti, ognuno con il suo saldo, e i tipi di pagamento (Carta, Contanti, Satispay, Bonifico…), ognuno legato a un conto. Una spesa dice come è stata pagata e da lì si ricava il conto. Un trasferimento sposta soldi tra due conti senza contare come entrata o uscita. Home e Movimenti si possono guardare per un solo conto.
 > **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md) e il formato di [`backup-manuale.md`](./released/backup-manuale.md); estende [`aggiunta-rapida.md`](./released/aggiunta-rapida.md), [`home-rendiconto.md`](./released/home-rendiconto.md) e [`movimenti.md`](./released/movimenti.md); riprende le soluzioni di [`gestione-categorie.md`](./released/gestione-categorie.md). Le ricorrenze della Fase 4 dipendono da questa spec, il budget no.

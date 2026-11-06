@@ -281,6 +281,15 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 - **Caselle di spunta**: 22 px, raggio 4; spuntate piene in `biro` con `check` in `su-biro`.
 - **Scelta di icona e colore**: griglia di 6 icone per riga e otto campioni di colore; la scelta ha il bordo `biro` (icona) o `inchiostro` (colore) da 2 px, e il nome del colore compare accanto al titolo.
 
+### Conti e pagamenti
+
+- **Selettore del conto**: icona `wallet`, nome del conto e `caret-down` nello stile Comando, in alto a destra in Home e Movimenti. Si vede solo con almeno due conti attivi. Nella Home sta accanto a «Oggi»; a 360 px un nome lungo si accorcia con i puntini.
+- **Foglio di scelta** (selettore, pagamento, conto): righe in una scheda, un tocco sceglie e chiude, la scelta ha `check` in `biro`. Saldi nello stile Importo.
+- **Elenco dei conti**: maniglia, quadratino del colore, icona, nome, saldo e freccia; sopra, il totale con la riga a puntini. Il primo dell'elenco dice «Predefinito».
+- **Pagamento**: pulsante tra Data e Nota sulle uscite. Sotto il nome di un pagamento c'è il suo conto, salvo che i due nomi coincidano («Contanti»). Solo icone generiche, mai i loghi dei marchi.
+- **Saldo iniziale**: campo in Mono con accanto «In attivo / In rosso», perché il tastierino numerico dell'iPhone non ha il meno.
+- **Trasferimento**: terzo segmento del selettore in alto, con almeno due conti attivi. Righe «Da» e «A», «Scambia» accanto a Data e Nota, «Salva» sotto le righe. In Movimenti: icona `arrows-left-right` in `testo-2`, «Banca → Contanti» e importo senza segno in `inchiostro`.
+
 ### Onboarding
 
 Logo grande, motto «Il quaderno dei conti di casa.», tre punti separati da linee (due tocchi, dati sul telefono, backup sul proprio Drive), la scheda «Installa Soldo» e due pulsanti: «Inizia da zero» e «Ripristina un backup». La scheda spiega che su iPhone, se l'app non è installata, Safari può cancellare i dati dopo 7 giorni senza aprirla. Su Android la scheda ha il pulsante «Installa»; nei browser che non offrono l'installazione dice dove trovarla nel menu, e sparisce quando l'app è già installata. Finché non c'è il backup automatico (Fase 3), il terzo punto è «Il backup è un file tuo». Sulla schermata di benvenuto non compare l'avviso «pronto per funzionare offline», che coprirebbe il logo.

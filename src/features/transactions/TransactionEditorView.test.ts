@@ -7,8 +7,9 @@ import { createMemoryHistory } from 'vue-router'
 import { createAppRouter } from '@/app/router'
 import { dismissToast, runToastAction, useToast } from '@/app/toast'
 import { db } from '@/db/database'
-import { getDefaultAccount } from '@/db/repositories/accounts'
+import { archiveAccount, createAccount, getDefaultAccount } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
+import { archivePaymentMethod, listPaymentMethods, updatePaymentMethod } from '@/db/repositories/payment-methods'
 import { addTransaction, getTransaction, listTransactions } from '@/db/repositories/transactions'
 import { seedDefaults } from '@/db/seed'
 import { today } from '@/domain/dates'
@@ -201,5 +202,330 @@ describe('existing transaction', () => {
       },
     })
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('transactions'))
+  })
+})
+
+function chip(wrapper: VueWrapper, text: string) {
+  return wrapper.findAll('.action-chip').find(item => item.text() === text)
+}
+
+/** Picks a row in the sheets of the screen: the first that names it. */
+async function choose(wrapper: VueWrapper, title: string) {
+  await wrapper.findAll('.choice-list__row').find(button => button.text().includes(title))!.trigger('click')
+  await flushPromises()
+}
+
+async function byPreset(preset: string) {
+  return (await listPaymentMethods()).find(method => method.preset === preset)!
+}
+
+describe('payment method', () => {
+  it('starts from the first of the list, and saves without an extra tap', async () => {
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await vi.waitFor(() => expect(chip(wrapper, 'Contanti')).toBeDefined())
+    await press(wrapper, ['5'])
+    await tapCategory(wrapper, 'Spesa')
+    await vi.waitFor(async () => expect(await listTransactions()).toHaveLength(1))
+    expect((await listTransactions())[0]).toMatchObject({
+      accountId: (await getDefaultAccount())!.id,
+      paymentMethodId: (await byPreset('cash')).id,
+    })
+  })
+
+  it('takes the account from the method', async () => {
+    const bank = await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const card = await byPreset('card')
+    await updatePaymentMethod(card.id, { accountId: bank.id })
+
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await vi.waitFor(() => expect(chip(wrapper, 'Contanti')).toBeDefined())
+    await chip(wrapper, 'Contanti')!.trigger('click')
+    await flushPromises()
+    await choose(wrapper, 'Carta')
+    expect(chip(wrapper, 'Carta')).toBeDefined()
+    await press(wrapper, ['5'])
+    await tapCategory(wrapper, 'Spesa')
+    await vi.waitFor(async () => expect(await listTransactions()).toHaveLength(1))
+    expect((await listTransactions())[0]).toMatchObject({ accountId: bank.id, paymentMethodId: card.id })
+  })
+
+  it('starts the next expense from the last one used', async () => {
+    const satispay = await byPreset('satispay')
+    await addTransaction({
+      kind: 'expense',
+      amountCents: 100,
+      date: today(),
+      accountId: satispay.accountId,
+      categoryId: expenseCategories[0]!.id,
+      note: '',
+      paymentMethodId: satispay.id,
+    })
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await vi.waitFor(() => expect(chip(wrapper, 'Satispay')).toBeDefined())
+  })
+
+  it('is not on an income, which asks for the account only with two of them', async () => {
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'income' }, 4)
+    await flushPromises()
+    expect(wrapper.findAll('.action-chip').map(item => item.text())).toEqual(['Oggi', 'Nota'])
+    wrapper.unmount()
+
+    await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const two = await mountEditor({ mode: 'new', kind: 'income' }, 4)
+    await vi.waitFor(() => expect(chip(two.wrapper, 'Contanti')).toBeDefined())
+    await chip(two.wrapper, 'Contanti')!.trigger('click')
+    await flushPromises()
+    await choose(two.wrapper, 'Banca')
+    await press(two.wrapper, ['5'])
+    await tapCategory(two.wrapper, 'Stipendio')
+    await vi.waitFor(async () => expect(await listTransactions()).toHaveLength(1))
+    const [saved] = await listTransactions()
+    expect(saved?.paymentMethodId).toBeUndefined()
+    expect(saved?.accountId).not.toBe((await getDefaultAccount())!.id)
+  })
+
+  it('drops the method when an expense becomes an income, and the account stays', async () => {
+    const card = await byPreset('card')
+    const account = (await getDefaultAccount())!
+    const saved = await addTransaction({
+      kind: 'expense',
+      amountCents: 100,
+      date: today(),
+      accountId: account.id,
+      categoryId: expenseCategories[0]!.id,
+      note: '',
+      paymentMethodId: card.id,
+    })
+    const { wrapper } = await mountEditor({ mode: 'edit', id: saved.id })
+    await vi.waitFor(() => expect(chip(wrapper, 'Carta')).toBeDefined())
+    await wrapper.findAll('.segmented-control__segment').find(item => item.text() === 'Entrata')!.trigger('click')
+    await vi.waitFor(() => expect(wrapper.findAll('.category-grid__item')).toHaveLength(4))
+    await tapCategory(wrapper, 'Stipendio')
+    await wrapper.findAll('.editor__action').find(item => item.text() === 'Salva')!.trigger('click')
+    await vi.waitFor(async () => expect((await getTransaction(saved.id))?.kind).toBe('income'))
+    const stored = await getTransaction(saved.id)
+    expect(stored?.paymentMethodId).toBeUndefined()
+    expect(stored?.accountId).toBe(account.id)
+  })
+
+  it('keeps an old expense on its account and without a method until one is chosen', async () => {
+    const account = (await getDefaultAccount())!
+    const bank = await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const card = await byPreset('card')
+    await updatePaymentMethod(card.id, { accountId: bank.id })
+    const saved = await addTransaction({
+      kind: 'expense',
+      amountCents: 100,
+      date: today(),
+      accountId: account.id,
+      categoryId: expenseCategories[0]!.id,
+      note: '',
+    })
+
+    const { wrapper } = await mountEditor({ mode: 'edit', id: saved.id })
+    await vi.waitFor(() => expect(chip(wrapper, 'Pagamento')).toBeDefined())
+    await wrapper.findAll('.editor__action').find(item => item.text() === 'Salva')!.trigger('click')
+    await vi.waitFor(() => expect(useToast().toast.value).toBeTruthy())
+    expect(await getTransaction(saved.id)).toMatchObject({ accountId: account.id })
+    expect((await getTransaction(saved.id))?.paymentMethodId).toBeUndefined()
+  })
+
+  it('leaves an expense on its account when its method moved to another one', async () => {
+    const account = (await getDefaultAccount())!
+    const bank = await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const card = await byPreset('card')
+    const saved = await addTransaction({
+      kind: 'expense',
+      amountCents: 100,
+      date: today(),
+      accountId: account.id,
+      categoryId: expenseCategories[0]!.id,
+      note: '',
+      paymentMethodId: card.id,
+    })
+    await updatePaymentMethod(card.id, { accountId: bank.id })
+
+    const { wrapper } = await mountEditor({ mode: 'edit', id: saved.id })
+    await vi.waitFor(() => expect(chip(wrapper, 'Carta')).toBeDefined())
+    await wrapper.findAll('.editor__action').find(item => item.text() === 'Salva')!.trigger('click')
+    await vi.waitFor(() => expect(useToast().toast.value).toBeTruthy())
+    expect((await getTransaction(saved.id))?.accountId).toBe(account.id)
+  })
+
+  it('offers an archived method only on the expense that already uses it', async () => {
+    const card = await byPreset('card')
+    const saved = await addTransaction({
+      kind: 'expense',
+      amountCents: 100,
+      date: today(),
+      accountId: card.accountId,
+      categoryId: expenseCategories[0]!.id,
+      note: '',
+      paymentMethodId: card.id,
+    })
+    await archivePaymentMethod(card.id)
+    const { wrapper } = await mountEditor({ mode: 'edit', id: saved.id })
+    await vi.waitFor(() => expect(chip(wrapper, 'Carta')).toBeDefined())
+    wrapper.unmount()
+
+    const fresh = await mountEditor({ mode: 'new', kind: 'expense' })
+    await vi.waitFor(() => expect(chip(fresh.wrapper, 'Contanti')).toBeDefined())
+  })
+})
+
+describe('transfer', () => {
+  it('is offered from the second active account on', async () => {
+    const single = await mountEditor({ mode: 'new', kind: 'expense' })
+    await flushPromises()
+    expect(single.wrapper.findAll('.segmented-control__segment').map(item => item.text())).toEqual(['Uscita', 'Entrata'])
+    single.wrapper.unmount()
+
+    await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await vi.waitFor(() => expect(wrapper.findAll('.segmented-control__segment').map(item => item.text())).toEqual(['Uscita', 'Entrata', 'Trasferimento']))
+  })
+
+  async function mountTransfer() {
+    const bank = await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const { wrapper, router } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await vi.waitFor(() => expect(wrapper.findAll('.segmented-control__segment')).toHaveLength(3))
+    await wrapper.findAll('.segmented-control__segment').find(item => item.text() === 'Trasferimento')!.trigger('click')
+    await vi.waitFor(() => expect(wrapper.findAll('.editor__side')).toHaveLength(2))
+    await vi.waitFor(() => expect(wrapper.findAll('.editor__side-name').map(item => item.text())).toEqual(['Contanti', 'Banca']))
+    return { wrapper, router, bank }
+  }
+
+  it('saves between two accounts with Salva, with no category and no method', async () => {
+    const { wrapper, router, bank } = await mountTransfer()
+    const cash = (await getDefaultAccount())!
+    await press(wrapper, ['5', '0'])
+    expect(amountText(wrapper)).toBe('50 €')
+    await wrapper.get('.editor__transfer-save').trigger('click')
+    await vi.waitFor(async () => expect(await listTransactions()).toHaveLength(1))
+    const [saved] = await listTransactions()
+    expect(saved).toMatchObject({
+      kind: 'transfer',
+      amountCents: 5000,
+      accountId: cash.id,
+      toAccountId: bank.id,
+      categoryId: null,
+    })
+    expect(saved?.paymentMethodId).toBeUndefined()
+    expect(toastMessage()).toBe('Salvato: 50,00 € · Contanti → Banca')
+    await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('home'))
+  })
+
+  it('asks for the amount first', async () => {
+    const { wrapper } = await mountTransfer()
+    await wrapper.get('.editor__transfer-save').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('.editor__line--hint').text()).toBe('Scrivi prima l\'importo')
+    expect(await listTransactions()).toHaveLength(0)
+  })
+
+  it('swaps the two sides', async () => {
+    const { wrapper } = await mountTransfer()
+    await chip(wrapper, 'Scambia')!.trigger('click')
+    expect(wrapper.findAll('.editor__side-name').map(item => item.text())).toEqual(['Banca', 'Contanti'])
+  })
+
+  it('edits and deletes a saved transfer, whose kind does not change', async () => {
+    const cash = (await getDefaultAccount())!
+    const bank = await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const saved = await addTransaction({
+      kind: 'transfer',
+      amountCents: 1000,
+      date: today(),
+      accountId: bank.id,
+      toAccountId: cash.id,
+      categoryId: null,
+      note: '',
+    })
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/')
+    const wrapper = mount(TransactionEditorView, {
+      props: {
+        target: { mode: 'edit', id: saved.id },
+      },
+      global: {
+        plugins: testPlugins(router),
+      },
+      attachTo: document.body,
+    })
+    await vi.waitFor(() => expect(wrapper.findAll('.editor__side-name').map(item => item.text())).toEqual(['Banca', 'Contanti']))
+    expect(wrapper.findAll('.segmented-control__segment').map(item => item.text())).toEqual(['Trasferimento'])
+    await chip(wrapper, 'Scambia')!.trigger('click')
+    await wrapper.findAll('.editor__action').find(item => item.text() === 'Salva')!.trigger('click')
+    await vi.waitFor(async () => expect((await getTransaction(saved.id))?.accountId).toBe(cash.id))
+    expect((await getTransaction(saved.id))?.toAccountId).toBe(bank.id)
+    wrapper.unmount()
+  })
+
+  it('keeps a transfer that uses an archived account editable', async () => {
+    const cash = (await getDefaultAccount())!
+    const bank = await createAccount({
+      name: 'Banca',
+      icon: 'bank',
+      color: 7,
+      initialBalanceCents: 0,
+    })
+    const saved = await addTransaction({
+      kind: 'transfer',
+      amountCents: 1000,
+      date: today(),
+      accountId: bank.id,
+      toAccountId: cash.id,
+      categoryId: null,
+      note: '',
+    })
+    await archiveAccount(bank.id)
+    const router = createAppRouter(createMemoryHistory())
+    await router.push('/')
+    const wrapper = mount(TransactionEditorView, {
+      props: {
+        target: { mode: 'edit', id: saved.id },
+      },
+      global: {
+        plugins: testPlugins(router),
+      },
+      attachTo: document.body,
+    })
+    await vi.waitFor(() => expect(wrapper.findAll('.editor__side-name').map(item => item.text())).toEqual(['Banca', 'Contanti']))
+    wrapper.unmount()
   })
 })

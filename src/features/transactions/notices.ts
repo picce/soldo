@@ -9,24 +9,39 @@ import { intlLocale } from '@/i18n/locale'
 
 type NoticeKind = 'saved' | 'deleted' | 'duplicated'
 
-/** «Salvato: −12,40 € · Spesa», and the same for deleted and duplicated transactions. */
-export function transactionNotice(kind: NoticeKind, transaction: Pick<Transaction, 'kind' | 'amountCents'>, category?: Category): string {
+/** What a transaction is about: its category, or the two accounts of a transfer. */
+type NoticeSubject = Category | string | undefined
+
+function subjectName(subject: NoticeSubject): string {
+  if (typeof subject === 'string')
+    return subject
+  return subject
+    ? categoryName(subject)
+    : ''
+}
+
+/**
+ * «Salvato: −12,40 € · Spesa», and the same for deleted and duplicated transactions. A transfer
+ * has no sign: «Salvato: 100,00 € · Banca → Contanti».
+ */
+export function transactionNotice(kind: NoticeKind, transaction: Pick<Transaction, 'kind' | 'amountCents'>, subject?: NoticeSubject): string {
+  const amount = transaction.kind === 'transfer'
+    ? formatAmount(transaction.amountCents, intlLocale(), { currency: true })
+    : formatAmount(signedCents(transaction), intlLocale(), { sign: 'always', currency: true })
   return i18n.global.t(`toast.${kind}`, {
-    amount: formatAmount(signedCents(transaction), intlLocale(), { sign: 'always', currency: true }),
-    category: category
-      ? categoryName(category)
-      : '',
+    amount,
+    category: subjectName(subject),
   })
 }
 
-export function showSaved(transaction: Pick<Transaction, 'kind' | 'amountCents'>, category?: Category) {
+export function showSaved(transaction: Pick<Transaction, 'kind' | 'amountCents'>, category?: NoticeSubject) {
   showToast({
     message: transactionNotice('saved', transaction, category),
   })
 }
 
 /** After a deletion: «Annulla» restores the transaction. */
-export function showDeleted(transaction: Transaction, category?: Category) {
+export function showDeleted(transaction: Transaction, category?: NoticeSubject) {
   showToast({
     message: transactionNotice('deleted', transaction, category),
     action: {
@@ -37,7 +52,7 @@ export function showDeleted(transaction: Transaction, category?: Category) {
 }
 
 /** After a duplication: «Annulla» deletes the copy. */
-export function showDuplicated(copy: Transaction, category?: Category) {
+export function showDuplicated(copy: Transaction, category?: NoticeSubject) {
   showToast({
     message: transactionNotice('duplicated', copy, category),
     action: {

@@ -92,8 +92,8 @@ test.describe('without the share sheet', () => {
     const text = await readFile(csv.path, 'utf8')
     const lines = text.replace(/^\uFEFF/, '').split('\r\n')
     expect(text.charCodeAt(0)).toBe(0xFEFF)
-    expect(lines[0]).toBe('Data;Tipo;Importo;Categoria;Conto;Nota')
-    expect(lines[1]).toMatch(/^\d{4}-\d{2}-\d{2};Uscita;-12,40;Spesa;Contanti;$/)
+    expect(lines[0]).toBe('Data;Tipo;Importo;Categoria;Conto;Pagamento;Nota')
+    expect(lines[1]).toMatch(/^\d{4}-\d{2}-\d{2};Uscita;-12,40;Spesa;Contanti;Contanti;$/)
     // The CSV is not a backup: the last backup stays «mai».
     await expect(page.getByText('ultimo: mai')).toBeVisible()
   })

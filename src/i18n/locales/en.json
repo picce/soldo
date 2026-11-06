@@ -107,14 +107,24 @@
     "noMatchTitle": "No transactions match these filters.",
     "noMatchHint": "Remove a filter to see the other transactions.",
     "noResultsTitle": "No results for “{query}”.",
-    "noResultsHint": "The search covers notes and categories of every month."
+    "noResultsHint": "The search covers notes and categories of every month.",
+    "transfers": "Transfers",
+    "transfer": "Transfer",
+    "payment": "Payment",
+    "paymentCount": "Payment ({count})"
   },
-  "categoryFilter": {
-    "title": "Categories",
-    "all": "All categories",
+  "filterSheet": {
     "reset": "Reset",
     "apply": "Apply",
     "applyCount": "Apply ({count})"
+  },
+  "categoryFilter": {
+    "title": "Categories",
+    "all": "All categories"
+  },
+  "paymentFilter": {
+    "title": "Payment methods",
+    "all": "All payment methods"
   },
   "settings": {
     "language": {
@@ -442,7 +452,18 @@
     "noteChip": "Note: {note}",
     "save": "Save",
     "duplicate": "Duplicate",
-    "delete": "Delete transaction"
+    "delete": "Delete transaction",
+    "transfer": "Transfer",
+    "newTransfer": "New transfer",
+    "payment": "Payment",
+    "paymentChip": "Payment: {payment}",
+    "accountChip": "Account: {account}",
+    "from": "From",
+    "to": "To",
+    "fromTitle": "From which account",
+    "toTitle": "To which account",
+    "swap": "Swap",
+    "chooseAccounts": "Choose two different accounts"
   },
   "dateSheet": {
     "title": "Date",

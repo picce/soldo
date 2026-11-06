@@ -1,6 +1,6 @@
 import type { BackupFile } from './format'
 import { db } from '@/db/database'
-import { accountName, categoryName, paymentMethodName } from '@/db/names'
+import { accountName, categoryName, paymentMethodName, transferRoute } from '@/db/names'
 import { now } from '@/db/records'
 import { setMeta } from '@/db/repositories/meta'
 import { SCHEMA_VERSION } from '@/db/schema'
@@ -77,14 +77,6 @@ export async function exportTransactionsCsv(): Promise<'done' | 'cancelled'> {
   const categoriesById = new Map(categories.map(category => [category.id, category]))
   const accountsById = new Map(accounts.map(account => [account.id, account]))
   const paymentMethodsById = new Map(paymentMethods.map(method => [method.id, method]))
-  const nameOfAccount = (id: string | undefined) => {
-    const account = id
-      ? accountsById.get(id)
-      : undefined
-    return account
-      ? accountName(account)
-      : ''
-  }
   const { t, locale } = i18n.global
   const csv = transactionsToCsv(transactions, {
     locale: locale.value,
@@ -112,9 +104,14 @@ export async function exportTransactionsCsv(): Promise<'done' | 'cancelled'> {
         ? categoryName(category)
         : ''
     },
-    accountName: transaction => transaction.kind === 'transfer'
-      ? `${nameOfAccount(transaction.accountId)} → ${nameOfAccount(transaction.toAccountId)}`
-      : nameOfAccount(transaction.accountId),
+    accountName: (transaction) => {
+      const account = accountsById.get(transaction.accountId)
+      if (transaction.kind === 'transfer')
+        return transferRoute(account, accountsById.get(transaction.toAccountId ?? ''))
+      return account
+        ? accountName(account)
+        : ''
+    },
     paymentName: (transaction) => {
       const method = transaction.paymentMethodId
         ? paymentMethodsById.get(transaction.paymentMethodId)

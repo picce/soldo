@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import type { Category, CategoryPreset, PaletteColor } from '@/db/schema'
+import type { Account, Category, CategoryPreset, PaletteColor, PaymentMethod } from '@/db/schema'
 import type { Period } from '@/domain/periods'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
 import ActionChip from '@/components/ActionChip.vue'
 import AmountText from '@/components/AmountText.vue'
+import ArchivedSection from '@/components/ArchivedSection.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
+import ChoiceList from '@/components/ChoiceList.vue'
 import ColorPicker from '@/components/ColorPicker.vue'
 import FilterChip from '@/components/FilterChip.vue'
 import IconButton from '@/components/IconButton.vue'
@@ -17,10 +19,14 @@ import Keypad from '@/components/Keypad.vue'
 import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
 import SearchField from '@/components/SearchField.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
+import SortableList from '@/components/SortableList.vue'
 import SwipeRow from '@/components/SwipeRow.vue'
 import TextField from '@/components/TextField.vue'
 import { shiftPeriod } from '@/domain/periods'
+import AccountSelector from '@/features/accounts/AccountSelector.vue'
+import AccountSheet from '@/features/accounts/AccountSheet.vue'
 import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
+import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 
 /**
  * Internal page, registered only in development (/dev/ui): every app component, in the
@@ -56,6 +62,81 @@ const categories: Category[] = [
   sampleCategory('bills', 'lightning', 7, 6),
   sampleCategory('health', 'first-aid', 8, 7),
 ]
+
+const accounts: Account[] = [
+  {
+    id: 'cash',
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: null,
+    preset: 'cash',
+    type: 'cash',
+    icon: 'wallet',
+    color: 1,
+    initialBalanceCents: 0,
+    currency: 'EUR',
+    archived: false,
+    order: 0,
+  },
+  {
+    id: 'bank',
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: null,
+    name: 'Banca',
+    type: 'bank',
+    icon: 'bank',
+    color: 7,
+    initialBalanceCents: 0,
+    currency: 'EUR',
+    archived: false,
+    order: 1,
+  },
+]
+const paymentMethods: PaymentMethod[] = [
+  {
+    id: 'card',
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: null,
+    preset: 'card',
+    icon: 'credit-card',
+    accountId: 'bank',
+    order: 0,
+    archived: false,
+  },
+  {
+    id: 'cash',
+    createdAt: '',
+    updatedAt: '',
+    deletedAt: null,
+    preset: 'cash',
+    icon: 'wallet',
+    accountId: 'cash',
+    order: 1,
+    archived: false,
+  },
+]
+const choices = [
+  {
+    id: 'all',
+    title: t('accountSelector.all'),
+    icon: 'wallet',
+    cents: 246170,
+    strong: true,
+  },
+  {
+    id: 'bank',
+    title: 'Banca',
+    icon: 'bank',
+    color: 7,
+    detail: t('accounts.default'),
+    cents: 234120,
+  },
+]
+const pickedChoice = ref('all')
+const accountSheetOpen = ref(false)
+const paymentSheetOpen = ref(false)
 
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
@@ -165,6 +246,40 @@ function toast() {
         ColorPicker
       </h3>
       <ColorPicker v-model="pickedColor" aria-label="ColorPicker" />
+
+      <h3 class="dev-ui__name type-note">
+        SortableList
+      </h3>
+      <SortableList :source="accounts" :persist="async () => {}" :name-of="account => account.id" aria-label="SortableList">
+        <template #row="{ item }">
+          <span class="type-body">{{ item.id }}</span>
+        </template>
+      </SortableList>
+
+      <h3 class="dev-ui__name type-note">
+        ArchivedSection
+      </h3>
+      <ArchivedSection :label="t('accounts.archived', { count: 1 })">
+        <p class="type-small">
+          {{ t('accountEdit.archivedNote') }}
+        </p>
+      </ArchivedSection>
+
+      <h3 class="dev-ui__name type-note">
+        ChoiceList
+      </h3>
+      <ChoiceList :choices="choices" :selected="pickedChoice" aria-label="ChoiceList" @select="pickedChoice = $event" />
+
+      <h3 class="dev-ui__name type-note">
+        AccountSelector (from the database, with at least two accounts), AccountSheet, PaymentMethodSheet
+      </h3>
+      <p>
+        <AccountSelector />
+        <ActionChip icon="wallet" :label="t('accountSheet.title')" @click="accountSheetOpen = true" />
+        <ActionChip icon="credit-card" :label="t('paymentSheet.title')" @click="paymentSheetOpen = true" />
+      </p>
+      <AccountSheet v-model:open="accountSheetOpen" :accounts="accounts" selected="bank" />
+      <PaymentMethodSheet v-model:open="paymentSheetOpen" :methods="paymentMethods" :accounts="accounts" selected="card" />
 
       <h3 class="dev-ui__name type-note">
         SearchField

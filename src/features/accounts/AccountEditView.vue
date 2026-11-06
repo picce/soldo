@@ -328,7 +328,7 @@ function showTransactions() {
           enterkeyhint="done"
           @keydown.enter.prevent="save"
         />
-        <SegmentedControl v-model="balanceSign" :options="signOptions" :aria-label="t('accountEdit.balanceSign')" />
+        <SegmentedControl v-model="balanceSign" :options="signOptions" :aria-label="t('accountEdit.balanceSign')" class="account-edit__sign" />
       </div>
       <p v-if="balanceCents === null" class="account-edit__note account-edit__note--error type-small" role="alert">
         {{ t('accountEdit.invalidBalance') }}
@@ -426,6 +426,18 @@ function showTransactions() {
 
 .account-edit__balance-field :deep(input) {
   font-family: var(--font-mono);
+}
+
+/* The two signs stay side by side: the field gives up the room. */
+.account-edit__sign {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+}
+
+.account-edit__sign :deep(.segmented-control__segment) {
+  --vv-button-padding-inline: 0.625rem;
+
+  flex-shrink: 0;
 }
 
 .account-edit__note {

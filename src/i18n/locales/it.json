@@ -107,14 +107,24 @@
     "noMatchTitle": "Nessun movimento con questi filtri.",
     "noMatchHint": "Togli un filtro per vedere gli altri movimenti.",
     "noResultsTitle": "Nessun risultato per «{query}».",
-    "noResultsHint": "La ricerca include note e categorie di tutti i mesi."
+    "noResultsHint": "La ricerca include note e categorie di tutti i mesi.",
+    "transfers": "Trasferimenti",
+    "transfer": "Trasferimento",
+    "payment": "Pagamento",
+    "paymentCount": "Pagamento ({count})"
   },
-  "categoryFilter": {
-    "title": "Categorie",
-    "all": "Tutte le categorie",
+  "filterSheet": {
     "reset": "Azzera",
     "apply": "Applica",
     "applyCount": "Applica ({count})"
+  },
+  "categoryFilter": {
+    "title": "Categorie",
+    "all": "Tutte le categorie"
+  },
+  "paymentFilter": {
+    "title": "Pagamenti",
+    "all": "Tutti i pagamenti"
   },
   "settings": {
     "language": {
@@ -442,7 +452,18 @@
     "noteChip": "Nota: {note}",
     "save": "Salva",
     "duplicate": "Duplica",
-    "delete": "Elimina movimento"
+    "delete": "Elimina movimento",
+    "transfer": "Trasferimento",
+    "newTransfer": "Nuovo trasferimento",
+    "payment": "Pagamento",
+    "paymentChip": "Pagamento: {payment}",
+    "accountChip": "Conto: {account}",
+    "from": "Da",
+    "to": "A",
+    "fromTitle": "Da quale conto",
+    "toTitle": "A quale conto",
+    "swap": "Scambia",
+    "chooseAccounts": "Scegli due conti diversi"
   },
   "dateSheet": {
     "title": "Data",

@@ -28,3 +28,12 @@ export function paymentMethodName(method: Pick<PaymentMethod, 'name' | 'preset'>
     ? i18n.global.t(`presets.payments.${method.preset}`)
     : ''
 }
+
+/** Both sides of a transfer: «Banca → Contanti». */
+export function transferRoute(from?: Pick<Account, 'name' | 'preset'>, to?: Pick<Account, 'name' | 'preset'>): string {
+  return `${from
+    ? accountName(from)
+    : ''} → ${to
+    ? accountName(to)
+    : ''}`
+}
