@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 /**
- * Account that Home and Movimenti show (docs/specs/conti-pagamenti-trasferimenti.md): one choice
+ * Account that Home and Movimenti show (docs/specs/released/conti-pagamenti-trasferimenti.md): one choice
  * for both, in memory while the app is open, like the period of the Home. Null is «Tutti i conti».
  */
 export const useAccountFilterStore = defineStore('accountFilter', () => {

@@ -13,7 +13,7 @@ import { useLiveQuery } from '@/db/useLiveQuery'
 import PaymentMethodLink from './PaymentMethodLink.vue'
 
 /**
- * Payment methods (docs/specs/conti-pagamenti-trasferimenti.md), each tied to the account its
+ * Payment methods (docs/specs/released/conti-pagamenti-trasferimenti.md), each tied to the account its
  * expenses come out of. Archived ones wait in a closed section at the end.
  */
 const { t } = useI18n()

@@ -3,7 +3,7 @@ import type { Account, Transaction } from '@/db/schema'
 type BalanceTransaction = Pick<Transaction, 'kind' | 'amountCents' | 'date' | 'accountId' | 'toAccountId' | 'deletedAt'>
 
 /**
- * Current balance of each account, in cents (docs/specs/conti-pagamenti-trasferimenti.md, "Saldo"):
+ * Current balance of each account, in cents (docs/specs/released/conti-pagamenti-trasferimenti.md, "Saldo"):
  * the initial balance, plus income, minus expenses, plus or minus transfers. Deleted transactions
  * do not count, nor do those dated after `today`, until their day comes.
  */

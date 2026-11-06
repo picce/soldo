@@ -38,7 +38,7 @@ Le schermate che i mockup del nucleo non coprivano ([spec](../specs/released/moc
 
 ### Fase 4
 
-Conti, pagamenti e trasferimenti ([spec](../specs/conti-pagamenti-trasferimenti.md)), approvati il 2026-11-06. **Non sono ancora in `design/soldo.figcraft`**: disegnati in HTML con gli stessi token, font e icone ([mockup-fase-4/](mockup-fase-4/)), vanno riportati nel file alla prima sessione in locale.
+Conti, pagamenti e trasferimenti ([spec](../specs/released/conti-pagamenti-trasferimenti.md)), approvati il 2026-11-06. **Non sono ancora in `design/soldo.figcraft`**: disegnati in HTML con gli stessi token, font e icone ([mockup-fase-4/](mockup-fase-4/)), vanno riportati nel file alla prima sessione in locale.
 
 | Schermata | Chiaro | Scuro |
 |---|---|---|

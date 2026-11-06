@@ -13,7 +13,7 @@ import AccountLink from './AccountLink.vue'
 import { useAccountBalances } from './useAccountBalances'
 
 /**
- * Accounts (docs/specs/conti-pagamenti-trasferimenti.md): each with its current balance, and the
+ * Accounts (docs/specs/released/conti-pagamenti-trasferimenti.md): each with its current balance, and the
  * total of the active ones. The first of the list is the default account.
  */
 const { t } = useI18n()

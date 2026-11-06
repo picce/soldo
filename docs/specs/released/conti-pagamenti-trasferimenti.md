@@ -1,9 +1,9 @@
 # Conti, pagamenti e trasferimenti
 
-> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.5.0
+> **Stato**: Rilasciata con la versione 0.5.0 (2026-11-06); `design/soldo.figcraft` è ancora da allineare
 > **Data**: 2026-11-06
 > **Ambito**: Prima parte della Fase 4. Dalle Impostazioni si gestiscono i conti, ognuno con il suo saldo, e i tipi di pagamento (Carta, Contanti, Satispay, Bonifico…), ognuno legato a un conto. Una spesa dice come è stata pagata e da lì si ricava il conto. Un trasferimento sposta soldi tra due conti senza contare come entrata o uscita. Home e Movimenti si possono guardare per un solo conto.
-> **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md) e il formato di [`backup-manuale.md`](./released/backup-manuale.md); estende [`aggiunta-rapida.md`](./released/aggiunta-rapida.md), [`home-rendiconto.md`](./released/home-rendiconto.md) e [`movimenti.md`](./released/movimenti.md); riprende le soluzioni di [`gestione-categorie.md`](./released/gestione-categorie.md). Le ricorrenze della Fase 4 dipendono da questa spec, il budget no.
+> **Spec collegate**: usa il modello di [`dati-locali.md`](./dati-locali.md) e il formato di [`backup-manuale.md`](./backup-manuale.md); estende [`aggiunta-rapida.md`](./aggiunta-rapida.md), [`home-rendiconto.md`](./home-rendiconto.md) e [`movimenti.md`](./movimenti.md); riprende le soluzioni di [`gestione-categorie.md`](./gestione-categorie.md). Le ricorrenze della Fase 4 dipendono da questa spec, il budget no.
 
 ## Panoramica
 
@@ -206,7 +206,7 @@ In `it.json` ed `en.json`: `settings.accounts`, `settings.payments`, `accounts`,
 
 Un rilascio, la versione 0.5.0, in sei passi sullo stesso branch `feature/conti-pagamenti-trasferimenti`:
 
-1. **Mockup**, in chiaro e in scuro: Impostazioni, Conti, Modifica conto, Tipi di pagamento, Modifica pagamento, foglio del selettore, foglio del pagamento, Nuovo trasferimento, riga del trasferimento in Movimenti, Home a 360 px con «Oggi» e selettore. Approvati il 2026-11-06, con le immagini in [`docs/design/render/`](../design/render/). Sono disegnati in HTML ([`docs/design/mockup-fase-4/`](../design/mockup-fase-4/)) perché nel cloud FigCraft non si può compilare: **`design/soldo.figcraft` è ancora da allineare**, alla prima sessione in locale.
+1. **Mockup**, in chiaro e in scuro: Impostazioni, Conti, Modifica conto, Tipi di pagamento, Modifica pagamento, foglio del selettore, foglio del pagamento, Nuovo trasferimento, riga del trasferimento in Movimenti, Home a 360 px con «Oggi» e selettore. Approvati il 2026-11-06, con le immagini in [`docs/design/render/`](../../design/render/). Sono disegnati in HTML ([`docs/design/mockup-fase-4/`](../../design/mockup-fase-4/)) perché nel cloud FigCraft non si può compilare: **`design/soldo.figcraft` è ancora da allineare**, alla prima sessione in locale.
 2. **Dati**: schema 2 con l'aggiornamento, formato di backup 2, saldi, repository, `parseAmount`, correzioni della tabella qui sopra.
 3. **Impostazioni**: conti e pagamenti, con riordino e archiviazione.
 4. **Editor**: pagamento, conto e trasferimenti.

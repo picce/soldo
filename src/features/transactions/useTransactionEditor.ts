@@ -45,7 +45,7 @@ export interface EditorOptions {
 
 /**
  * State and actions of the quick-add and edit screen (docs/specs/released/aggiunta-rapida.md,
- * docs/specs/conti-pagamenti-trasferimenti.md). A new expense or income is saved by tapping a
+ * docs/specs/released/conti-pagamenti-trasferimenti.md). A new expense or income is saved by tapping a
  * category; an existing one and a transfer with «Salva». An expense names how it is paid, and its
  * account comes from there; an income names its account; a transfer names two.
  */

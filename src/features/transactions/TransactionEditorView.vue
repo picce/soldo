@@ -37,7 +37,7 @@ import { useTransactionEditor } from './useTransactionEditor'
  * Quick add and edit of a transaction (docs/specs/released/aggiunta-rapida.md): amount on the
  * keypad, then a tap on the category saves. Editing adds Salva, Duplica and Elimina. An expense
  * also says how it is paid, an income on which account, and a transfer between which two
- * (docs/specs/conti-pagamenti-trasferimenti.md).
+ * (docs/specs/released/conti-pagamenti-trasferimenti.md).
  */
 const props = defineProps<{
   target: EditorTarget

@@ -1,6 +1,6 @@
 /**
  * Records stored in IndexedDB (docs/specs/released/dati-locali.md). Schema v1 holds the tables of
- * the roadmap; v2 adds the payment methods (docs/specs/conti-pagamenti-trasferimenti.md).
+ * the roadmap; v2 adds the payment methods (docs/specs/released/conti-pagamenti-trasferimenti.md).
  */
 
 export const SCHEMA_VERSION = 2
