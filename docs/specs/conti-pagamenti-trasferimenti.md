@@ -118,7 +118,7 @@ Il campo `type` è obbligatorio ma non cambia nulla nell'app, quindi non si chie
 - `src/features/accounts/AccountsView.vue`: scheda del totale, elenco, sezione `<details>` «Archiviati (n)», «Nuovo conto» nella barra in basso.
 - `src/features/accounts/AccountEditView.vue`: nome (obbligatorio, al massimo 24 caratteri, unico senza distinguere maiuscole e accenti), icona, colore, saldo iniziale, «Archivia» o «Ripristina», «Salva». Il cestino compare solo per i conti mai usati, come per le categorie, e «Vedi movimenti» apre Movimenti su quel conto.
 - **Saldo iniziale**: `TextField` numerico più un controllo «In attivo / In rosso». Il segno sta a parte perché il tastierino numerico dell'iPhone non ha il meno. Il testo si legge con una nuova `parseAmount` in `src/domain/money.ts`, che accetta `1.234,56` e `1234.56`. `isValidAmountCents` non serve qui: rifiuta zero e i negativi, che per un saldo vanno bene.
-- `src/features/payments/PaymentMethodsView.vue` e `PaymentMethodEditView.vue`: stessa struttura, con nome, icona e conto collegato. Il conto si sceglie con `AccountSheet` e la riga si vede con almeno due conti attivi. Nell'elenco, sotto il nome, c'è il conto.
+- `src/features/payments/PaymentMethodsView.vue` e `PaymentMethodEditView.vue`: stessa struttura, con nome, icona e conto collegato. Il conto si sceglie con `AccountSheet` e la riga si vede con almeno due conti attivi. Nell'elenco, sotto il nome, c'è il conto, se ha un nome diverso dal pagamento: niente «Contanti / Contanti».
 - **Icone**: `src/features/accounts/icons.ts` con `wallet`, `credit-card`, `bank`, `piggy-bank`, `coins`, `vault`; `src/features/payments/icons.ts` con `wallet`, `credit-card`, `device-mobile`, `bank`, `money`, `dots-three-outline`. Nomi accessibili in `accountIcons` e `paymentIcons`. `IconPicker` e `ColorPicker` si riusano così come sono. In `scripts/build-icons.js` si aggiungono `credit-card`, `bank`, `coins`, `vault`, `money` e `arrows-left-right`. Niente loghi di Satispay o di altri marchi.
 - **Riordino**: `useCategoryOrder` diventa generico (`useRowOrder`) e riceve la funzione che salva l'ordine e il testo da annunciare. Le categorie non cambiano comportamento.
 
@@ -141,7 +141,7 @@ Il pulsante del conto nel mockup, tra Data e Nota, cambia secondo il tipo di mov
 | Trasferimento | Nessuno: ci sono «Da» e «A» | |
 
 - **Uscita nuova**: parte da `lastUsedPaymentMethod(contoScelto)`. Se nel selettore non c'è un conto, o quel conto non ha ancora spese con un pagamento, parte dall'ultimo usato in generale; se non ce n'è nessuno, dal primo pagamento dell'elenco. Il tocco sulla categoria salva, come oggi: nessun tocco in più.
-- **Foglio del pagamento** (`PaymentMethodSheet.vue`): l'elenco e, con almeno due conti attivi, il conto sotto il nome.
+- **Foglio del pagamento** (`PaymentMethodSheet.vue`): l'elenco e, con almeno due conti attivi, il conto sotto il nome, con la stessa regola dell'elenco.
 - **Il conto dell'uscita** viene dal pagamento. Passando da Uscita a Entrata il pagamento si toglie e il conto resta; tornando a Uscita si riparte dall'ultimo usato.
 - **Uscita senza pagamento** (quelle già inserite): il pulsante dice «Pagamento». Si può salvare così, e il conto non cambia.
 - **Entrata nuova**: parte dal conto scelto nel selettore, altrimenti dal predefinito. Si sceglie con `AccountSheet.vue`.
@@ -150,7 +150,7 @@ Il pulsante del conto nel mockup, tra Data e Nota, cambia secondo il tipo di mov
 ### Trasferimenti
 
 - `/nuovo/:kind(uscita|entrata|trasferimento)`: `EditorKind` aggiunge `transfer` e il selettore in alto ha un terzo segmento, «Trasferimento», con almeno due conti attivi. In modifica il tipo di un trasferimento non cambia, e un'uscita o un'entrata non può diventare trasferimento.
-- **Schermata**: al posto della griglia delle categorie due righe, «Da» e «A», che aprono `AccountSheet`, con un pulsante per scambiarle, e «Salva» in basso (qui non c'è una categoria il cui tocco salva). Di base «Da» è il primo conto e «A» il secondo; il conto scelto in un lato sparisce dalle scelte dell'altro.
+- **Schermata**: al posto della griglia delle categorie due righe, «Da» e «A», che aprono `AccountSheet`, un pulsante «Scambia» accanto a Data e Nota, e «Salva» sotto le righe (qui non c'è una categoria il cui tocco salva). Di base «Da» è il primo conto e «A» il secondo; il conto scelto in un lato sparisce dalle scelte dell'altro.
 - **Riga in Movimenti**: icona `arrows-left-right` in `testo-2`, titolo con la nota o «Trasferimento», sotto «Banca → Contanti», a destra l'importo senza segno in `inchiostro`.
 - **Totali**: i trasferimenti restano fuori dal rendiconto, dalle categorie e dal totale del giorno, come già fanno `summarize` e `groupByDay`.
 
@@ -206,7 +206,7 @@ In `it.json` ed `en.json`: `settings.accounts`, `settings.payments`, `accounts`,
 
 Un rilascio, la versione 0.5.0, in sei passi sullo stesso branch `feature/conti-pagamenti-trasferimenti`:
 
-1. **Mockup** in `design/soldo.figcraft`, in chiaro e in scuro: Conti, Modifica conto, Tipi di pagamento, Modifica pagamento, foglio del selettore, foglio del pagamento, Nuovo trasferimento, riga del trasferimento in Movimenti, Home a 360 px con «Oggi» e selettore. Si parte dopo la loro approvazione.
+1. **Mockup**, in chiaro e in scuro: Impostazioni, Conti, Modifica conto, Tipi di pagamento, Modifica pagamento, foglio del selettore, foglio del pagamento, Nuovo trasferimento, riga del trasferimento in Movimenti, Home a 360 px con «Oggi» e selettore. Approvati il 2026-11-06, con le immagini in [`docs/design/render/`](../design/render/). Sono disegnati in HTML ([`docs/design/mockup-fase-4/`](../design/mockup-fase-4/)) perché nel cloud FigCraft non si può compilare: **`design/soldo.figcraft` è ancora da allineare**, alla prima sessione in locale.
 2. **Dati**: schema 2 con l'aggiornamento, formato di backup 2, saldi, repository, `parseAmount`, correzioni della tabella qui sopra.
 3. **Impostazioni**: conti e pagamenti, con riordino e archiviazione.
 4. **Editor**: pagamento, conto e trasferimenti.

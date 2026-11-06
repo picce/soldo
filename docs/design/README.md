@@ -36,6 +36,23 @@ Le schermate che i mockup del nucleo non coprivano ([spec](../specs/released/moc
 | Importa backup | <img src="render/importa-backup-chiaro.png" width="220" alt="Importa backup in chiaro"> | <img src="render/importa-backup-scuro.png" width="220" alt="Importa backup in scuro"> |
 | Onboarding su Android | <img src="render/onboarding-android-chiaro.png" width="220" alt="Onboarding su Android in chiaro"> | <img src="render/onboarding-android-scuro.png" width="220" alt="Onboarding su Android in scuro"> |
 
+### Fase 4
+
+Conti, pagamenti e trasferimenti ([spec](../specs/conti-pagamenti-trasferimenti.md)), approvati il 2026-11-06. **Non sono ancora in `design/soldo.figcraft`**: disegnati in HTML con gli stessi token, font e icone ([mockup-fase-4/](mockup-fase-4/)), vanno riportati nel file alla prima sessione in locale.
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Impostazioni | <img src="render/impostazioni-conti-chiaro.png" width="220" alt="Impostazioni in chiaro"> | <img src="render/impostazioni-conti-scuro.png" width="220" alt="Impostazioni in scuro"> |
+| Conti | <img src="render/conti-chiaro.png" width="220" alt="Conti in chiaro"> | <img src="render/conti-scuro.png" width="220" alt="Conti in scuro"> |
+| Modifica conto | <img src="render/modifica-conto-chiaro.png" width="220" alt="Modifica conto in chiaro"> | <img src="render/modifica-conto-scuro.png" width="220" alt="Modifica conto in scuro"> |
+| Tipi di pagamento | <img src="render/tipi-pagamento-chiaro.png" width="220" alt="Tipi di pagamento in chiaro"> | <img src="render/tipi-pagamento-scuro.png" width="220" alt="Tipi di pagamento in scuro"> |
+| Modifica pagamento | <img src="render/modifica-pagamento-chiaro.png" width="220" alt="Modifica pagamento in chiaro"> | <img src="render/modifica-pagamento-scuro.png" width="220" alt="Modifica pagamento in scuro"> |
+| Selettore del conto | <img src="render/foglio-conto-chiaro.png" width="220" alt="Selettore del conto in chiaro"> | <img src="render/foglio-conto-scuro.png" width="220" alt="Selettore del conto in scuro"> |
+| Foglio del pagamento | <img src="render/foglio-pagamento-chiaro.png" width="220" alt="Foglio del pagamento in chiaro"> | <img src="render/foglio-pagamento-scuro.png" width="220" alt="Foglio del pagamento in scuro"> |
+| Nuovo trasferimento | <img src="render/nuovo-trasferimento-chiaro.png" width="220" alt="Nuovo trasferimento in chiaro"> | <img src="render/nuovo-trasferimento-scuro.png" width="220" alt="Nuovo trasferimento in scuro"> |
+| Riga del trasferimento | <img src="render/movimenti-trasferimento-chiaro.png" width="220" alt="Riga del trasferimento in chiaro"> | <img src="render/movimenti-trasferimento-scuro.png" width="220" alt="Riga del trasferimento in scuro"> |
+| Home a 360 px | <img src="render/home-360-chiaro.png" width="220" alt="Home a 360 px in chiaro"> | <img src="render/home-360-scuro.png" width="220" alt="Home a 360 px in scuro"> |
+
 Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
 
 ## File di design
