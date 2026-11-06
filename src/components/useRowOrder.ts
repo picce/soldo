@@ -1,13 +1,11 @@
 import type { Ref } from 'vue'
-import type { Category } from '@/db/schema'
 import { onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 import { showToast } from '@/app/toast'
-import { reorderCategories } from '@/db/repositories/categories'
 import { i18n } from '@/i18n'
 
 /** Distance from the top and bottom of the screen where a dragged row scrolls the page. */
 const SCROLL_EDGE = 64
-/** The bottom edge starts above the bar of «Nuova categoria». */
+/** The bottom edge starts above the bar at the bottom of the page. */
 const SCROLL_EDGE_BOTTOM = 140
 const SCROLL_STEP = 8
 
@@ -25,13 +23,13 @@ interface DragSession {
 }
 
 /**
- * Order of a kind's categories (docs/specs/released/gestione-categorie.md): the dragged row follows
- * the finger, the others make room, and on release the whole order is saved; «Sposta su»
- * and «Sposta giù» do the same one step at a time. `items` follows the database, except
- * while a row is being dragged.
+ * Order of a list (docs/specs/released/gestione-categorie.md): the dragged row follows the finger,
+ * the others make room, and on release `persist` saves the whole order; «Sposta su» and «Sposta
+ * giù» do the same one step at a time. `items` follows the database, except while a row is being
+ * dragged.
  */
-export function useCategoryOrder(source: Ref<Category[] | undefined>) {
-  const items = shallowRef<Category[]>([])
+export function useRowOrder<T extends { id: string }>(source: Ref<T[] | undefined>, persist: (ids: string[]) => Promise<void>) {
+  const items = shallowRef<T[]>([])
   /** Id of the dragged row. */
   const draggedId = ref<string | null>(null)
   /** Vertical shift of each row while dragging, in pixels. */
@@ -45,9 +43,9 @@ export function useCategoryOrder(source: Ref<Category[] | undefined>) {
       items.value = rows
   }, { immediate: true })
 
-  function save(next: Category[]) {
+  function save(next: T[]) {
     items.value = next
-    reorderCategories(next.map(category => category.id)).catch(() => {
+    persist(next.map(item => item.id)).catch(() => {
       items.value = source.value ?? []
       showToast({
         message: i18n.global.t('common.saveError'),
@@ -55,10 +53,10 @@ export function useCategoryOrder(source: Ref<Category[] | undefined>) {
     })
   }
 
-  function moved(from: number, to: number): Category[] {
+  function moved(from: number, to: number): T[] {
     const next = [...items.value]
-    const [category] = next.splice(from, 1)
-    next.splice(to, 0, category!)
+    const [item] = next.splice(from, 1)
+    next.splice(to, 0, item!)
     return next
   }
 
@@ -85,13 +83,13 @@ export function useCategoryOrder(source: Ref<Category[] | undefined>) {
         target = slotIndex
     })
     const next: Record<string, number> = {}
-    items.value.forEach((category, row) => {
+    items.value.forEach((item, row) => {
       if (row === index)
-        next[category.id] = dy
+        next[item.id] = dy
       else if (index < row && row <= target)
-        next[category.id] = -height
+        next[item.id] = -height
       else if (target <= row && row < index)
-        next[category.id] = height
+        next[item.id] = height
     })
     offsets.value = next
     if (target !== session.target && 'vibrate' in navigator)

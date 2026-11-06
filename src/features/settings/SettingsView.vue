@@ -10,8 +10,10 @@ import { exportBackup, exportTransactionsCsv } from '@/backup/export'
 import { connectGoogle, useDriveAvailable } from '@/backup/google/auth'
 import AppPage from '@/components/AppPage.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
+import { listAccounts } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
 import { getMeta } from '@/db/repositories/meta'
+import { listPaymentMethods } from '@/db/repositories/payment-methods'
 import { useLiveQuery } from '@/db/useLiveQuery'
 import { timeAgo } from '@/domain/dates'
 import { useIntlLocale, useLocalePreference } from '@/i18n/locale'
@@ -52,6 +54,15 @@ const categoryCount = computed(() => {
     t('settings.categories.income', count('income')),
   ].join(' · ')
 })
+
+const { data: accounts } = useLiveQuery(() => listAccounts())
+const { data: paymentMethods } = useLiveQuery(() => listPaymentMethods())
+const accountCount = computed(() => accounts.value
+  ? t('settings.accounts.accountsCount', accounts.value.length)
+  : '')
+const paymentCount = computed(() => paymentMethods.value
+  ? t('settings.accounts.paymentsCount', paymentMethods.value.length)
+  : '')
 
 // Backup: «ultimo: 3 giorni fa» from the last JSON export (or the restored file).
 const intlLocale = useIntlLocale()
@@ -145,6 +156,25 @@ const versionLine = computed(() =>
       <p id="settings-language-hint" class="settings-section__hint type-small">
         {{ t('settings.language.hint') }}
       </p>
+    </section>
+    <section class="settings-section" aria-labelledby="settings-accounts">
+      <h2 id="settings-accounts" class="settings-section__title type-label">
+        {{ t('settings.accounts.label') }}
+      </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="wallet"
+          :title="t('settings.accounts.accounts')"
+          :detail="accountCount"
+          :to="{ name: 'accounts' }"
+        />
+        <SettingsRow
+          icon="credit-card"
+          :title="t('settings.accounts.payments')"
+          :detail="paymentCount"
+          :to="{ name: 'payment-methods' }"
+        />
+      </div>
     </section>
     <section class="settings-section" aria-labelledby="settings-categories">
       <h2 id="settings-categories" class="settings-section__title type-label">

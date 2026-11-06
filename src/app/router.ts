@@ -62,6 +62,52 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/impostazioni/conti',
+    name: 'accounts',
+    component: () => import('@/features/accounts/AccountsView.vue'),
+    meta: { titleKey: 'accounts.title', fullscreen: true, depth: 1 },
+  },
+  {
+    path: '/impostazioni/conti/:id',
+    name: 'account-edit',
+    component: () => import('@/features/accounts/AccountEditView.vue'),
+    props: route => ({
+      id: route.params.id === 'nuovo'
+        ? null
+        : route.params.id,
+    }),
+    meta: {
+      titleKey: route => route.params.id === 'nuovo'
+        ? 'accountEdit.new'
+        : 'accountEdit.edit',
+      fullscreen: true,
+      depth: 2,
+    },
+  },
+  {
+    path: '/impostazioni/pagamenti',
+    name: 'payment-methods',
+    component: () => import('@/features/payments/PaymentMethodsView.vue'),
+    meta: { titleKey: 'payments.title', fullscreen: true, depth: 1 },
+  },
+  {
+    path: '/impostazioni/pagamenti/:id',
+    name: 'payment-method-edit',
+    component: () => import('@/features/payments/PaymentMethodEditView.vue'),
+    props: route => ({
+      id: route.params.id === 'nuovo'
+        ? null
+        : route.params.id,
+    }),
+    meta: {
+      titleKey: route => route.params.id === 'nuovo'
+        ? 'paymentEdit.new'
+        : 'paymentEdit.edit',
+      fullscreen: true,
+      depth: 2,
+    },
+  },
+  {
     path: '/nuovo/:kind(uscita|entrata)',
     name: 'transaction-new',
     component: () => import('@/features/transactions/TransactionEditorView.vue'),
