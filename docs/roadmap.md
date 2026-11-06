@@ -19,7 +19,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
-| [Conti, pagamenti e trasferimenti](specs/conti-pagamenti-trasferimenti.md) | Fase 4 | da definire | Nessuna | Implementata sul branch, da pubblicare |
+| [Conti, pagamenti e trasferimenti](specs/conti-pagamenti-trasferimenti.md) | Fase 4 | da definire | Nessuna | Su `develop`, da pubblicare |
 | Budget mensili | Fase 4 | da definire | Nessuna | Da scrivere |
 | Ricorrenze | Fase 4 | da definire | Conti, pagamenti e trasferimenti | Da scrivere |
 
