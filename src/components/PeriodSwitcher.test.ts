@@ -58,3 +58,23 @@ describe('periodSwitcher', () => {
     expect(wrapper.get('h2').text()).toBe('2–8 November')
   })
 })
+
+describe('periodSwitcher without tabs', () => {
+  it('keeps only the title and the arrows', async () => {
+    const wrapper = mount(PeriodSwitcher, {
+      props: {
+        period: { unit: 'month', anchor: '2026-11-05' },
+        showTabs: false,
+      },
+      global: {
+        plugins: testPlugins(),
+      },
+    })
+    expect(wrapper.find('[role="tablist"]').exists()).toBe(false)
+    expect(wrapper.get('h2').text()).toBe('Novembre 2026')
+    await wrapper.get('button[aria-label="Periodo successivo"]').trigger('click')
+    expect(wrapper.emitted('shift')).toEqual([
+      [1],
+    ])
+  })
+})

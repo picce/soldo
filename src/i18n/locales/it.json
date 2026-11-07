@@ -50,9 +50,6 @@
     "restoreFile": "Ripristina da un file"
   },
   "pages": {
-    "budget": {
-      "intro": "Qui potrai impostare un budget mensile, totale o per categoria, e vedere quanto ti resta."
-    },
     "stats": {
       "intro": "Qui vedrai come cambiano entrate e uscite nel tempo."
     }
@@ -169,6 +166,51 @@
     "moveUp": "Sposta su: {name}",
     "moveDown": "Sposta giù: {name}",
     "moved": "{name}: posizione {position} di {count}"
+  },
+  "budgets": {
+    "total": "Budget del mese",
+    "left": "restano",
+    "over": "oltre",
+    "spentOf": "{spent} di {budget}",
+    "spentTotalOf": "Spesi {spent} di {budget}",
+    "daily": "Manca un giorno: {amount} da spendere | Mancano {days} giorni: {amount} al giorno",
+    "spentMonth": "Spesi nel mese",
+    "setTotal": "Imposta il budget del mese",
+    "byCategory": "Per categoria",
+    "ofCategory": "Budget di {name}",
+    "unbudgeted": "Senza budget",
+    "add": "Aggiungi budget",
+    "actions": "Azioni sul budget",
+    "emptyTitle": "Decidi quanto spendere",
+    "emptyText": "Un budget per il mese, o per le categorie che vuoi tenere d'occhio. Qui vedi quanto ti resta, e Soldo ti avvisa quando ti avvicini.",
+    "emptyAction": "Imposta un budget"
+  },
+  "budgetEdit": {
+    "title": "Budget",
+    "totalTitle": "Budget del mese",
+    "categoryTitle": "Budget: {name}",
+    "amount": "Importo al mese",
+    "invalidAmount": "Scrivi un importo, per esempio 200,00.",
+    "when": "Quando vale",
+    "repeat": "Ogni mese",
+    "once": "Solo {month}",
+    "repeatHint": "Da {month} in poi, finché non lo cambi.",
+    "onceHint": "Solo per {month}.",
+    "spent": "Spesi finora a {month}",
+    "save": "Salva",
+    "remove": "Togli",
+    "removedTotal": "Budget del mese tolto da {month}.",
+    "removedCategory": "Budget di {name} tolto da {month}."
+  },
+  "budgetMeter": {
+    "used": "{percent}% usato",
+    "over": "{percent}% usato, oltre di {amount}"
+  },
+  "budgetWarning": {
+    "categoryNear": "Budget di {category}: {percent}% usato.",
+    "categoryOver": "Budget di {category} superato di {amount}.",
+    "totalNear": "Budget del mese: {percent}% usato.",
+    "totalOver": "Budget del mese superato di {amount}."
   },
   "accounts": {
     "title": "Conti",
