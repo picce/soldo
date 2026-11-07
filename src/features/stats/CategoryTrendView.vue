@@ -21,7 +21,7 @@ import { useAccountFilterStore } from '@/stores/account-filter'
 import StatsChange from './StatsChange.vue'
 
 /**
- * One category over the 12 months that end with the chosen one (docs/specs/statistiche.md,
+ * One category over the 12 months that end with the chosen one (docs/specs/released/statistiche.md,
  * "Andamento di una categoria"): its total against the average, the bars with the average line,
  * every month in a list, and the way to its transactions.
  */

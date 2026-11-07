@@ -6,7 +6,7 @@ import { monthOf, monthRange, shiftMonth } from './budgets'
 import { fromIsoDate, toIsoDate } from './dates'
 
 /**
- * Figures of the Statistics (docs/specs/statistiche.md): a month or a year, compared with the one
+ * Figures of the Statistics (docs/specs/released/statistiche.md): a month or a year, compared with the one
  * before at the same point. Transfers are neither income nor expenses and never count.
  */
 

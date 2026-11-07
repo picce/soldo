@@ -73,7 +73,7 @@ Budget e ricorrenze ([budget](../specs/released/budget-mensili.md), [ricorrenze]
 
 ### Fase 5
 
-Statistiche ([spec](../specs/statistiche.md)), del 2026-11-07, con lo stesso metodo della Fase 4: sorgente in [mockup-fase-5/build-0.8.cjs](mockup-fase-5/build-0.8.cjs) (usa i pezzi di `mockup-fase-4/build.cjs`), immagini con `node mockup-fase-4/shoot.cjs <cartella>`. A 360 px: [mese](render/statistiche-mese-360-chiaro.png), [anno](render/statistiche-anno-360-chiaro.png). Colori dei grafici: `--color-chart-expense` e `--color-chart-income`, controllati con lo script della skill `dataviz`.
+Statistiche ([spec](../specs/released/statistiche.md)), del 2026-11-07, con lo stesso metodo della Fase 4: sorgente in [mockup-fase-5/build-0.8.cjs](mockup-fase-5/build-0.8.cjs) (usa i pezzi di `mockup-fase-4/build.cjs`), immagini con `node mockup-fase-4/shoot.cjs <cartella>`. A 360 px: [mese](render/statistiche-mese-360-chiaro.png), [anno](render/statistiche-anno-360-chiaro.png). Colori dei grafici: `--color-chart-expense` e `--color-chart-income`, controllati con lo script della skill `dataviz`.
 
 | Schermata | Chiaro | Scuro |
 |---|---|---|

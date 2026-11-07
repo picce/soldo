@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { niceStep } from '@/domain/stats'
 
 /**
- * What LineChart and BarChart share (docs/specs/statistiche.md, "Grafici"): the size, the value
+ * What LineChart and BarChart share (docs/specs/released/statistiche.md, "Grafici"): the size, the value
  * axis and reading a point with the finger, the mouse or the arrow keys.
  */
 

@@ -19,7 +19,7 @@
   --color-danger: #b3261e;
   /* Status only (a budget near its limit), always with an icon and a label: never a series. */
   --color-warning: #e9a100;
-  /* Series of the Statistics charts (docs/specs/statistiche.md), checked with the dataviz skill. */
+  /* Series of the Statistics charts (docs/specs/released/statistiche.md), checked with the dataviz skill. */
   --color-chart-expense: #2340c8;
   --color-chart-income: #1f7a45;
   --color-on-danger: #fff;

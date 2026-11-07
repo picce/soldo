@@ -3,7 +3,7 @@ import { computed, useTemplateRef } from 'vue'
 import { CHART_HEIGHT, CHART_PADDING as PAD, useChartSelection, useChartWidth, valueAxis } from './chart'
 
 /**
- * Lines over days (docs/specs/statistiche.md, «Giorno per giorno»): 2px lines, a dashed one for
+ * Lines over days (docs/specs/released/statistiche.md, «Giorno per giorno»): 2px lines, a dashed one for
  * the period before, one value axis from zero. A point is read with the finger, the mouse or the
  * arrow keys (`v-model:selected`); the page writes what it reads. For screen readers the drawing
  * is hidden and a table holds every value.

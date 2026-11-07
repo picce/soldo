@@ -43,7 +43,7 @@ import { useAccountFilterStore } from '@/stores/account-filter'
 import StatsChange from './StatsChange.vue'
 
 /**
- * Statistics (docs/specs/statistiche.md): a month day by day or a year month by month, each
+ * Statistics (docs/specs/released/statistiche.md): a month day by day or a year month by month, each
  * figure next to the period before at the same point, and the categories that changed. The
  * period lives in the address (`?mese=2026-11`, `?anno=2026`), so «Indietro» from a category
  * comes back to it.

@@ -3,7 +3,7 @@ import { computed, useTemplateRef } from 'vue'
 import { CHART_HEIGHT, CHART_PADDING as PAD, useChartSelection, useChartWidth, valueAxis } from './chart'
 
 /**
- * Bars over months (docs/specs/statistiche.md, «Mese per mese» and a category over 12 months): one
+ * Bars over months (docs/specs/released/statistiche.md, «Mese per mese» and a category over 12 months): one
  * or two series side by side, 2px apart, rounded at the top and standing on the axis; optionally
  * the average as a dashed line, named in the right margin. Choosing a month (finger, mouse, arrow
  * keys, `v-model:selected`) dims the others; `emphasis` does the same while nothing is chosen.

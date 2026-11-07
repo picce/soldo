@@ -1,9 +1,9 @@
 # Statistiche
 
-> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.8.0
+> **Stato**: Rilasciata (versione 0.8.0, 2026-11-07)
 > **Data**: 2026-11-07
 > **Ambito**: Prima parte della Fase 5. La scheda Statistiche, oggi vuota, mostra come cambiano uscite ed entrate nel tempo: un mese giorno per giorno contro il mese prima, un anno mese per mese, l'andamento di una categoria negli ultimi 12 mesi. Ogni numero ha accanto il confronto con il periodo prima, fermo allo stesso punto.
-> **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md); il rendiconto di un periodo resta nella Home ([`home-rendiconto.md`](./released/home-rendiconto.md)); il selettore del conto viene da [`conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md); l'elenco filtrato da [`movimenti.md`](./released/movimenti.md).
+> **Spec collegate**: usa il modello di [`dati-locali.md`](./dati-locali.md); il rendiconto di un periodo resta nella Home ([`home-rendiconto.md`](./home-rendiconto.md)); il selettore del conto viene da [`conti-pagamenti-trasferimenti.md`](./conti-pagamenti-trasferimenti.md); l'elenco filtrato da [`movimenti.md`](./movimenti.md).
 
 ## Panoramica
 

@@ -1,4 +1,4 @@
-// Mockups of docs/specs/statistiche.md, step 1, with the pieces of ../mockup-fase-4/build.cjs (same
+// Mockups of docs/specs/released/statistiche.md, step 1, with the pieces of ../mockup-fase-4/build.cjs (same
 // tokens, fonts and icons). Usage: node build-0.8.cjs <repo> <outDir>, then
 // node ../mockup-fase-4/shoot.cjs <outDir>.
 const { icon, cat, status, back, nav, label, button, amount, writeMockups } = require('../mockup-fase-4/build.cjs')
