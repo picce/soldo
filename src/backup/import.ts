@@ -2,7 +2,9 @@ import type { BackupFile } from './format'
 import type { Account } from '@/db/schema'
 import { db } from '@/db/database'
 import { defaultPaymentMethods, firstActiveAccount } from '@/db/payment-defaults'
+import { generateDueOccurrences } from '@/db/repositories/recurrences'
 import { SCHEMA_VERSION } from '@/db/schema'
+import { today } from '@/domain/dates'
 import { backupFileSchema } from './format'
 import { gunzip, isGzip, sha256Hex } from './pack'
 import { BACKUP_FORMAT } from './version'
@@ -34,7 +36,9 @@ const NOT_SOLDO: BackupReading = { ok: false, error: 'notSoldo' }
 
 /**
  * Format 1 had no payment methods: the file gets the default ones, on its first account, as the
- * database does when it upgrades. A file with broken data fails the check that follows.
+ * database does when it upgrades. Format 2 needs nothing: format 3 only adds optional fields (the
+ * end of a budget, the payment method of a recurrence). A file with broken data fails the check
+ * that follows.
  */
 function upgradeFormat1(raw: object): object {
   const data = (raw as { data?: { accounts?: unknown } }).data
@@ -83,9 +87,12 @@ export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: 
   if (checksum && await sha256Hex(JSON.stringify((raw as { data?: unknown }).data)) !== checksum)
     return { ok: false, error: 'invalid' }
 
-  const parsed = backupFileSchema.safeParse(format === 1
-    ? upgradeFormat1(raw)
-    : raw)
+  const parsed = backupFileSchema.safeParse({
+    ...(format === 1
+      ? upgradeFormat1(raw)
+      : raw),
+    format: BACKUP_FORMAT,
+  })
   if (!parsed.success)
     return { ok: false, error: 'invalid' }
   const backup = parsed.data
@@ -126,4 +133,6 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
       { key: 'schemaVersion', value: SCHEMA_VERSION },
     ])
   })
+  // The series of the file go on from where they were: what came due since is added now.
+  await generateDueOccurrences(today())
 }

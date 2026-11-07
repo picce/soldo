@@ -1,4 +1,5 @@
 import type { RouteLocationNormalized, Router, RouteRecordRaw, RouterHistory } from 'vue-router'
+import type { RecurrenceFrequency } from '@/db/schema'
 import { watch } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { restoreScroll } from '@/app/scroll'
@@ -9,6 +10,14 @@ const NEW_KINDS: Record<string, { kind: 'expense' | 'income' | 'transfer', title
   uscita: { kind: 'expense', titleKey: 'editor.newExpense' },
   entrata: { kind: 'income', titleKey: 'editor.newIncome' },
   trasferimento: { kind: 'transfer', titleKey: 'editor.newTransfer' },
+}
+
+/** `?ripeti=mensile`: the quick add opens with the repeat already chosen («Nuova ricorrenza»). */
+const REPEAT_QUERY: Record<string, RecurrenceFrequency> = {
+  giornaliero: 'daily',
+  settimanale: 'weekly',
+  mensile: 'monthly',
+  annuale: 'yearly',
 }
 
 export const routes: RouteRecordRaw[] = [
@@ -29,6 +38,22 @@ export const routes: RouteRecordRaw[] = [
     name: 'budget',
     component: () => import('@/features/budgets/BudgetView.vue'),
     meta: { titleKey: 'nav.budget' },
+  },
+  {
+    path: '/budget/:categoria',
+    name: 'budget-edit',
+    component: () => import('@/features/budgets/BudgetEditView.vue'),
+    props: route => ({
+      categoryKey: route.params.categoria,
+      month: route.query.mese,
+    }),
+    meta: {
+      titleKey: route => route.params.categoria === 'totale'
+        ? 'budgetEdit.totalTitle'
+        : 'budgetEdit.title',
+      fullscreen: true,
+      depth: 1,
+    },
   },
   {
     path: '/statistiche',
@@ -118,12 +143,20 @@ export const routes: RouteRecordRaw[] = [
     path: '/nuovo/:kind(uscita|entrata|trasferimento)',
     name: 'transaction-new',
     component: () => import('@/features/transactions/TransactionEditorView.vue'),
-    props: route => ({
-      target: {
-        mode: 'new',
-        kind: NEW_KINDS[route.params.kind as string]?.kind ?? 'expense',
-      },
-    }),
+    props: (route) => {
+      const repeat = typeof route.query.ripeti === 'string'
+        ? REPEAT_QUERY[route.query.ripeti]
+        : undefined
+      return {
+        target: {
+          mode: 'new',
+          kind: NEW_KINDS[route.params.kind as string]?.kind ?? 'expense',
+          ...(repeat
+            ? { repeat }
+            : {}),
+        },
+      }
+    },
     meta: {
       titleKey: route => NEW_KINDS[route.params.kind as string]?.titleKey ?? 'editor.newExpense',
       fullscreen: true,
@@ -138,6 +171,21 @@ export const routes: RouteRecordRaw[] = [
       target: { mode: 'edit', id: route.params.id },
     }),
     meta: { titleKey: 'editor.edit', fullscreen: true, modal: true },
+  },
+  {
+    path: '/impostazioni/ricorrenze',
+    name: 'recurrences',
+    component: () => import('@/features/recurrences/RecurrencesView.vue'),
+    meta: { titleKey: 'recurrences.title', fullscreen: true, depth: 1 },
+  },
+  {
+    path: '/ricorrenze/:id',
+    name: 'recurrence-edit',
+    component: () => import('@/features/transactions/TransactionEditorView.vue'),
+    props: route => ({
+      target: { mode: 'rule', id: route.params.id },
+    }),
+    meta: { titleKey: 'editor.editRule', fullscreen: true, modal: true },
   },
   {
     path: '/benvenuto',

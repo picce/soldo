@@ -7,6 +7,7 @@ import { createAppRouter, requireOnboarding } from '@/app/router'
 // Only the Phosphor icons the app uses (scripts/build-icons.js): nothing is fetched at runtime.
 import phIcons from '@/assets/icons/ph.json'
 import { startBackup } from '@/backup/start'
+import { startRecurrences } from '@/features/recurrences/start'
 import { i18n } from '@/i18n'
 import { initLocale } from '@/i18n/locale'
 import App from './App.vue'
@@ -46,3 +47,6 @@ app
   })
 
 app.mount('#app')
+
+// Once the notices can show: the series add what came due while the app was closed.
+startRecurrences()

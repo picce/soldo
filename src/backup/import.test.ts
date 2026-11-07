@@ -1,11 +1,13 @@
 import type { BackupFile } from './format'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { db } from '@/db/database'
 import { setClock } from '@/db/records'
 import { getDefaultAccount } from '@/db/repositories/accounts'
+import { listBudgets, removeBudget, setBudget } from '@/db/repositories/budgets'
 import { listCategories } from '@/db/repositories/categories'
 import { getMeta } from '@/db/repositories/meta'
 import { listPaymentMethods } from '@/db/repositories/payment-methods'
+import { createRecurrence, getRecurrence } from '@/db/repositories/recurrences'
 import { addTransaction, deleteTransaction, listTransactions } from '@/db/repositories/transactions'
 import { SCHEMA_VERSION } from '@/db/schema'
 import { seedDefaults } from '@/db/seed'
@@ -66,7 +68,7 @@ describe('backup', () => {
   it('reads its own export and previews what it holds', async () => {
     await addSome()
     const backup = await createBackup()
-    expect(backup).toMatchObject({ app: 'soldo', format: 2, schemaVersion: 2 })
+    expect(backup).toMatchObject({ app: 'soldo', format: 3, schemaVersion: 2 })
     expect(backup.data.transactions).toHaveLength(3)
 
     const reading = await readBackup(asFile(backup))
@@ -122,6 +124,78 @@ describe('backup', () => {
     expect((await db.transactions.get(saved.id))?.paymentMethodId).toBe(method!.id)
   })
 
+  it('keeps the end of a budget through a backup', async () => {
+    await setBudget({
+      month: '2026-01',
+      categoryId: null,
+      amountCents: 100000,
+      repeat: true,
+    })
+    await removeBudget('2026-03', null)
+    const before = await listBudgets()
+    const reading = await readBackup(asFile(await createBackup()))
+    await Promise.all(db.tables.map(table => table.clear()))
+    await restoreBackup(reading.ok
+      ? reading.backup
+      : expect.fail('not read'))
+    expect(await listBudgets()).toEqual(before)
+    expect(before[0]?.endMonth).toBe('2026-02')
+  })
+
+  it('keeps a series with its payment method, and adds what came due once restored', async () => {
+    vi.useFakeTimers({
+      toFake: ['Date'],
+    })
+    vi.setSystemTime(new Date(2026, 10, 7, 10))
+    try {
+      const [method] = await listPaymentMethods()
+      const [groceries] = await listCategories({ kind: 'expense' })
+      const series = await createRecurrence({
+        template: {
+          kind: 'expense',
+          amountCents: 1299,
+          accountId: method!.accountId,
+          paymentMethodId: method!.id,
+          categoryId: groceries!.id,
+          note: 'Netflix',
+        },
+        freq: 'monthly',
+        interval: 1,
+        startDate: '2026-10-09',
+      })
+      const reading = await readBackup(asFile(await createBackup()))
+      await Promise.all(db.tables.map(table => table.clear()))
+      await restoreBackup(reading.ok
+        ? reading.backup
+        : expect.fail('not read'))
+      expect((await getRecurrence(series.id))?.template.paymentMethodId).toBe(method!.id)
+      expect((await listTransactions()).map(transaction => [transaction.date, transaction.note])).toEqual([
+        ['2026-10-09', 'Netflix'],
+      ])
+    }
+    finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('reads a file of format 2 as it is', async () => {
+    await setBudget({
+      month: '2026-01',
+      categoryId: null,
+      amountCents: 100000,
+      repeat: true,
+    })
+    const reading = await readBackup(asFile({
+      ...await createBackup(),
+      format: 2,
+    }))
+    expect(reading.ok).toBe(true)
+    if (reading.ok) {
+      expect(reading.backup.format).toBe(3)
+      expect(reading.backup.data.budgets).toHaveLength(1)
+    }
+  })
+
   describe('of format 1', () => {
     /** A backup as the app wrote it before the payment methods. */
     async function format1() {
@@ -155,7 +229,7 @@ describe('backup', () => {
       }))
       expect(reading.ok).toBe(true)
       if (reading.ok) {
-        expect(reading.backup.format).toBe(2)
+        expect(reading.backup.format).toBe(3)
         expect(reading.backup.data.paymentMethods.map(method => method.preset)).toEqual([
           'cash',
           'card',
@@ -205,7 +279,7 @@ describe('backup', () => {
 
   it('refuses a backup of a newer format', async () => {
     const backup = await createBackup()
-    expect(await readBackup(asFile({ ...backup, format: 3 }))).toEqual({ ok: false, error: 'newerFormat' })
+    expect(await readBackup(asFile({ ...backup, format: 4 }))).toEqual({ ok: false, error: 'newerFormat' })
   })
 
   it('refuses invalid records', async () => {

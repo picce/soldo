@@ -93,6 +93,7 @@ const budgetSchema: z.ZodType<Budget> = z.object({
   categoryId: z.string().nullable(),
   amountCents: cents,
   repeat: z.boolean(),
+  endMonth: z.string().regex(/^\d{4}-\d{2}$/).optional(),
 })
 
 const recurrenceSchema: z.ZodType<Recurrence> = z.object({
@@ -103,6 +104,7 @@ const recurrenceSchema: z.ZodType<Recurrence> = z.object({
     currency: z.string(),
     accountId: z.string(),
     toAccountId: z.string().optional(),
+    paymentMethodId: z.string().optional(),
     categoryId: z.string().nullable(),
     note: z.string(),
   }),

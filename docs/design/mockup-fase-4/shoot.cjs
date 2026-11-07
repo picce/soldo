@@ -1,4 +1,4 @@
-// Renders the mockups and reports anything that overflows its screen. Usage: node shoot.js <outDir>
+// Renders the mockups and reports anything that overflows its screen. Usage: node shoot.cjs <outDir>
 const path = require('node:path')
 const { chromium } = require('playwright')
 
@@ -40,9 +40,10 @@ function overflowing(root) {
   }
   await page.goto(`file://${path.resolve(out, 'narrow.html')}`)
   await page.evaluate(() => document.fonts.ready)
-  const narrow = await page.$('.screen')
-  await narrow.screenshot({ path: path.join(out, 'nuovo-trasferimento-360-chiaro.png') })
-  ;(await narrow.evaluate(overflowing)).forEach(line => console.log(line))
+  for (const narrow of await page.$$('.screen')) {
+    await narrow.screenshot({ path: path.join(out, `${await narrow.getAttribute('data-id')}-chiaro.png`) })
+    ;(await narrow.evaluate(overflowing)).forEach(line => console.log(line))
+  }
   await browser.close()
   console.log('rendered')
 })()

@@ -14,8 +14,10 @@ import { listAccounts } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
 import { getMeta } from '@/db/repositories/meta'
 import { listPaymentMethods } from '@/db/repositories/payment-methods'
+import { listRecurrences } from '@/db/repositories/recurrences'
 import { useLiveQuery } from '@/db/useLiveQuery'
-import { timeAgo } from '@/domain/dates'
+import { timeAgo, today } from '@/domain/dates'
+import { isFinished } from '@/domain/recurrences'
 import { useIntlLocale, useLocalePreference } from '@/i18n/locale'
 import DriveRestoreSheet from './DriveRestoreSheet.vue'
 import DriveSheet from './DriveSheet.vue'
@@ -63,6 +65,15 @@ const accountCount = computed(() => accounts.value
 const paymentCount = computed(() => paymentMethods.value
   ? t('settings.accounts.paymentsCount', paymentMethods.value.length)
   : '')
+
+// Series still going: «4 attive».
+const { data: recurrences } = useLiveQuery(() => listRecurrences())
+const recurrenceCount = computed(() => {
+  if (!recurrences.value)
+    return ''
+  const current = today()
+  return t('settings.recurrences.count', recurrences.value.filter(recurrence => !isFinished(recurrence, current)).length)
+})
 
 // Backup: «ultimo: 3 giorni fa» from the last JSON export (or the restored file).
 const intlLocale = useIntlLocale()
@@ -173,6 +184,19 @@ const versionLine = computed(() =>
           :title="t('settings.accounts.payments')"
           :detail="paymentCount"
           :to="{ name: 'payment-methods' }"
+        />
+      </div>
+    </section>
+    <section class="settings-section" aria-labelledby="settings-recurrences">
+      <h2 id="settings-recurrences" class="settings-section__title type-label">
+        {{ t('settings.recurrences.label') }}
+      </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="repeat"
+          :title="t('settings.recurrences.title')"
+          :detail="recurrenceCount"
+          :to="{ name: 'recurrences' }"
         />
       </div>
     </section>

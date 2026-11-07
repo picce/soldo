@@ -2,6 +2,7 @@ import type { PaymentMethod } from '../schema'
 import { db } from '../database'
 import { paymentMethodName } from '../names'
 import { newRecord, now } from '../records'
+import { countRecurrenceUses } from './recurrences'
 
 export interface PaymentMethodQuery {
   /** Archived methods are hidden unless asked for (they stay in the history). */
@@ -152,10 +153,10 @@ export async function countPaymentMethodTransactions(id: string): Promise<number
     .count()
 }
 
-/** Soft delete, only for a payment method no expense uses: otherwise PaymentMethodInUseError. */
+/** Soft delete, only for a payment method no expense or series uses: otherwise PaymentMethodInUseError. */
 export async function deletePaymentMethod(id: string): Promise<void> {
-  await db.transaction('rw', db.paymentMethods, db.transactions, async () => {
-    const count = await countPaymentMethodTransactions(id)
+  await db.transaction('rw', db.paymentMethods, db.transactions, db.recurrences, async () => {
+    const count = await countPaymentMethodTransactions(id) + await countRecurrenceUses({ paymentMethodId: id })
     if (count > 0)
       throw new PaymentMethodInUseError(id, count)
     await assertNotLast(id)

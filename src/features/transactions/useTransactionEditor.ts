@@ -1,4 +1,5 @@
-import type { Account, Category, PaymentMethod, Transaction } from '@/db/schema'
+import type { RecurrenceInput } from '@/db/repositories/recurrences'
+import type { Account, Category, PaymentMethod, Recurrence, RecurrenceFrequency, Transaction } from '@/db/schema'
 import type { CalculatorKey, CalculatorState } from '@/domain/calculator'
 import { computed, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -8,6 +9,17 @@ import { firstActiveAccount } from '@/db/payment-defaults'
 import { listAccounts } from '@/db/repositories/accounts'
 import { getCategory, listCategories } from '@/db/repositories/categories'
 import { listPaymentMethods, startingPaymentMethod } from '@/db/repositories/payment-methods'
+import {
+  createRecurrence,
+  deleteRecurrence,
+  generateDueOccurrences,
+  getRecurrence,
+  restoreRecurrence,
+  resumeRecurrence,
+  revertRecurrence,
+  stopRecurrence,
+  updateRecurrence,
+} from '@/db/repositories/recurrences'
 import {
   addTransaction,
   deleteTransaction,
@@ -24,17 +36,35 @@ import {
   pressKey,
 } from '@/domain/calculator'
 import { today } from '@/domain/dates'
+import { isFinished } from '@/domain/recurrences'
+import { withBudgetCheck } from '@/features/budgets/warnings'
+import { recurrenceName } from '@/features/recurrences/describe'
 import { useAccountFilterStore } from '@/stores/account-filter'
-import { showDeleted, showDuplicated, showSaved } from './notices'
+import { showDeleted, showDuplicated, showSaved, showSeriesSaved } from './notices'
 
 export type EditorKind = Transaction['kind']
 
+/**
+ * What the screen works on: a new transaction (a series too, with `repeat` already chosen), a
+ * saved one, or a series (docs/specs/released/ricorrenze.md).
+ */
 export type EditorTarget
-  = | { mode: 'new', kind: EditorKind }
+  = | { mode: 'new', kind: EditorKind, repeat?: RecurrenceFrequency }
     | { mode: 'edit', id: string }
+    | { mode: 'rule', id: string }
+
+/** How a series repeats, as chosen in the date sheet. */
+export interface RepeatChoice {
+  freq: RecurrenceFrequency
+  interval: number
+  endDate?: string
+}
 
 /** Why the screen cannot save yet, shown above the amount. */
-export type EditorHint = 'enterAmount' | 'invalidAmount' | 'chooseCategory' | 'chooseAccounts'
+export type EditorHint = 'enterAmount' | 'invalidAmount' | 'chooseCategory' | 'chooseAccounts' | 'endBeforeStart'
+
+/** What an edited transaction or series already uses: archived choices stay on offer for it. */
+type KeptChoices = Pick<Transaction, 'kind' | 'accountId' | 'toAccountId' | 'paymentMethodId' | 'categoryId'>
 
 export interface EditorOptions {
   /** Called once the transaction is saved, duplicated or deleted: the screen closes. */
@@ -47,13 +77,16 @@ export interface EditorOptions {
  * State and actions of the quick-add and edit screen (docs/specs/released/aggiunta-rapida.md,
  * docs/specs/released/conti-pagamenti-trasferimenti.md). A new expense or income is saved by tapping a
  * category; an existing one and a transfer with «Salva». An expense names how it is paid, and its
- * account comes from there; an income names its account; a transfer names two.
+ * account comes from there; an income names its account; a transfer names two. With a repeat, a
+ * new one is saved as a series, and a series is edited on the same screen (docs/specs/released/ricorrenze.md).
  */
 export function useTransactionEditor(target: EditorTarget, options: EditorOptions) {
   const { t } = useI18n()
   const filter = useAccountFilterStore()
 
-  const isEdit = target.mode === 'edit'
+  /** A saved transaction or a series: categories are chosen, and «Salva» saves. */
+  const isEdit = target.mode !== 'new'
+  const isRule = target.mode === 'rule'
   const currentKind = ref<EditorKind>(target.mode === 'new'
     ? target.kind
     : 'expense')
@@ -68,7 +101,13 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
   const fromAccountId = ref<string | null>(null)
   const toAccountId = ref<string | null>(null)
   const original = shallowRef<Transaction>()
-  /** False while an existing transaction is loading. */
+  /** The series edited (mode `rule`), or the one an edited transaction belongs to. */
+  const rule = shallowRef<Recurrence>()
+  const kept = shallowRef<KeptChoices>()
+  const repeat = ref<RepeatChoice | null>(target.mode === 'new' && target.repeat
+    ? { freq: target.repeat, interval: 1 }
+    : null)
+  /** False while an existing transaction or series is loading. */
   const ready = ref(!isEdit)
   const hint = ref<EditorHint | null>(null)
   /** Grows at every refused save: the amount shakes again. */
@@ -85,7 +124,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     [currentKind],
   )
   const categories = computed(() => (categoryRows.value ?? [])
-    .filter(category => !category.archived || category.id === original.value?.categoryId))
+    .filter(category => !category.archived || category.id === kept.value?.categoryId))
 
   /** The selected category, when it belongs to the current kind. */
   const selectedId = computed(() => categories.value.some(category => category.id === categoryId.value)
@@ -98,10 +137,10 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
 
   /** Accounts offered: the active ones, and an archived one this transaction already uses. */
   const accountChoices = computed(() => (accountRows.value ?? []).filter(account =>
-    !account.archived || [original.value?.accountId, original.value?.toAccountId].includes(account.id)))
+    !account.archived || [kept.value?.accountId, kept.value?.toAccountId].includes(account.id)))
   /** Methods offered: the active ones, and an archived one this expense already uses. */
   const paymentChoices = computed(() => (methodRows.value ?? []).filter(method =>
-    !method.archived || method.id === original.value?.paymentMethodId))
+    !method.archived || method.id === kept.value?.paymentMethodId))
 
   function accountById(id: string | null): Account | undefined {
     return (accountRows.value ?? []).find(account => account.id === id)
@@ -178,25 +217,57 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     },
   })
 
+  /** Puts a saved transaction, or the template of a series, on screen. */
+  function fill(fields: KeptChoices & Pick<Transaction, 'amountCents' | 'date' | 'note'>) {
+    kept.value = fields
+    currentKind.value = fields.kind
+    calculator.value = calculatorFromCents(fields.amountCents)
+    date.value = fields.date
+    note.value = fields.note
+    categoryId.value = fields.categoryId
+    accountId.value = fields.accountId
+    paymentMethodId.value = fields.paymentMethodId ?? null
+    fromAccountId.value = fields.accountId
+    toAccountId.value = fields.toAccountId ?? null
+  }
+
   if (target.mode === 'edit') {
-    void getTransaction(target.id).then((transaction) => {
+    void getTransaction(target.id).then(async (transaction) => {
       if (!transaction) {
         options.onNotFound()
         return
       }
       original.value = transaction
-      currentKind.value = transaction.kind
-      calculator.value = calculatorFromCents(transaction.amountCents)
-      date.value = transaction.date
-      note.value = transaction.note
-      categoryId.value = transaction.categoryId
-      accountId.value = transaction.accountId
-      paymentMethodId.value = transaction.paymentMethodId ?? null
-      fromAccountId.value = transaction.accountId
-      toAccountId.value = transaction.toAccountId ?? null
+      fill(transaction)
+      if (transaction.recurrenceId)
+        rule.value = await getRecurrence(transaction.recurrenceId)
       ready.value = true
     })
   }
+  else if (target.mode === 'rule') {
+    void getRecurrence(target.id).then((found) => {
+      if (!found) {
+        options.onNotFound()
+        return
+      }
+      rule.value = found
+      fill({ ...found.template, date: found.startDate })
+      repeat.value = { freq: found.freq, interval: found.interval, endDate: found.endDate }
+      ready.value = true
+    })
+  }
+
+  /** A series that is over can be taken up again; one that has started can be stopped. */
+  const ruleState = computed<'upcoming' | 'active' | 'finished' | undefined>(() => {
+    const current = rule.value
+    if (!isRule || !current)
+      return undefined
+    if (isFinished(current, today()))
+      return 'finished'
+    return current.startDate > today()
+      ? 'upcoming'
+      : 'active'
+  })
 
   function press(key: CalculatorKey) {
     calculator.value = pressKey(calculator.value, key)
@@ -244,15 +315,56 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
   function moneySide() {
     if (currentKind.value !== 'expense')
       return { accountId: accountId.value!, paymentMethodId: undefined }
-    const unchanged = selectedMethod.value?.id === original.value?.paymentMethodId
+    const unchanged = selectedMethod.value?.id === kept.value?.paymentMethodId
     return {
       // An expense keeps its account until its payment method changes: a method moved to another
       // account later must not move the old expenses (and their balances) with it.
-      accountId: isEdit && unchanged && original.value?.kind === 'expense'
-        ? original.value.accountId
+      accountId: isEdit && unchanged && kept.value?.kind === 'expense'
+        ? kept.value.accountId
         : selectedMethod.value?.accountId ?? accountId.value!,
       paymentMethodId: selectedMethod.value?.id,
     }
+  }
+
+  /** False after showing why: a series cannot end before it starts. */
+  function validSchedule(): boolean {
+    const end = repeat.value?.endDate
+    if (end && end < date.value) {
+      refuse('endBeforeStart')
+      return false
+    }
+    return true
+  }
+
+  type ScreenFields = Pick<Transaction, 'kind' | 'amountCents' | 'date' | 'accountId' | 'categoryId' | 'note'>
+    & Partial<Pick<Transaction, 'toAccountId' | 'paymentMethodId'>>
+
+  /** The series of what is on screen: the date is its start. */
+  function seriesInput({ date: startDate, ...template }: ScreenFields, choice: RepeatChoice): RecurrenceInput {
+    return {
+      template,
+      freq: choice.freq,
+      interval: choice.interval,
+      startDate,
+      endDate: choice.endDate,
+    }
+  }
+
+  /** A new series from what is on screen, and its transactions already due (today's too). */
+  async function createSeries(fields: ScreenFields, choice: RepeatChoice, subject: Category | string) {
+    const input = seriesInput(fields, choice)
+    const { warning } = await withBudgetCheck(fields, async () => {
+      await createRecurrence(input)
+      return generateDueOccurrences(today())
+    })
+    showSeriesSaved(fields, subject, input, warning)
+  }
+
+  /** Changes to the series on screen; what came due with them is added at once. */
+  async function updateSeries(fields: ScreenFields, subject: Category | string) {
+    await updateRecurrence(rule.value!.id, seriesInput(fields, repeat.value!), today())
+    await generateDueOccurrences(today())
+    showSaved(fields, subject)
   }
 
   function selectCategory(category: Category) {
@@ -262,21 +374,28 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
       return
     }
     const amount = validAmount()
-    if (amount === null)
+    if (amount === null || !validSchedule())
       return
+    const choice = repeat.value
     void run(async () => {
       const side = moneySide()
       if (!side.accountId)
         throw new Error('No account to save the transaction to')
-      const saved = await addTransaction({
+      const fields = {
         kind: currentKind.value,
         amountCents: amount,
         date: date.value,
         categoryId: category.id,
         note: note.value,
         ...side,
-      })
-      showSaved(saved, category)
+      }
+      if (choice) {
+        await createSeries(fields, choice, category)
+      }
+      else {
+        const { result: saved, warning } = await withBudgetCheck(fields, () => addTransaction(fields))
+        showSaved(saved, category, warning)
+      }
       options.onDone()
     })
   }
@@ -330,15 +449,24 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
 
   function saveTransfer() {
     const fields = transferFields()
-    if (!fields)
+    if (!fields || !validSchedule())
       return
+    const choice = repeat.value
     void run(async () => {
       const transaction = original.value
-      if (transaction)
-        await updateTransaction(transaction.id, fields)
-      else
-        await addTransaction(fields)
-      showSaved(fields, routeLabel())
+      if (isRule) {
+        await updateSeries(fields, routeLabel())
+      }
+      else if (choice) {
+        await createSeries(fields, choice, routeLabel())
+      }
+      else {
+        if (transaction)
+          await updateTransaction(transaction.id, fields)
+        else
+          await addTransaction(fields)
+        showSaved(fields, routeLabel())
+      }
       options.onDone()
     })
   }
@@ -349,12 +477,21 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
       return
     }
     const edited = editedFields()
+    if (!edited || !validSchedule())
+      return
+    if (isRule) {
+      void run(async () => {
+        await updateSeries(edited.fields, edited.category)
+        options.onDone()
+      })
+      return
+    }
     const transaction = original.value
-    if (!edited || !transaction)
+    if (!transaction)
       return
     void run(async () => {
-      await updateTransaction(transaction.id, edited.fields)
-      showSaved(edited.fields, edited.category)
+      const { warning } = await withBudgetCheck(edited.fields, () => updateTransaction(transaction.id, edited.fields))
+      showSaved(edited.fields, edited.category, warning)
       options.onDone()
     })
   }
@@ -380,16 +517,74 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     if (!edited || !transaction)
       return
     void run(async () => {
-      const copy = await addTransaction({
+      const fields = {
         ...edited.fields,
         date: today(),
+      }
+      const { result: copy, warning } = await withBudgetCheck(fields, () => addTransaction(fields))
+      showDuplicated(copy, edited.category, warning)
+      options.onDone()
+    })
+  }
+
+  /** Name of the series on screen, for its notices. */
+  async function ruleName(): Promise<string> {
+    const template = rule.value!.template
+    const category = template.categoryId
+      ? await getCategory(template.categoryId)
+      : undefined
+    return recurrenceName(template, category)
+  }
+
+  /** Ends the series today, with «Annulla». */
+  function stop() {
+    const current = rule.value
+    if (!current)
+      return
+    void run(async () => {
+      const before = await stopRecurrence(current.id, today())
+      showToast({
+        message: t('recurrences.stopped', { name: await ruleName() }),
+        action: {
+          label: t('common.undo'),
+          run: () => revertRecurrence(before),
+        },
       })
-      showDuplicated(copy, edited.category)
+      options.onDone()
+    })
+  }
+
+  /** Takes a series that is over up again, from today on. */
+  function resume() {
+    const current = rule.value
+    if (!current)
+      return
+    void run(async () => {
+      await resumeRecurrence(current.id, today())
+      await generateDueOccurrences(today())
+      showToast({
+        message: t('recurrences.resumed', { name: await ruleName() }),
+      })
       options.onDone()
     })
   }
 
   function remove() {
+    const current = rule.value
+    if (isRule && current) {
+      void run(async () => {
+        await deleteRecurrence(current.id)
+        showToast({
+          message: t('recurrences.deleted', { name: await ruleName() }),
+          action: {
+            label: t('common.undo'),
+            run: () => restoreRecurrence(current.id),
+          },
+        })
+        options.onDone()
+      })
+      return
+    }
     const transaction = original.value
     if (!transaction)
       return
@@ -441,6 +636,10 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
 
   return {
     isEdit,
+    isRule,
+    rule,
+    ruleState,
+    repeat,
     ready,
     kind,
     calculator,
@@ -474,5 +673,7 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     save,
     duplicate,
     remove,
+    stop,
+    resume,
   }
 }

@@ -50,9 +50,6 @@
     "restoreFile": "Restore from a file"
   },
   "pages": {
-    "budget": {
-      "intro": "Here you will set a monthly budget, overall or per category, and see how much is left."
-    },
     "stats": {
       "intro": "Here you will see how income and expenses change over time."
     }
@@ -111,7 +108,8 @@
     "transfers": "Transfers",
     "transfer": "Transfer",
     "payment": "Payment",
-    "paymentCount": "Payment ({count})"
+    "paymentCount": "Payment ({count})",
+    "recurring": "Recurring"
   },
   "filterSheet": {
     "reset": "Reset",
@@ -163,12 +161,83 @@
       "version": "Version {version}",
       "privacy": "Privacy",
       "privacyDetail": "Where your data lives and what Soldo sees"
+    },
+    "recurrences": {
+      "label": "Recurring",
+      "title": "Recurring transactions",
+      "count": "None active | {n} active | {n} active"
     }
   },
   "sortable": {
     "moveUp": "Move up: {name}",
     "moveDown": "Move down: {name}",
     "moved": "{name}: position {position} of {count}"
+  },
+  "budgets": {
+    "total": "Monthly budget",
+    "left": "left",
+    "over": "over",
+    "spentOf": "{spent} of {budget}",
+    "spentTotalOf": "Spent {spent} of {budget}",
+    "daily": "One day to go: {amount} to spend | {days} days to go: {amount} a day",
+    "spentMonth": "Spent this month",
+    "setTotal": "Set the monthly budget",
+    "byCategory": "By category",
+    "ofCategory": "{name} budget",
+    "unbudgeted": "No budget",
+    "add": "Add budget",
+    "actions": "Budget actions",
+    "emptyTitle": "Decide how much to spend",
+    "emptyText": "A budget for the month, or for the categories you want to keep an eye on. Here you see what is left, and Soldo tells you when you get close.",
+    "emptyAction": "Set a budget"
+  },
+  "budgetEdit": {
+    "title": "Budget",
+    "totalTitle": "Monthly budget",
+    "categoryTitle": "Budget: {name}",
+    "amount": "Amount per month",
+    "invalidAmount": "Write an amount, for example 200.00.",
+    "when": "When it applies",
+    "repeat": "Every month",
+    "once": "{month} only",
+    "repeatHint": "From {month} on, until you change it.",
+    "onceHint": "For {month} only.",
+    "spent": "Spent so far in {month}",
+    "save": "Save",
+    "remove": "Remove",
+    "removedTotal": "Monthly budget removed from {month}.",
+    "removedCategory": "{name} budget removed from {month}."
+  },
+  "budgetMeter": {
+    "used": "{percent}% used",
+    "over": "{percent}% used, {amount} over"
+  },
+  "budgetWarning": {
+    "categoryNear": "{category} budget: {percent}% used.",
+    "categoryOver": "{category} budget exceeded by {amount}.",
+    "totalNear": "Monthly budget: {percent}% used.",
+    "totalOver": "Monthly budget exceeded by {amount}."
+  },
+  "recurrences": {
+    "title": "Recurring",
+    "upcoming": "Coming up",
+    "upcomingHint": "next 30 days",
+    "active": "Active",
+    "finished": "Ended ({count})",
+    "next": "next {date}",
+    "starts": "from {date}",
+    "ended": "ended {date}",
+    "emptyTitle": "Nothing repeats yet",
+    "empty": "Rent, salary, subscriptions: note them once and Soldo adds them by itself when the day comes.",
+    "new": "New recurring transaction",
+    "repeats": "Repeats {every}.",
+    "scheduled": "Scheduled: {amount} · {category}, from {date}, {every}.",
+    "addedOne": "Added from recurring: {name}",
+    "addedSome": "Added from recurring: {names}",
+    "addedMany": "Added {n} recurring transactions",
+    "stopped": "Stopped: {name}",
+    "resumed": "Resumed: {name}",
+    "deleted": "Recurring transaction deleted: {name}"
   },
   "accounts": {
     "title": "Accounts",
@@ -208,7 +277,8 @@
     "archivedMovedToast": "Archived: {name}. Its payment methods move to {successor}.",
     "unarchivedToast": "Restored: {name}",
     "deletedToast": "Deleted: {name}",
-    "deletedMovedToast": "Deleted: {name}. Its payment methods move to {successor}."
+    "deletedMovedToast": "Deleted: {name}. Its payment methods move to {successor}.",
+    "ruleUsage": "Used by a recurring transaction: to remove it, archive it."
   },
   "accountIcons": {
     "wallet": "Wallet",
@@ -254,7 +324,8 @@
     "added": "Added: {name}",
     "archivedToast": "Archived: {name}",
     "unarchivedToast": "Restored: {name}",
-    "deletedToast": "Deleted: {name}"
+    "deletedToast": "Deleted: {name}",
+    "ruleUsage": "Used by a recurring transaction: to remove it, archive it."
   },
   "paymentIcons": {
     "wallet": "Wallet",
@@ -297,7 +368,8 @@
     "added": "Added: {name}",
     "archivedToast": "Archived: {name}",
     "unarchivedToast": "Restored: {name}",
-    "deletedToast": "Deleted: {name}"
+    "deletedToast": "Deleted: {name}",
+    "ruleUsage": "Used by a recurring transaction: to remove it, archive it."
   },
   "categoryIcons": {
     "shoppingCart": "Shopping cart",
@@ -463,14 +535,56 @@
     "fromTitle": "From which account",
     "toTitle": "To which account",
     "swap": "Swap",
-    "chooseAccounts": "Choose two different accounts"
+    "chooseAccounts": "Choose two different accounts",
+    "editRule": "Edit recurring transaction",
+    "rule": "Recurring",
+    "ruleNote": "Changes apply to the next transactions: the ones already added stay as they are.",
+    "stop": "Stop",
+    "resume": "Resume",
+    "deleteRule": "Delete the series",
+    "editSeries": "Edit the series",
+    "series": "Series",
+    "endBeforeStart": "The end comes before the start"
   },
   "dateSheet": {
     "title": "Date",
     "today": "Today",
     "yesterday": "Yesterday",
     "other": "Other date",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "done": "Done"
+  },
+  "repeat": {
+    "title": "Repeat",
+    "none": "Does not repeat",
+    "every": {
+      "daily": "Every day | Every {n} days",
+      "weekly": "Every week | Every {n} weeks",
+      "monthly": "Every month | Every {n} months",
+      "yearly": "Every year | Every {n} years"
+    },
+    "everyInline": {
+      "daily": "every day | every {n} days",
+      "weekly": "every week | every {n} weeks",
+      "monthly": "every month | every {n} months",
+      "yearly": "every year | every {n} years"
+    },
+    "chip": {
+      "daily": "daily",
+      "weekly": "weekly",
+      "monthly": "monthly",
+      "yearly": "yearly"
+    },
+    "unit": {
+      "daily": "day | days",
+      "weekly": "week | weeks",
+      "monthly": "month | months",
+      "yearly": "year | years"
+    },
+    "interval": "Every",
+    "until": "Until",
+    "noEnd": "No end",
+    "clearEnd": "Remove the end"
   },
   "noteSheet": {
     "title": "Note",

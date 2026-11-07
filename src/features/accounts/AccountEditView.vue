@@ -26,6 +26,7 @@ import {
   unarchiveAccount,
   updateAccount,
 } from '@/db/repositories/accounts'
+import { countRecurrenceUses } from '@/db/repositories/recurrences'
 import { formatAmount, parseAmount } from '@/domain/money'
 import { normalizeText } from '@/domain/search'
 import { suggestColor } from '@/features/categories/suggest'
@@ -59,6 +60,8 @@ const color = ref<PaletteColor>(1)
 const balanceText = ref('')
 const balanceSign = ref<'positive' | 'negative'>('positive')
 const usage = ref(0)
+/** Series that use the account: with any, it can be archived but not deleted. */
+const ruleUsage = ref(0)
 const submitted = ref(false)
 const busy = ref(false)
 const nameField = useTemplateRef<InstanceType<typeof TextField>>('nameField')
@@ -92,6 +95,7 @@ async function load() {
       ? 'negative'
       : 'positive'
     usage.value = await countAccountTransactions(found.id)
+    ruleUsage.value = await countRecurrenceUses({ accountId: found.id })
   }
   others.value = (await listAccounts({ includeArchived: true })).filter(other => other.id !== props.id)
   if (!props.id) {
@@ -151,7 +155,7 @@ const iconOptions = computed(() => ACCOUNT_ICONS.map(value => ({
 })))
 
 const isLastActive = computed(() => !!account.value && !account.value.archived && !others.value.some(other => !other.archived))
-const deletable = computed(() => !!account.value && usage.value === 0 && !isLastActive.value)
+const deletable = computed(() => !!account.value && usage.value === 0 && ruleUsage.value === 0 && !isLastActive.value)
 
 /** Runs one change at a time, then goes back to the list; on failure it stays here. */
 async function run(change: () => Promise<void>) {
@@ -345,6 +349,9 @@ function showTransactions() {
       </p>
       <p v-if="usage > 0 && !account?.archived && !isLastActive" class="account-edit__note type-small">
         {{ t('accountEdit.usage', usage) }}
+      </p>
+      <p v-else-if="ruleUsage > 0 && !account?.archived && !isLastActive" class="account-edit__note type-small">
+        {{ t('accountEdit.ruleUsage') }}
       </p>
 
       <button v-if="usage > 0" type="button" class="account-edit__link" @click="showTransactions">

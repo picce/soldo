@@ -1,14 +1,29 @@
 <script setup lang="ts">
+import type { RepeatChoice } from './useTransactionEditor'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/AppIcon.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import { addDays, formatDate, isIsoDate, today } from '@/domain/dates'
 import { useIntlLocale } from '@/i18n/locale'
+import RepeatFields from './RepeatFields.vue'
 
-/** Date of a transaction (mockup "Data"): today, yesterday or any other day. */
+/**
+ * Date of a transaction (mockup "Data"): today, yesterday or any other day. With `repeatMode` it
+ * also has «Ripeti» (docs/specs/released/ricorrenze.md): `optional` in the quick add, `required` for a
+ * series. While a repeat is chosen a tap on a day does not close the sheet: «Fatto» does.
+ */
+const props = withDefaults(defineProps<{
+  repeatMode?: 'none' | 'optional' | 'required'
+}>(), {
+  repeatMode: 'none',
+})
+
 const open = defineModel<boolean>('open', { required: true })
 const date = defineModel<string>('date', { required: true })
+const repeat = defineModel<RepeatChoice | null>('repeat', { default: null })
+
+const repeating = computed(() => props.repeatMode !== 'none' && !!repeat.value)
 
 const { t } = useI18n()
 const intlLocale = useIntlLocale()
@@ -42,7 +57,9 @@ watch(open, (isOpen) => {
 
 function choose(value: string) {
   date.value = value
-  open.value = false
+  otherDate.value = ''
+  if (!repeating.value)
+    open.value = false
 }
 
 /** The whole field opens the browser's calendar: its own button is hidden for the icon of the mockup. */
@@ -56,7 +73,9 @@ function openPicker(event: MouseEvent) {
 
 function confirm() {
   if (isIsoDate(otherDate.value))
-    choose(otherDate.value)
+    date.value = otherDate.value
+  if (repeating.value || isIsoDate(otherDate.value))
+    open.value = false
 }
 </script>
 
@@ -90,12 +109,18 @@ function confirm() {
         @keydown.enter.prevent="confirm"
       >
     </div>
+    <RepeatFields
+      v-if="repeatMode !== 'none'"
+      v-model="repeat"
+      :optional="repeatMode === 'optional'"
+      :start-date="isIsoDate(otherDate) ? otherDate : date"
+    />
     <template #footer>
       <VvButton
-        :label="t('dateSheet.confirm')"
+        :label="repeating ? t('dateSheet.done') : t('dateSheet.confirm')"
         modifiers="primary"
         class="date-sheet__confirm"
-        :disabled="!isIsoDate(otherDate)"
+        :disabled="!repeating && !isIsoDate(otherDate)"
         @click="confirm"
       />
     </template>

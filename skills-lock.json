@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-config-audit": {
+      "source": "8wavesrl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/agent-config-audit/SKILL.md",
+      "computedHash": "0d8b50d0cd201e3bf0f9b0f8c8323e3d4a0f5a1e08f507e94e381b6558709061"
+    },
+    "changelog": {
+      "source": "8wavesrl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/changelog/SKILL.md",
+      "computedHash": "4fff3ef72f34edad4f25a6f42a2624d79953668e1ee0dc7680debcda03406a96"
+    },
+    "codex-setup": {
+      "source": "8wavesrl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/codex-setup/SKILL.md",
+      "computedHash": "ea924ea09d57523b9e2c0014868830fbcddaa295e91627a7047b705e7ae42da1"
+    },
+    "full-review": {
+      "source": "8wavesrl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/full-review/SKILL.md",
+      "computedHash": "ec97fec80489083def0c4c709613a6b975d833239f8354d691438c0739469f8e"
+    },
+    "new-spec": {
+      "source": "8wavesrl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/new-spec/SKILL.md",
+      "computedHash": "c4a4ffe4efff624dd4d258918ee43da2106c21efed63b57ebb213df48174a20e"
+    },
+    "thinking-partner": {
+      "source": "8wavesrl/skills",
+      "sourceType": "github",
+      "skillPath": "skills/thinking-partner/SKILL.md",
+      "computedHash": "884d3d3cdcb7f6e3ba6922761b73ab54b6e417cc6c47ccd138cebdb4ce6c488e"
+    }
+  }
+}

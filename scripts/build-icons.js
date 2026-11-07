@@ -37,6 +37,10 @@ const LIGHT = [
   'money',
   'arrows-left-right',
   'arrows-down-up',
+  // Recurrences
+  'repeat',
+  'pause',
+  'play',
   // Quick add and transaction editor
   'x',
   'calendar-blank',
@@ -98,6 +102,9 @@ const REGULAR = [
   'check',
   'trash',
   'copy',
+  // Budget levels, small next to a percentage (BudgetFlag)
+  'warning',
+  'warning-circle',
 ]
 
 const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)

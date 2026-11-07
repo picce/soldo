@@ -8,6 +8,7 @@ import { createAppRouter } from '@/app/router'
 import { dismissToast, runToastAction, useToast } from '@/app/toast'
 import { db } from '@/db/database'
 import { archiveAccount, createAccount, getDefaultAccount } from '@/db/repositories/accounts'
+import { setBudget } from '@/db/repositories/budgets'
 import { listCategories } from '@/db/repositories/categories'
 import { archivePaymentMethod, listPaymentMethods, updatePaymentMethod } from '@/db/repositories/payment-methods'
 import { addTransaction, getTransaction, listTransactions } from '@/db/repositories/transactions'
@@ -527,5 +528,63 @@ describe('transfer', () => {
     })
     await vi.waitFor(() => expect(wrapper.findAll('.editor__side-name').map(item => item.text())).toEqual(['Banca', 'Contanti']))
     wrapper.unmount()
+  })
+})
+
+describe('budget warning', () => {
+  const month = today().slice(0, 7)
+
+  async function spend(keys: string[], category = 'Spesa') {
+    dismissToast()
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await press(wrapper, keys)
+    await tapCategory(wrapper, category)
+    await vi.waitFor(() => expect(toastMessage()).toMatch(/^Salvato/))
+    wrapper.unmount()
+    return toastMessage()
+  }
+
+  it('adds to the notice when an expense takes the category past 80%', async () => {
+    await setBudget({
+      month,
+      categoryId: expenseCategories[0]!.id,
+      amountCents: 1000,
+      repeat: true,
+    })
+    expect(await spend(['5'])).toBe('Salvato: −5,00 € · Spesa')
+    expect(await spend(['4'])).toBe('Salvato: −4,00 € · Spesa. Budget di Spesa: 90% usato.')
+    // Still near: no second warning.
+    expect(await spend(['1'])).toBe('Salvato: −1,00 € · Spesa')
+    expect(await spend(['2'])).toBe('Salvato: −2,00 € · Spesa. Budget di Spesa superato di 2,00 €.')
+  })
+
+  it('warns for the total, and prefers the category at the same level', async () => {
+    await setBudget({
+      month,
+      categoryId: null,
+      amountCents: 1000,
+      repeat: true,
+    })
+    expect(await spend(['9'], 'Casa')).toBe('Salvato: −9,00 € · Casa. Budget del mese: 90% usato.')
+    await setBudget({
+      month,
+      categoryId: expenseCategories[0]!.id,
+      amountCents: 100,
+      repeat: true,
+    })
+    expect(await spend(['2'])).toBe('Salvato: −2,00 € · Spesa. Budget di Spesa superato di 1,00 €.')
+  })
+
+  it('says nothing for an income', async () => {
+    await setBudget({
+      month,
+      categoryId: null,
+      amountCents: 100,
+      repeat: true,
+    })
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'income' }, 4)
+    await press(wrapper, ['9'])
+    await tapCategory(wrapper, 'Stipendio')
+    await vi.waitFor(() => expect(toastMessage()).toBe('Salvato: +9,00 € · Stipendio'))
   })
 })
