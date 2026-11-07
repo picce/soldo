@@ -1,5 +1,5 @@
 import type { BackupFile } from './format'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { db } from '@/db/database'
 import { setClock } from '@/db/records'
 import { getDefaultAccount } from '@/db/repositories/accounts'
@@ -7,6 +7,7 @@ import { listBudgets, removeBudget, setBudget } from '@/db/repositories/budgets'
 import { listCategories } from '@/db/repositories/categories'
 import { getMeta } from '@/db/repositories/meta'
 import { listPaymentMethods } from '@/db/repositories/payment-methods'
+import { createRecurrence, getRecurrence } from '@/db/repositories/recurrences'
 import { addTransaction, deleteTransaction, listTransactions } from '@/db/repositories/transactions'
 import { SCHEMA_VERSION } from '@/db/schema'
 import { seedDefaults } from '@/db/seed'
@@ -139,6 +140,42 @@ describe('backup', () => {
       : expect.fail('not read'))
     expect(await listBudgets()).toEqual(before)
     expect(before[0]?.endMonth).toBe('2026-02')
+  })
+
+  it('keeps a series with its payment method, and adds what came due once restored', async () => {
+    vi.useFakeTimers({
+      toFake: ['Date'],
+    })
+    vi.setSystemTime(new Date(2026, 10, 7, 10))
+    try {
+      const [method] = await listPaymentMethods()
+      const [groceries] = await listCategories({ kind: 'expense' })
+      const series = await createRecurrence({
+        template: {
+          kind: 'expense',
+          amountCents: 1299,
+          accountId: method!.accountId,
+          paymentMethodId: method!.id,
+          categoryId: groceries!.id,
+          note: 'Netflix',
+        },
+        freq: 'monthly',
+        interval: 1,
+        startDate: '2026-10-09',
+      })
+      const reading = await readBackup(asFile(await createBackup()))
+      await Promise.all(db.tables.map(table => table.clear()))
+      await restoreBackup(reading.ok
+        ? reading.backup
+        : expect.fail('not read'))
+      expect((await getRecurrence(series.id))?.template.paymentMethodId).toBe(method!.id)
+      expect((await listTransactions()).map(transaction => [transaction.date, transaction.note])).toEqual([
+        ['2026-10-09', 'Netflix'],
+      ])
+    }
+    finally {
+      vi.useRealTimers()
+    }
   })
 
   it('reads a file of format 2 as it is', async () => {

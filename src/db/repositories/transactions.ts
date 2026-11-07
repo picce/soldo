@@ -27,8 +27,11 @@ function validate(fields: Partial<TransactionFields>) {
     throw new RangeError(`Invalid date: ${fields.date}`)
 }
 
-/** What each kind may hold: only transfers have a destination, only expenses a payment method. */
-function validateKind({ kind, accountId, toAccountId, categoryId, paymentMethodId }: TransactionFields) {
+/**
+ * What each kind may hold: only transfers have a destination, only expenses a payment method.
+ * The template of a recurrence passes the same checks.
+ */
+export function validateKind({ kind, accountId, toAccountId, categoryId, paymentMethodId }: Pick<TransactionFields, 'kind' | 'accountId' | 'toAccountId' | 'categoryId' | 'paymentMethodId'>) {
   if (kind === 'transfer') {
     if (!toAccountId || toAccountId === accountId)
       throw new RangeError('A transfer needs two different accounts')

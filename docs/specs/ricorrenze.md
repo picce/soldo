@@ -1,6 +1,6 @@
 # Ricorrenze
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.6.0
 > **Data**: 2026-11-07
 > **Ambito**: Ultima parte della Fase 4. Un movimento si può segnare come ricorrente (ogni giorno, settimana, mese o anno, con intervallo e fine facoltativi): Soldo lo aggiunge da solo quando arriva il giorno, senza doppioni. Una pagina elenca le ricorrenze e i prossimi addebiti; da lì una serie si modifica, si interrompe e si riprende.
 > **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md); estende [`aggiunta-rapida.md`](./released/aggiunta-rapida.md) e [`movimenti.md`](./released/movimenti.md); usa conti e pagamenti di [`conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md); condivide il formato di backup 3 con i [budget mensili](./budget-mensili.md).
@@ -55,8 +55,8 @@ Lo schema del database non cambia: `recurrences` esiste dalla versione 1 e le tr
 
 - `listRecurrences()`, `getRecurrence(id)`.
 - `createRecurrence({ template, freq, interval, startDate, endDate })`: il modello passa gli stessi controlli di un movimento (`validateKind`, oggi interna a `transactions.ts`, diventa esportata); `interval` intero da 1 a 99; `endDate`, se c'è, non prima di `startDate`.
-- `updateRecurrence(id, changes)`: cambia modello e calendario. `lastGeneratedDate` resta com'è, così i giorni già passati non si rigenerano con il calendario nuovo.
-- `stopRecurrence(id, today)`: `endDate` a oggi; restituisce la regola com'era, per «Annulla».
+- `updateRecurrence(id, changes, today)`: cambia modello e calendario. Se cambia il calendario (frequenza, intervallo o inizio), `lastGeneratedDate` passa almeno a oggi: i giorni fino a oggi non si riempiono con il calendario nuovo.
+- `stopRecurrence(id, today)`: `endDate` a oggi, solo per una serie già partita (una che deve ancora partire si elimina); restituisce la regola com'era, per «Annulla» (`revertRecurrence`).
 - `resumeRecurrence(id, today)`: toglie la fine e porta `lastGeneratedDate` almeno a ieri, così i giorni in cui era ferma non si recuperano.
 - `deleteRecurrence(id)` e `restoreRecurrence(id)`: la serie sparisce, i movimenti già generati restano.
 - `generateDueOccurrences(today)`: in una sola transazione su `recurrences` e `transactions`, per ogni serie non eliminata calcola le date scadute, legge gli id che esistono già (eliminati compresi) e aggiunge gli altri con i campi del modello, `date` e `occurrenceDate` uguali al giorno, `recurrenceId` e `source: 'recurring'`; poi salva `lastGeneratedDate`. Restituisce i movimenti aggiunti. Due schede insieme non fanno doppioni: IndexedDB esegue una dopo l'altra le transazioni di scrittura sulle stesse tabelle.
@@ -69,11 +69,11 @@ Lo schema del database non cambia: `recurrences` esiste dalla versione 1 e le tr
 - all'avvio e quando la pagina torna visibile (`visibilitychange`), perché il giorno può essere cambiato con l'app aperta in background;
 - dopo aver salvato o ripreso una serie e dopo un ripristino da backup (`restoreBackup` in `src/backup/import.ts`).
 
-All'avvio e al ritorno in primo piano, se ha aggiunto qualcosa, una notifica: «Aggiunto dalle ricorrenze: Affitto», «Aggiunti dalle ricorrenze: Affitto, Netflix», oltre tre «Aggiunti 5 movimenti dalle ricorrenze». Il nome di una serie è la nota del modello, altrimenti la categoria, altrimenti «Trasferimento».
+All'avvio e al ritorno in primo piano, se ha aggiunto qualcosa, una notifica: «Aggiunto dalle ricorrenze: Affitto», «Aggiunti dalle ricorrenze: Affitto, Netflix», oltre tre (o con lo stesso nome due volte) «Aggiunti 5 movimenti dalle ricorrenze». Il nome di una serie è la nota del modello, altrimenti la categoria, altrimenti «Trasferimento».
 
 ### Nell'aggiunta rapida
 
-- **Foglio della data** (`src/features/transactions/DateSheet.vue`): sotto Oggi, Ieri e Altro giorno, la sezione «Ripeti»: «Non si ripete», «Ogni giorno», «Ogni settimana», «Ogni mese», «Ogni anno». Scelta una frequenza compaiono «Ogni N» (un campo numerico con l'unità al plurale) e «Fino al» (una data, facoltativa). Il giorno scelto sopra è l'inizio della serie.
+- **Foglio della data** (`src/features/transactions/DateSheet.vue`, con `RepeatFields.vue`): sotto Oggi, Ieri e Altra data, la sezione «Ripeti»: «Non si ripete», «Ogni giorno», «Ogni settimana», «Ogni mese», «Ogni anno». Scelta una frequenza compaiono «Ogni N» (un campo numerico con l'unità al plurale) e «Fino al» (una data, facoltativa, «Nessuna fine» se vuota). Il giorno scelto sopra è l'inizio della serie. Senza ripetizione, toccare un giorno chiude il foglio come prima; con una ripetizione il foglio resta aperto e si chiude con «Fatto». Una fine prima dell'inizio non si salva: «La fine viene prima dell'inizio».
 - **Pulsante della data**: con una ripetizione l'icona diventa `repeat` e il testo «Oggi · mensile» (`giornaliero` diventa «ogni giorno», poi «settimanale», «mensile», «annuale»). Se i pulsanti non stanno in una riga, vanno a capo invece di accorciarsi.
 - **Salvare** una spesa che si ripete crea la serie (`createRecurrence`) e subito dopo genera le occorrenze scadute: se la serie parte da oggi o prima, il movimento compare come sempre. La notifica: «Salvato: −750,00 € · Casa. Si ripete ogni mese.»; se parte più avanti, «Programmato: −750,00 € · Casa, dal 1 dicembre, ogni mese.»
 - **`/nuovo/uscita?ripeti=mensile`** apre l'aggiunta rapida con la ripetizione già scelta (`giornaliero`, `settimanale`, `mensile`, `annuale`): ci porta «Nuova ricorrenza».
@@ -85,20 +85,20 @@ Una serie si modifica nella stessa schermata dell'aggiunta rapida, su `/ricorren
 
 - importo, categoria, pagamento o conto, nota e tipo come per un movimento; la data è l'inizio della serie, il foglio della data mostra «Ripeti» senza «Non si ripete»;
 - sotto i pulsanti, «Le modifiche valgono per i prossimi movimenti: quelli già aggiunti restano come sono.»;
-- in basso «Salva» e «Interrompi» (o «Riprendi» per una serie conclusa); in alto il cestino, «Elimina la serie». Interrompere ed eliminare mostrano una notifica con «Annulla»;
+- in basso «Salva» e «Interrompi» (o «Riprendi» per una serie conclusa; una serie che deve ancora partire ha solo «Salva»); in alto il cestino, «Elimina la serie». Interrompere ed eliminare mostrano una notifica con «Annulla»;
 - conti, categorie e pagamenti archiviati restano scelti se la serie li usava, come per un movimento in modifica.
 
 ### Pagina Ricorrenze
 
-`src/features/recurrences/RecurrencesView.vue` su `/impostazioni/ricorrenze` (`SubPage`, `depth: 1`, `fullscreen`), dalla riga «Movimenti ricorrenti» delle Impostazioni (icona `repeat`, sotto il numero di serie attive), in una sezione «Ricorrenze».
+`src/features/recurrences/RecurrencesView.vue` su `/impostazioni/ricorrenze` (`SubPage`, `depth: 1`, `fullscreen`), dalla riga «Movimenti ricorrenti» delle Impostazioni (icona `repeat`, sotto il numero di serie attive), in una sezione «Ricorrenze» dopo «Conti e pagamenti».
 
 - **In arrivo**: le prossime occorrenze dei prossimi 30 giorni, al massimo 10, con giorno, nome, «Ogni mese · Carta» e importo.
-- **Attive**: una riga per serie con icona, nome, «Ogni mese · prossimo 1 dic» e importo; apre la serie.
+- **Attive**: una riga per serie con icona, nome, «Ogni mese · prossimo 1 dic» (o «dal 1 dic» se deve ancora partire) e importo, in ordine di prossima data; apre la serie.
 - **Concluse (n)**: sezione chiusa (`ArchivedSection`).
 - **Vuoto**: «Affitto, stipendio, abbonamenti: segnali una volta e Soldo li aggiunge da solo quando arriva il giorno.»
 - In basso «Nuova ricorrenza».
 
-`src/features/recurrences/describe.ts` (nuovo) scrive la frequenza: «Ogni mese», «Ogni 2 settimane», e in inglese «Every month», «Every 2 weeks».
+`src/features/recurrences/describe.ts` (nuovo) scrive la frequenza («Ogni mese», «Ogni 2 settimane», in inglese «Every month», «Every 2 weeks»; «mensile» sul pulsante della data) e il nome di una serie.
 
 ### In Movimenti
 

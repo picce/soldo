@@ -21,9 +21,24 @@ describe('router', () => {
     ['/impostazioni/categorie', 'categories'],
     ['/impostazioni/categorie/nuova', 'category-edit'],
     ['/impostazioni/categorie/abc', 'category-edit'],
+    ['/impostazioni/ricorrenze', 'recurrences'],
+    ['/ricorrenze/abc', 'recurrence-edit'],
   ])('resolves %s to the %s route', (path, name) => {
     const router = createAppRouter(createMemoryHistory())
     expect(router.resolve(path).name).toBe(name)
+  })
+
+  it('opens the quick add with the repeat of the address, and ignores an unknown one', () => {
+    const router = createAppRouter(createMemoryHistory())
+    const targetOf = (path: string) => {
+      const route = router.resolve(path)
+      const props = route.matched[0]!.props.default as (route: unknown) => { target: unknown }
+      return props(route).target
+    }
+    expect(targetOf('/nuovo/uscita?ripeti=mensile')).toEqual({ mode: 'new', kind: 'expense', repeat: 'monthly' })
+    expect(targetOf('/nuovo/entrata?ripeti=settimanale')).toEqual({ mode: 'new', kind: 'income', repeat: 'weekly' })
+    expect(targetOf('/nuovo/uscita?ripeti=spesso')).toEqual({ mode: 'new', kind: 'expense' })
+    expect(targetOf('/ricorrenze/abc')).toEqual({ mode: 'rule', id: 'abc' })
   })
 
   it('redirects unknown routes to home', async () => {

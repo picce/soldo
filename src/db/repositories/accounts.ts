@@ -4,6 +4,7 @@ import { accountName } from '../names'
 import { firstActiveAccount } from '../payment-defaults'
 import { newRecord, now } from '../records'
 import { DEFAULT_CURRENCY } from '../schema'
+import { countRecurrenceUses } from './recurrences'
 
 export interface AccountQuery {
   /** Archived accounts are hidden unless asked for (they stay in the history). */
@@ -212,12 +213,17 @@ export async function unarchiveAccount(id: string, undo?: { order: number, metho
 }
 
 /**
- * Soft delete, only for an account no transaction uses: otherwise AccountInUseError. Its payment
- * methods move as when archiving, and the returned ids are for `restoreAccount`.
+ * Soft delete, only for an account no transaction or series uses: otherwise AccountInUseError. Its
+ * payment methods move as when archiving, and the returned ids are for `restoreAccount`.
  */
 export async function deleteAccount(id: string): Promise<string[]> {
-  return db.transaction('rw', db.accounts, db.paymentMethods, db.transactions, async () => {
-    const count = await countAccountTransactions(id)
+  return db.transaction('rw', [
+    db.accounts,
+    db.paymentMethods,
+    db.transactions,
+    db.recurrences,
+  ], async () => {
+    const count = await countAccountTransactions(id) + await countRecurrenceUses({ accountId: id })
     if (count > 0)
       throw new AccountInUseError(id, count)
     const successor = await successorOf(id)

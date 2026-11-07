@@ -152,13 +152,20 @@ export interface Budget extends BaseRecord {
 export const RECURRENCE_FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'] as const
 export type RecurrenceFrequency = typeof RECURRENCE_FREQUENCIES[number]
 
-/** Rule that generates transactions. Used from Phase 4. */
+/** What every transaction of a series has in common: all but the date. */
+export type RecurrenceTemplate = Pick<Transaction, 'kind' | 'amountCents' | 'currency' | 'accountId' | 'toAccountId' | 'paymentMethodId' | 'categoryId' | 'note'>
+
+/** Rule that generates transactions (docs/specs/ricorrenze.md). */
 export interface Recurrence extends BaseRecord {
-  template: Pick<Transaction, 'kind' | 'amountCents' | 'currency' | 'accountId' | 'toAccountId' | 'categoryId' | 'note'>
+  template: RecurrenceTemplate
   freq: RecurrenceFrequency
+  /** Every how many days, weeks, months or years: 1 to 99. */
   interval: number
+  /** First date, `YYYY-MM-DD`. */
   startDate: string
+  /** Last possible date, included. */
   endDate?: string
+  /** Date of the last transaction added: the next ones come after it. */
   lastGeneratedDate?: string
 }
 

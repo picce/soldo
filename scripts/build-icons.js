@@ -37,6 +37,10 @@ const LIGHT = [
   'money',
   'arrows-left-right',
   'arrows-down-up',
+  // Recurrences
+  'repeat',
+  'pause',
+  'play',
   // Quick add and transaction editor
   'x',
   'calendar-blank',

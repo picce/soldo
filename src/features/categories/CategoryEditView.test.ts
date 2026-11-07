@@ -8,6 +8,7 @@ import { db } from '@/db/database'
 import { categoryName } from '@/db/names'
 import { getDefaultAccount } from '@/db/repositories/accounts'
 import { getCategory, listCategories } from '@/db/repositories/categories'
+import { createRecurrence } from '@/db/repositories/recurrences'
 import { addTransaction } from '@/db/repositories/transactions'
 import { seedDefaults } from '@/db/seed'
 import { testPlugins } from '@/test/plugins'
@@ -128,5 +129,25 @@ describe('categoryEditView', () => {
 
     await runToastAction()
     await vi.waitFor(async () => expect((await listCategories({ kind: 'expense' })).map(categoryName)[0]).toBe('Spesa'))
+  })
+
+  it('cannot delete a category a series uses, only archive it', async () => {
+    const pets = expense.find(category => category.preset === 'pets')!
+    const account = await getDefaultAccount()
+    await createRecurrence({
+      template: {
+        kind: 'expense',
+        amountCents: 2500,
+        accountId: account!.id,
+        categoryId: pets.id,
+        note: 'Crocchette',
+      },
+      freq: 'monthly',
+      interval: 1,
+      startDate: '2026-12-01',
+    })
+    const { wrapper } = await mountEditor(pets.id)
+    expect(wrapper.findAll('button').some(item => item.attributes('aria-label') === 'Elimina categoria')).toBe(false)
+    expect(wrapper.text()).toContain('Usata da una ricorrenza: per toglierla, archiviala.')
   })
 })
