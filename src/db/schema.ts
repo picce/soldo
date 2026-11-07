@@ -138,13 +138,15 @@ export interface Transaction extends BaseRecord {
   externalId?: string
 }
 
-/** Monthly budget, total (`categoryId` null) or per category. Used from Phase 4. */
+/** Monthly budget, total (`categoryId` null) or per category (docs/specs/budget-mensili.md). */
 export interface Budget extends BaseRecord {
   /** `YYYY-MM`. */
   month: string
   categoryId: string | null
   amountCents: number
   repeat: boolean
+  /** Last month of a repeating budget, `YYYY-MM`. Without it, it repeats until another one replaces it. */
+  endMonth?: string
 }
 
 export const RECURRENCE_FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'] as const
