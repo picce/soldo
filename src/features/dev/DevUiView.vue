@@ -3,6 +3,7 @@ import type { Account, Category, CategoryPreset, PaletteColor, PaymentMethod } f
 import type { Period } from '@/domain/periods'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import RotateNotice from '@/app/components/RotateNotice.vue'
 import { showToast } from '@/app/toast'
 import ActionChip from '@/components/ActionChip.vue'
 import AmountText from '@/components/AmountText.vue'
@@ -352,6 +353,11 @@ function toast() {
         <VvButton label="AppToast" modifiers="secondary" @click="toast" />
         <VvButton label="BottomSheet" modifiers="secondary" @click="sheetOpen = true" />
       </p>
+
+      <h3 class="dev-ui__name type-note">
+        RotateNotice
+      </h3>
+      <RotateNotice preview />
     </section>
 
     <BottomSheet v-model="sheetOpen" :title="t('noteSheet.title')">

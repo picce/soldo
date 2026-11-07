@@ -33,7 +33,7 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 
 ```
 src/
-  app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts; movimento: page-transitions.ts (transizioni tra le pagine), gestures.ts (trascinare un foglio, tornare indietro dal bordo), scroll.ts, motion.ts
+  app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast, RotateNotice: solo in verticale), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts; movimento: page-transitions.ts (transizioni tra le pagine), gestures.ts (trascinare un foglio, tornare indietro dal bordo), scroll.ts, motion.ts
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
   components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker, ChoiceList, SortableList, ArchivedSection, ActionBar, BudgetMeter); useRowOrder.ts (riordino delle righe), list-motion.ts (righe che si aprono e si chiudono) e useTweenedNumber.ts (cifre che scorrono)
   features/     una cartella per sezione: onboarding, home, transactions, categories, accounts, payments, budgets, recurrences, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)

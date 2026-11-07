@@ -605,6 +605,10 @@
     "deleted": "Deleted: {amount} · {category}",
     "duplicated": "Duplicated: {amount} · {category}"
   },
+  "rotate": {
+    "title": "Turn your phone",
+    "text": "Soldo works upright."
+  },
   "presets": {
     "categories": {
       "groceries": "Groceries",

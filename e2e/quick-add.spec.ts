@@ -88,10 +88,11 @@ test('edits a transaction, then deletes it and undoes', async ({ page }) => {
   await expect.poll(async () => (await storedTransactions(page))[0]?.deletedAt).toBeNull()
 })
 
-test('offers a "Nuova uscita" shortcut in the manifest', async ({ page, request }) => {
+test('offers a "Nuova uscita" shortcut in the manifest, for an app that stays upright', async ({ page, request }) => {
   await page.goto('/')
   const href = await page.locator('link[rel="manifest"]').getAttribute('href')
   const manifest = await (await request.get(href!)).json()
+  expect(manifest.orientation).toBe('portrait')
   expect(manifest.shortcuts).toEqual([
     expect.objectContaining({ name: 'Nuova uscita', url: '/nuovo/uscita' }),
   ])
