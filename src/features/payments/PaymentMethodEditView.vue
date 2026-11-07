@@ -24,6 +24,7 @@ import {
   unarchivePaymentMethod,
   updatePaymentMethod,
 } from '@/db/repositories/payment-methods'
+import { countRecurrenceUses } from '@/db/repositories/recurrences'
 import { normalizeText } from '@/domain/search'
 import AccountSheet from '@/features/accounts/AccountSheet.vue'
 import { PAYMENT_ICONS, paymentIconKey } from './icons'
@@ -50,6 +51,8 @@ const name = ref('')
 const icon = ref<string>(PAYMENT_ICONS[0])
 const accountId = ref('')
 const usage = ref(0)
+/** Series paid this way: with any, it can be archived but not deleted. */
+const ruleUsage = ref(0)
 const submitted = ref(false)
 const busy = ref(false)
 const accountOpen = ref(false)
@@ -68,6 +71,7 @@ async function load() {
     icon.value = found.icon
     accountId.value = found.accountId
     usage.value = await countPaymentMethodTransactions(found.id)
+    ruleUsage.value = await countRecurrenceUses({ paymentMethodId: found.id })
   }
   else {
     accountId.value = (await getDefaultAccount())?.id ?? ''
@@ -117,7 +121,7 @@ const showsAccount = computed(() => accounts.value.filter(account => !account.ar
 const linkedAccount = computed(() => accounts.value.find(account => account.id === accountId.value))
 
 const isLastActive = computed(() => !!method.value && !method.value.archived && !others.value.some(other => !other.archived))
-const deletable = computed(() => !!method.value && usage.value === 0 && !isLastActive.value)
+const deletable = computed(() => !!method.value && usage.value === 0 && ruleUsage.value === 0 && !isLastActive.value)
 
 /** Runs one change at a time, then goes back to the list; on failure it stays here. */
 async function run(change: () => Promise<void>) {
@@ -262,6 +266,9 @@ function remove() {
       </p>
       <p v-else-if="usage > 0" class="payment-edit__note type-small">
         {{ t('paymentEdit.usage', usage) }}
+      </p>
+      <p v-else-if="ruleUsage > 0" class="payment-edit__note type-small">
+        {{ t('paymentEdit.ruleUsage') }}
       </p>
     </template>
 

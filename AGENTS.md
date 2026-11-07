@@ -36,12 +36,12 @@ src/
   app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts; movimento: page-transitions.ts (transizioni tra le pagine), gestures.ts (trascinare un foglio, tornare indietro dal bordo), scroll.ts, motion.ts
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
   components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker, ChoiceList, SortableList, ArchivedSection, ActionBar, BudgetMeter); useRowOrder.ts (riordino delle righe), list-motion.ts (righe che si aprono e si chiudono) e useTweenedNumber.ts (cifre che scorrono)
-  features/     una cartella per sezione: onboarding, home, transactions, categories, accounts, payments, budgets, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
+  features/     una cartella per sezione: onboarding, home, transactions, categories, accounts, payments, budgets, recurrences, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
   stores/       stato Pinia condiviso tra pagine (period.ts: il periodo della Home; account-filter.ts: il conto scelto in Home e Movimenti)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css, motion.css (transizioni tra le pagine)
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
-  domain/       funzioni pure: importi, date, periodi, riepiloghi, saldi, budget, calcolatrice, ricerca, giorni
+  domain/       funzioni pure: importi, date, periodi, riepiloghi, saldi, budget, ricorrenze, calcolatrice, ricerca, giorni
   test/         supporto ai test: plugins.ts (Pinia, i18n e Volver con le icone locali), setup.ts (niente rete nei test unitari), fake-drive.ts (Google Drive in memoria, anche per gli e2e)
   backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti; backup automatico: provider.ts, google/ (accesso tramite il Worker e Drive API), pack.ts (gzip e checksum), retention.ts, state.ts (stato del dispositivo in localStorage), auto.ts (il motore), start.ts (avvio da main.ts)
   import/       arriva in Fase 6 (vedi roadmap)
