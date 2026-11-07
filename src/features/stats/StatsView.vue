@@ -325,6 +325,7 @@ const trendMonth = computed(() => {
     : `${period.value.key}-12`
 })
 
+/** Until it is known whether anything exists, the page shows neither the empty state nor zeros. */
 const nothingYet = computed(() => anyTransaction.value === false)
 const noExpenses = computed(() => now.value?.expenseCents === 0 && !isFuture.value)
 const noExpensesText = computed(() => period.value.unit === 'month'
@@ -367,7 +368,7 @@ const unitLabel = computed<StatsUnit>(() => period.value.unit)
         </VvButton>
       </div>
 
-      <template v-else-if="now && expenseChange">
+      <template v-else-if="anyTransaction && now && expenseChange">
         <section class="stats-card" aria-labelledby="stats-expenses">
           <h2 id="stats-expenses" class="stats__muted type-label">
             {{ t('stats.expenses') }}
