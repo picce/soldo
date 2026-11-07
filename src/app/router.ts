@@ -62,6 +62,18 @@ export const routes: RouteRecordRaw[] = [
     meta: { titleKey: 'nav.stats' },
   },
   {
+    path: '/statistiche/categoria/:id',
+    name: 'stats-category',
+    component: () => import('@/features/stats/CategoryTrendView.vue'),
+    props: route => ({
+      categoryId: route.params.id,
+      month: typeof route.query.mese === 'string'
+        ? route.query.mese
+        : undefined,
+    }),
+    meta: { titleKey: 'nav.stats', fullscreen: true, depth: 1 },
+  },
+  {
     path: '/impostazioni',
     name: 'settings',
     component: () => import('@/features/settings/SettingsView.vue'),

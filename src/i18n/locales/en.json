@@ -49,11 +49,6 @@
     "restoreDrive": "Restore from Google Drive",
     "restoreFile": "Restore from a file"
   },
-  "pages": {
-    "stats": {
-      "intro": "Here you will see how income and expenses change over time."
-    }
-  },
   "period": {
     "label": "Period",
     "day": "Day",
@@ -217,6 +212,48 @@
     "categoryOver": "{category} budget exceeded by {amount}.",
     "totalNear": "Monthly budget: {percent}% used.",
     "totalOver": "Monthly budget exceeded by {amount}."
+  },
+  "stats": {
+    "expenses": "Expenses",
+    "income": "Income",
+    "saved": "Saved",
+    "perDay": "Per day",
+    "perMonth": "Per month",
+    "against": {
+      "monthSoFar": "compared with {range}",
+      "month": "compared with {month}",
+      "yearSoFar": "compared with {year}, up to {date}",
+      "year": "compared with {year}"
+    },
+    "same": "same as before",
+    "new": "new",
+    "daily": "Day by day",
+    "monthly": "Month by month",
+    "dailyChart": "Expenses added up day by day",
+    "monthlyChart": "Income and expenses month by month",
+    "noExpensesMonth": "No expenses in {month}",
+    "noExpensesYear": "No expenses in {year}",
+    "open": "Open {month}",
+    "byCategory": {
+      "expense": "Expenses by category",
+      "income": "Income by category"
+    },
+    "empty": {
+      "title": "Nothing to compare yet",
+      "text": "With your first transactions you will see here how spending changes: day by day, month by month and by category.",
+      "action": "Add an expense"
+    },
+    "trend": {
+      "soFar": "so far",
+      "onAverage": "on the average",
+      "average": "Monthly average",
+      "total": "In the last 12 months",
+      "months": "Last 12 months",
+      "chart": "{category} in the last 12 months",
+      "averageShort": "average",
+      "noAverage": "No full month to average yet",
+      "transactions": "See the transactions of {month}"
+    }
   },
   "recurrences": {
     "title": "Recurring",

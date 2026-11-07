@@ -78,3 +78,24 @@ describe('periodSwitcher without tabs', () => {
     ])
   })
 })
+
+describe('periodSwitcher with fewer units', () => {
+  it('offers only the units asked for, and the keys move among them', async () => {
+    const wrapper = mount(PeriodSwitcher, {
+      props: {
+        period: { unit: 'month', anchor: '2026-11-01' },
+        units: ['month', 'year'],
+      },
+      global: {
+        plugins: testPlugins(),
+      },
+      attachTo: document.body,
+    })
+    expect(wrapper.findAll('[role="tab"]').map(tab => tab.text())).toEqual(['Mese', 'Anno'])
+    await wrapper.get('[role="tablist"]').trigger('keydown', { key: 'ArrowRight' })
+    expect(wrapper.emitted('update:unit')).toEqual([
+      ['year'],
+    ])
+    wrapper.unmount()
+  })
+})

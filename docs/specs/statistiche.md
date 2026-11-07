@@ -1,6 +1,6 @@
 # Statistiche
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.8.0
 > **Data**: 2026-11-07
 > **Ambito**: Prima parte della Fase 5. La scheda Statistiche, oggi vuota, mostra come cambiano uscite ed entrate nel tempo: un mese giorno per giorno contro il mese prima, un anno mese per mese, l'andamento di una categoria negli ultimi 12 mesi. Ogni numero ha accanto il confronto con il periodo prima, fermo allo stesso punto.
 > **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md); il rendiconto di un periodo resta nella Home ([`home-rendiconto.md`](./released/home-rendiconto.md)); il selettore del conto viene da [`conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md); l'elenco filtrato da [`movimenti.md`](./released/movimenti.md).
@@ -50,14 +50,14 @@ Per questo ogni cifra ha accanto il confronto con il periodo prima, ma allo stes
 - **Scheda «Uscite»**: l'importo grande; sotto la differenza con una freccia, «↗ 12% · +33,50 € rispetto a 1–7 ottobre» (oppure «rispetto a ottobre», «rispetto al 2025, fino al 7 nov»). La differenza non ha colore: spendere di più non è sempre un male, e il verso lo dicono la freccia e il segno. In fondo tre cifre: Entrate (nel colore delle entrate), Risparmiato, Al giorno (o Al mese).
 - **Grafico, vista Mese, «Giorno per giorno»**: linea in `--color-chart-expense` per il mese, linea tratteggiata in `--color-ink-2` per il mese prima, asse dei giorni (1, 8, 15, 22, ultimo) e tre o quattro valori in euro; un punto sull'ultimo giorno contato. Legenda sotto.
 - **Grafico, vista Anno, «Mese per mese»**: per ogni mese due barre affiancate, entrate in `--color-chart-income` e uscite in `--color-chart-expense`; legenda sotto. Toccato un mese, gli altri si attenuano e accanto alla legenda compare «Apri ottobre», che passa alla vista Mese di quel mese.
-- **Per categoria**: le uscite per categoria, dalla più alta, con l'importo e sotto la differenza («↗ 18,20 €», «nuova»); la riga apre l'andamento. Sotto, se ci sono, le entrate per categoria nello stesso modo.
+- **Per categoria**: le uscite per categoria, dalla più alta, con l'importo e sotto la differenza («↗ 13% · +10,00 €», «nuova», «come prima»); la riga apre l'andamento. Nell'intestazione il confronto in breve («rispetto al 2025»), perché la scheda sopra dice già fino a che giorno. Sotto, se ci sono, le entrate per categoria nello stesso modo.
 - **Vuoto**: senza nessun movimento, una frase su cosa arriverà e «Aggiungi una spesa». Con movimenti altrove ma non nel periodo, la scheda mostra zero e il grafico resta vuoto con «Nessuna uscita a novembre».
 
 ### Andamento di una categoria
 
 `src/features/stats/CategoryTrendView.vue` su `/statistiche/categoria/:id?mese=2026-10` (per la vista Anno, il mese è dicembre dell'anno, o il mese in corso), `SubPage` con `depth: 1` e `fullscreen`, titolo il nome della categoria.
 
-- Scheda: il mese scelto, il suo totale («finora» se è in corso) e la differenza dalla media; sotto «Media al mese» e «Negli ultimi 12 mesi».
+- Scheda: il mese scelto, il suo totale («finora» se è in corso) e, se il mese è finito, la differenza dalla media (un mese a metà sembrerebbe sempre più economico); sotto «Media al mese» e «Negli ultimi 12 mesi».
 - Grafico: 12 barre nel colore della categoria, quella del mese scelto piena e le altre attenuate; la media come linea tratteggiata, con la scritta «media» nel margine destro. Toccare una barra la legge, come negli altri grafici.
 - Elenco dei mesi dal più recente, con il totale: è anche la tabella del grafico.
 - «Vedi i movimenti di ottobre»: Movimenti filtrato per categoria e mese (`/movimenti?categoria=…&dal=…&al=…`, come dalla Home).
@@ -68,7 +68,7 @@ Per questo ogni cifra ha accanto il confronto con il periodo prima, ma allo stes
 
 - linee di 2 px, barre con gli angoli in alto arrotondati di 3 px e 2 px tra due barre affiancate, griglia in `--color-line`, valori degli assi in `--color-ink-2` e Mono 10; un solo asse dei valori;
 - colori per serie: due token nuovi, `--color-chart-expense` e `--color-chart-income`. In chiaro sono `--color-pen` e `--color-income`; in scuro un passo più scuri (`#6b84f2`, `#3aa86d`), perché la luminosità delle barre resti nella fascia che la skill chiede su fondo scuro. Controllati con lo script della skill: separazione per daltonismo ΔE 22 (deuteranopia), sopra la soglia di 8; la tritanopia è sotto (5,3) e per questo c'è sempre la legenda;
-- **lettura**: toccare o trascinare sceglie il giorno o il mese più vicino, con una linea verticale (o le altre barre attenuate) e il valore nella riga del titolo, «5 nov 198,60 € · ott 150,60 €»; con la tastiera il grafico prende il fuoco e le frecce spostano la scelta. La riga del valore è `aria-live="polite"`;
+- **lettura**: toccare o trascinare sceglie il giorno o il mese più vicino (con il mouse il passaggio legge e il clic fissa la scelta, così «Apri ottobre» resta raggiungibile), con una linea verticale (o le altre barre attenuate) e il valore nella riga del titolo, «5 nov 198,60 € · ott 150,60 €»; con la tastiera il grafico prende il fuoco e le frecce spostano la scelta. La riga del valore è `aria-live="polite"`;
 - per gli screen reader il disegno è nascosto e al suo posto c'è una tabella con tutti i valori (nascosta alla vista);
 - in `/dev/ui`, in chiaro e in scuro.
 

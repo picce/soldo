@@ -37,6 +37,8 @@ const LIGHT = [
   'money',
   'arrows-left-right',
   'arrows-down-up',
+  // Statistics: nothing to compare yet
+  'chart-line',
   // Phone turned sideways (RotateNotice)
   'device-rotate',
   // Recurrences
@@ -107,6 +109,9 @@ const REGULAR = [
   // Budget levels, small next to a percentage (BudgetFlag)
   'warning',
   'warning-circle',
+  // Statistics: up or down from the period before
+  'arrow-up-right',
+  'arrow-down-right',
 ]
 
 const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)

@@ -18,18 +18,19 @@ const props = withDefaults(defineProps<{
   controls?: string
   /** False for a page with a single unit, such as Budget: only the title and the arrows. */
   showTabs?: boolean
+  /** The tabs offered, in order: all four in the Home, Mese and Anno in the Statistics. */
+  units?: PeriodUnit[]
 }>(), {
   direction: 0,
   controls: undefined,
   showTabs: true,
+  units: () => ['day', 'week', 'month', 'year'],
 })
 
 const emit = defineEmits<{
   'update:unit': [unit: PeriodUnit]
   'shift': [step: -1 | 1]
 }>()
-
-const UNITS: PeriodUnit[] = ['day', 'week', 'month', 'year']
 
 const { t } = useI18n()
 const intlLocale = useIntlLocale()
@@ -47,22 +48,22 @@ async function select(unit: PeriodUnit, focus = false) {
     emit('update:unit', unit)
   if (focus) {
     await nextTick()
-    tabs.value?.[UNITS.indexOf(unit)]?.focus()
+    tabs.value?.[props.units.indexOf(unit)]?.focus()
   }
 }
 
 function onKeydown(event: KeyboardEvent) {
-  const index = UNITS.indexOf(props.period.unit)
+  const index = props.units.indexOf(props.period.unit)
   const target = {
     ArrowLeft: index - 1,
     ArrowRight: index + 1,
     Home: 0,
-    End: UNITS.length - 1,
+    End: props.units.length - 1,
   }[event.key]
   if (target === undefined)
     return
   event.preventDefault()
-  void select(UNITS[(target + UNITS.length) % UNITS.length]!, true)
+  void select(props.units[(target + props.units.length) % props.units.length]!, true)
 }
 </script>
 
@@ -70,7 +71,7 @@ function onKeydown(event: KeyboardEvent) {
   <div class="period-switcher">
     <div v-if="showTabs" class="period-switcher__tabs" role="tablist" :aria-label="t('period.label')" @keydown="onKeydown">
       <button
-        v-for="unit in UNITS"
+        v-for="unit in units"
         :id="`period-tab-${unit}`"
         :key="unit"
         ref="tabs"

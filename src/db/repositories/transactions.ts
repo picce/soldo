@@ -116,6 +116,11 @@ export async function duplicateTransaction(id: string, date: string): Promise<Tr
 }
 
 /** Transactions not deleted, newest first (by date, then by creation). */
+/** Whether any transaction is left: the Statistics explain themselves when there is none. */
+export async function hasTransactions(): Promise<boolean> {
+  return !!(await db.transactions.filter(transaction => transaction.deletedAt === null).first())
+}
+
 export async function listTransactions(query: TransactionQuery = {}): Promise<Transaction[]> {
   const { from, to, kinds, categoryIds, accountId } = query
   const collection = from || to
