@@ -11,7 +11,7 @@ import { signedCents } from '@/domain/days'
  * A transaction in the list (mockup "Movimenti"): icon in the category color, the note
  * (or the category, without a note), category and payment method or account below, the amount on
  * the right. A transfer has its own icon, its two accounts and an amount with no sign. It opens
- * the edit screen.
+ * the edit screen. One added by a series has a small `repeat` icon before its detail.
  */
 const props = defineProps<{
   transaction: Transaction
@@ -55,7 +55,12 @@ const cents = computed(() => isTransfer.value
     />
     <span class="transaction-row__text">
       <span class="transaction-row__title type-body">{{ title }}</span>
-      <span v-if="detail" class="transaction-row__detail type-small">{{ detail }}</span>
+      <span v-if="detail || transaction.recurrenceId" class="transaction-row__detail type-small">
+        <template v-if="transaction.recurrenceId">
+          <AppIcon name="repeat" class="transaction-row__repeat" />
+          <span class="sr-only">{{ t('transactions.recurring') }}</span>
+        </template>{{ detail }}
+      </span>
     </span>
     <AmountText v-if="isTransfer" :cents="cents" />
     <AmountText v-else :cents="cents" :sign="cents > 0 ? 'always' : 'auto'" colored />
@@ -115,5 +120,13 @@ const cents = computed(() => isTransfer.value
 
 .transaction-row__detail {
   color: var(--color-ink-2);
+}
+
+/* A transaction added by a series (docs/specs/ricorrenze.md). */
+.transaction-row__repeat {
+  --app-icon-size: 0.875rem;
+
+  margin-inline-end: 0.25rem;
+  vertical-align: -0.125em;
 }
 </style>

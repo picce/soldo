@@ -28,6 +28,7 @@ import { currencyPlacement, formatAmount, MINUS } from '@/domain/money'
 import AccountSheet from '@/features/accounts/AccountSheet.vue'
 import { useAccountBalances } from '@/features/accounts/useAccountBalances'
 import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
+import { describeEvery, describeShort } from '@/features/recurrences/describe'
 import { useIntlLocale } from '@/i18n/locale'
 import DateSheet from './DateSheet.vue'
 import NoteSheet from './NoteSheet.vue'
@@ -37,7 +38,9 @@ import { useTransactionEditor } from './useTransactionEditor'
  * Quick add and edit of a transaction (docs/specs/released/aggiunta-rapida.md): amount on the
  * keypad, then a tap on the category saves. Editing adds Salva, Duplica and Elimina. An expense
  * also says how it is paid, an income on which account, and a transfer between which two
- * (docs/specs/released/conti-pagamenti-trasferimenti.md).
+ * (docs/specs/released/conti-pagamenti-trasferimenti.md). The same screen makes and edits a series
+ * (docs/specs/ricorrenze.md): «Ripeti» in the date sheet, and on a transaction of a series a row
+ * that leads to it.
  */
 const props = defineProps<{
   target: EditorTarget
@@ -50,14 +53,20 @@ const intlLocale = useIntlLocale()
 /** Back to where the screen was opened from, or to a sensible page when opened directly. */
 function close() {
   goBack(router, {
-    name: props.target.mode === 'edit'
-      ? 'transactions'
-      : 'home',
+    name: {
+      new: 'home',
+      edit: 'transactions',
+      rule: 'recurrences',
+    }[props.target.mode],
   })
 }
 
 const {
   isEdit,
+  isRule,
+  rule,
+  ruleState,
+  repeat,
   ready,
   kind,
   calculator,
@@ -91,9 +100,22 @@ const {
   save,
   duplicate,
   remove,
+  stop,
+  resume,
 } = useTransactionEditor(props.target, {
   onDone: close,
-  onNotFound: () => void router.replace({ name: 'transactions' }),
+  onNotFound: () => void router.replace({
+    name: isRule ? 'recurrences' : 'transactions',
+  }),
+})
+
+/** «Ripeti» in the date sheet: offered for a new transaction, always there for a series. */
+const repeatMode = computed(() => {
+  if (isRule)
+    return 'required'
+  return isEdit
+    ? 'none'
+    : 'optional'
 })
 
 const dateOpen = ref(false)
@@ -142,6 +164,8 @@ const kindOptions = computed<{ value: EditorKind, label: string }[]>(() => {
 })
 
 const title = computed(() => {
+  if (isRule)
+    return t('editor.editRule')
   if (isEdit)
     return t('editor.edit')
   return {
@@ -173,7 +197,7 @@ const sign = computed(() => {
 
 const currency = computed(() => currencyPlacement(intlLocale.value))
 
-const dateLabel = computed(() => {
+const dayLabel = computed(() => {
   const current = today()
   if (date.value === current)
     return t('dateSheet.today')
@@ -188,6 +212,10 @@ const dateLabel = computed(() => {
       : { year: 'numeric' }),
   })
 })
+/** «Oggi», or «Oggi · mensile» with a repeat. */
+const dateLabel = computed(() => repeat.value
+  ? `${dayLabel.value} · ${describeShort(repeat.value)}`
+  : dayLabel.value)
 
 // A physical keyboard works too: digits, comma or point, + − * / and Backspace.
 const KEYBOARD_KEYS: Record<string, CalculatorKey> = {
@@ -229,7 +257,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
         v-if="isEdit"
         icon="trash"
         tone="danger"
-        :label="t('editor.delete')"
+        :label="isRule ? t('editor.deleteRule') : t('editor.delete')"
         :disabled="!ready"
         class="editor__delete"
         @click="remove"
@@ -245,7 +273,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           {{ expression }}
         </p>
         <p v-else-if="isEdit" class="editor__line editor__line--label type-label">
-          {{ t('editor.editing') }}
+          {{ isRule ? t('editor.rule') : t('editor.editing') }}
         </p>
         <p v-else class="editor__line" />
         <p
@@ -268,7 +296,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
       <div class="editor__chips">
         <ActionChip
-          icon="calendar-blank"
+          :icon="repeat ? 'repeat' : 'calendar-blank'"
           class="editor__date-chip"
           :label="dateLabel"
           :aria-label="t('editor.dateChip', { date: dateLabel })"
@@ -307,6 +335,17 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           @click="swapAccounts"
         />
       </div>
+
+      <p v-if="isRule" class="editor__rule-note type-small">
+        {{ t('editor.ruleNote') }}
+      </p>
+      <p v-else-if="rule" class="editor__series type-small">
+        <AppIcon name="repeat" class="editor__series-icon" />
+        <span class="editor__series-every">{{ describeEvery(rule) }}</span>
+        <RouterLink :to="{ name: 'recurrence-edit', params: { id: rule.id } }" class="editor__series-link">
+          {{ t('editor.editSeries') }}
+        </RouterLink>
+      </p>
 
       <section v-if="kind === 'transfer'" class="editor__transfer" :aria-label="t('editor.transfer')">
         <div class="editor__sides">
@@ -348,7 +387,17 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
       </section>
 
       <div v-if="isEdit" class="editor__actions">
-        <VvButton :label="t('editor.duplicate')" modifiers="secondary" class="editor__action" @click="duplicate">
+        <VvButton v-if="ruleState === 'active'" :label="t('editor.stop')" modifiers="secondary" class="editor__action" @click="stop">
+          <template #before>
+            <AppIcon name="pause" class="editor__action-icon" />
+          </template>
+        </VvButton>
+        <VvButton v-else-if="ruleState === 'finished'" :label="t('editor.resume')" modifiers="secondary" class="editor__action" @click="resume">
+          <template #before>
+            <AppIcon name="play" class="editor__action-icon" />
+          </template>
+        </VvButton>
+        <VvButton v-else-if="!isRule" :label="t('editor.duplicate')" modifiers="secondary" class="editor__action" @click="duplicate">
           <template #before>
             <AppIcon name="copy" class="editor__action-icon" />
           </template>
@@ -365,7 +414,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
       </div>
     </template>
 
-    <DateSheet v-model:open="dateOpen" v-model:date="date" />
+    <DateSheet v-model:open="dateOpen" v-model:date="date" v-model:repeat="repeat" :repeat-mode="repeatMode" />
     <NoteSheet v-model:open="noteOpen" v-model:note="note" />
     <PaymentMethodSheet
       v-model:open="paymentOpen"
@@ -513,8 +562,64 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 .editor__chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   padding: 1rem var(--page-gutter) 0;
+}
+
+.editor__rule-note,
+.editor__series {
+  margin: 0;
+  padding: 0.75rem var(--page-gutter) 0;
+  color: var(--color-ink-2);
+}
+
+.editor__series {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editor__series-icon {
+  --app-icon-size: 1.125rem;
+}
+
+.editor__series-every {
+  flex: 1;
+}
+
+.editor__series-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-block: -0.75rem;
+  color: var(--color-pen);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--motion-press) var(--motion-ease);
+}
+
+@media (hover: hover) {
+  .editor__series-link:hover {
+    color: var(--color-pen-hover);
+  }
+}
+
+.editor__series-link:active {
+  color: var(--color-pen-pressed);
+  transition-duration: 0s;
+}
+
+.editor__series-link:focus-visible {
+  outline: 2px solid var(--color-pen);
+  outline-offset: 2px;
+  border-radius: var(--rounded);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor__series-link {
+    transition: none;
+  }
 }
 
 .editor__date-chip {

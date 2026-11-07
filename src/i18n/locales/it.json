@@ -108,7 +108,8 @@
     "transfers": "Trasferimenti",
     "transfer": "Trasferimento",
     "payment": "Pagamento",
-    "paymentCount": "Pagamento ({count})"
+    "paymentCount": "Pagamento ({count})",
+    "recurring": "Ricorrente"
   },
   "filterSheet": {
     "reset": "Azzera",
@@ -160,6 +161,11 @@
       "version": "Versione {version}",
       "privacy": "Privacy",
       "privacyDetail": "Dove stanno i tuoi dati e cosa vede Soldo"
+    },
+    "recurrences": {
+      "label": "Ricorrenze",
+      "title": "Movimenti ricorrenti",
+      "count": "Nessuna attiva | {n} attiva | {n} attive"
     }
   },
   "sortable": {
@@ -212,6 +218,27 @@
     "totalNear": "Budget del mese: {percent}% usato.",
     "totalOver": "Budget del mese superato di {amount}."
   },
+  "recurrences": {
+    "title": "Ricorrenze",
+    "upcoming": "In arrivo",
+    "upcomingHint": "prossimi 30 giorni",
+    "active": "Attive",
+    "finished": "Concluse ({count})",
+    "next": "prossimo {date}",
+    "starts": "dal {date}",
+    "ended": "conclusa il {date}",
+    "emptyTitle": "Niente da ripetere, per ora",
+    "empty": "Affitto, stipendio, abbonamenti: segnali una volta e Soldo li aggiunge da solo quando arriva il giorno.",
+    "new": "Nuova ricorrenza",
+    "repeats": "Si ripete {every}.",
+    "scheduled": "Programmato: {amount} · {category}, dal {date}, {every}.",
+    "addedOne": "Aggiunto dalle ricorrenze: {name}",
+    "addedSome": "Aggiunti dalle ricorrenze: {names}",
+    "addedMany": "Aggiunti {n} movimenti dalle ricorrenze",
+    "stopped": "Interrotta: {name}",
+    "resumed": "Ripresa: {name}",
+    "deleted": "Ricorrenza eliminata: {name}"
+  },
   "accounts": {
     "title": "Conti",
     "list": "Conti",
@@ -250,7 +277,8 @@
     "archivedMovedToast": "Archiviato: {name}. I suoi pagamenti passano a {successor}.",
     "unarchivedToast": "Ripristinato: {name}",
     "deletedToast": "Eliminato: {name}",
-    "deletedMovedToast": "Eliminato: {name}. I suoi pagamenti passano a {successor}."
+    "deletedMovedToast": "Eliminato: {name}. I suoi pagamenti passano a {successor}.",
+    "ruleUsage": "Usato da una ricorrenza: per toglierlo, archivialo."
   },
   "accountIcons": {
     "wallet": "Portafoglio",
@@ -296,7 +324,8 @@
     "added": "Aggiunto: {name}",
     "archivedToast": "Archiviato: {name}",
     "unarchivedToast": "Ripristinato: {name}",
-    "deletedToast": "Eliminato: {name}"
+    "deletedToast": "Eliminato: {name}",
+    "ruleUsage": "Usato da una ricorrenza: per toglierlo, archivialo."
   },
   "paymentIcons": {
     "wallet": "Portafoglio",
@@ -339,7 +368,8 @@
     "added": "Aggiunta: {name}",
     "archivedToast": "Archiviata: {name}",
     "unarchivedToast": "Ripristinata: {name}",
-    "deletedToast": "Eliminata: {name}"
+    "deletedToast": "Eliminata: {name}",
+    "ruleUsage": "Usata da una ricorrenza: per toglierla, archiviala."
   },
   "categoryIcons": {
     "shoppingCart": "Carrello",
@@ -505,14 +535,56 @@
     "fromTitle": "Da quale conto",
     "toTitle": "A quale conto",
     "swap": "Scambia",
-    "chooseAccounts": "Scegli due conti diversi"
+    "chooseAccounts": "Scegli due conti diversi",
+    "editRule": "Modifica ricorrenza",
+    "rule": "Ricorrenza",
+    "ruleNote": "Le modifiche valgono per i prossimi movimenti: quelli già aggiunti restano come sono.",
+    "stop": "Interrompi",
+    "resume": "Riprendi",
+    "deleteRule": "Elimina la serie",
+    "editSeries": "Modifica la serie",
+    "series": "Serie",
+    "endBeforeStart": "La fine viene prima dell'inizio"
   },
   "dateSheet": {
     "title": "Data",
     "today": "Oggi",
     "yesterday": "Ieri",
     "other": "Altra data",
-    "confirm": "Conferma"
+    "confirm": "Conferma",
+    "done": "Fatto"
+  },
+  "repeat": {
+    "title": "Ripeti",
+    "none": "Non si ripete",
+    "every": {
+      "daily": "Ogni giorno | Ogni {n} giorni",
+      "weekly": "Ogni settimana | Ogni {n} settimane",
+      "monthly": "Ogni mese | Ogni {n} mesi",
+      "yearly": "Ogni anno | Ogni {n} anni"
+    },
+    "everyInline": {
+      "daily": "ogni giorno | ogni {n} giorni",
+      "weekly": "ogni settimana | ogni {n} settimane",
+      "monthly": "ogni mese | ogni {n} mesi",
+      "yearly": "ogni anno | ogni {n} anni"
+    },
+    "chip": {
+      "daily": "ogni giorno",
+      "weekly": "settimanale",
+      "monthly": "mensile",
+      "yearly": "annuale"
+    },
+    "unit": {
+      "daily": "giorno | giorni",
+      "weekly": "settimana | settimane",
+      "monthly": "mese | mesi",
+      "yearly": "anno | anni"
+    },
+    "interval": "Ogni",
+    "until": "Fino al",
+    "noEnd": "Nessuna fine",
+    "clearEnd": "Togli la fine"
   },
   "noteSheet": {
     "title": "Nota",
