@@ -9,7 +9,7 @@
 | 2 — Nucleo local-first | Completata e pubblicata con la versione 0.2.0 (2026-11-05): aggiunta rapida, Home, Movimenti, categorie, backup manuale e CSV, onboarding (spec in [docs/specs/released](specs/released/)) |
 | Prima della Fase 3 | Pubblicata con la versione 0.3.0 (2026-11-05): [sensazione da app nativa](specs/released/sensazione-nativa.md), cioè risposta al tocco, transizioni tra le pagine, gesti, liste e cifre animate |
 | 3 — Backup su Google Drive | Pubblicata con la versione 0.4.0 (2026-11-05), da attivare: serve la configurazione di Google ([docs/google-drive.md](google-drive.md)), poi la prova con un Drive vero chiude la [spec](specs/backup-google-drive.md) |
-| 4 — Conti, trasferimenti, budget, ricorrenze | In corso: [conti, pagamenti e trasferimenti](specs/released/conti-pagamenti-trasferimenti.md) pubblicati con la versione 0.5.0 (2026-11-06); budget e ricorrenze da fare. `design/soldo.figcraft` da allineare ai mockup in `docs/design/mockup-fase-4/` |
+| 4 — Conti, trasferimenti, budget, ricorrenze | In corso: [conti, pagamenti e trasferimenti](specs/released/conti-pagamenti-trasferimenti.md) pubblicati con la versione 0.5.0 (2026-11-06); [budget](specs/budget-mensili.md) e [ricorrenze](specs/ricorrenze.md) in corso, per la versione 0.6.0. `design/soldo.figcraft` da allineare ai mockup in `docs/design/mockup-fase-4/` |
 | 5–7 | Da iniziare |
 
 ## Spec attive
@@ -19,8 +19,8 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
-| Budget mensili | Fase 4 | da definire | Nessuna | Da scrivere |
-| Ricorrenze | Fase 4 | da definire | Conti, pagamenti e trasferimenti | Da scrivere |
+| [Budget mensili](specs/budget-mensili.md) | Fase 4 | da definire | Nessuna | Bozza |
+| [Ricorrenze](specs/ricorrenze.md) | Fase 4 | da definire | [Budget mensili](specs/budget-mensili.md) (formato di backup 3) | Bozza |
 
 ## Contesto
 

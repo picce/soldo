@@ -1,5 +1,5 @@
-// Mockups of docs/specs/conti-pagamenti-trasferimenti.md, step 1, drawn in HTML with the project's
-// tokens, fonts and Phosphor icons. Usage: node build.js <repo> <outDir>
+// Mockups of docs/specs/released/conti-pagamenti-trasferimenti.md, step 1, drawn in HTML with the project's
+// tokens, fonts and Phosphor icons. Usage: node build.cjs <repo> <outDir>
 const fs = require('node:fs')
 const path = require('node:path')
 
@@ -284,17 +284,29 @@ header.sub{flex:none;display:flex;align-items:center;gap:16px;padding:2px 20px 1
 .toast b{color:var(--color-pen);font-weight:600}
 `
 
-function page(theme) {
-  const frames = Object.entries(SCREENS).map(([id, [title, width, html]]) =>
+function page(theme, screens = SCREENS, title = 'Mockup conti e pagamenti') {
+  const frames = Object.entries(screens).map(([id, [title, width, html]]) =>
     `<div class="frame"><h3>${title}</h3><section class="screen theme ${theme}" data-id="${id}" style="width:${width}px">${html}</section></div>`).join('\n')
-  return `<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mockup conti e pagamenti</title><style>${css}</style></head><body><div class="sheetgrid">${frames}</div></body></html>`
+  return `<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title><style>${css}</style></head><body><div class="sheetgrid">${frames}</div></body></html>`
 }
 
-fs.mkdirSync(out, { recursive: true })
-fs.writeFileSync(path.join(out, 'mockup-chiaro.html'), page('theme--light'))
-fs.writeFileSync(path.join(out, 'mockup-scuro.html'), page('theme--dark'))
+/**
+ * Writes the two sheets of mockups and `narrow.html`, the screens in `narrowIds` again at 360 px
+ * (in light only), for shoot.cjs. `extraCss` adds the styles of later mockups.
+ */
+function writeMockups({ screens, narrowIds, title, extraCss = '' }) {
+  const style = css + extraCss
+  const sheet = theme => page(theme, screens, title).replace(`<style>${css}</style>`, `<style>${style}</style>`)
+  fs.mkdirSync(out, { recursive: true })
+  fs.writeFileSync(path.join(out, 'mockup-chiaro.html'), sheet('theme--light'))
+  fs.writeFileSync(path.join(out, 'mockup-scuro.html'), sheet('theme--dark'))
+  const narrow = narrowIds.map(id => `<section class="screen theme theme--light" data-id="${id}-360" style="width:360px">${screens[id][2]}</section>`).join('')
+  fs.writeFileSync(path.join(out, 'narrow.html'), `<!doctype html><meta charset="utf-8"><style>${style}</style>${narrow}`)
+  console.log('ok', Object.keys(screens).length)
+}
+
+module.exports = { icon, cat, status, back, selector, handle, caret, check, nav, label, button, seg, chip, field, sheet, keypad, row, amount, writeMockups }
 
 // Same layout at 360 px: the header and the three-segment control must still fit.
-const narrow = Object.fromEntries(['nuovo-trasferimento'].map(id => [id, [SCREENS[id][0], 360, SCREENS[id][2]]]))
-fs.writeFileSync(path.join(out, 'narrow.html'), `<!doctype html><meta charset="utf-8"><style>${css}</style><section class="screen theme theme--light" data-id="nuovo-trasferimento-360" style="width:360px">${narrow['nuovo-trasferimento'][2]}</section>`)
-console.log('ok', Object.keys(SCREENS).length)
+if (require.main === module)
+  writeMockups({ screens: SCREENS, narrowIds: ['nuovo-trasferimento'], title: 'Mockup conti e pagamenti' })

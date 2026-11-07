@@ -53,6 +53,24 @@ Conti, pagamenti e trasferimenti ([spec](../specs/released/conti-pagamenti-trasf
 | Riga del trasferimento | <img src="render/movimenti-trasferimento-chiaro.png" width="220" alt="Riga del trasferimento in chiaro"> | <img src="render/movimenti-trasferimento-scuro.png" width="220" alt="Riga del trasferimento in scuro"> |
 | Home a 360 px | <img src="render/home-360-chiaro.png" width="220" alt="Home a 360 px in chiaro"> | <img src="render/home-360-scuro.png" width="220" alt="Home a 360 px in scuro"> |
 
+Budget e ricorrenze ([budget](../specs/budget-mensili.md), [ricorrenze](../specs/ricorrenze.md)), del 2026-11-07, con lo stesso metodo: sorgente in [mockup-fase-4/build-0.6.cjs](mockup-fase-4/build-0.6.cjs), immagini con `node shoot.cjs <cartella>`. A 360 px: [Budget](render/budget-360-chiaro.png), [aggiunta rapida ripetuta](render/nuova-ricorrente-360-chiaro.png), [Data con «Ripeti»](render/foglio-ripeti-360-chiaro.png).
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Budget | <img src="render/budget-chiaro.png" width="220" alt="Budget in chiaro"> | <img src="render/budget-scuro.png" width="220" alt="Budget in scuro"> |
+| Budget vuoto | <img src="render/budget-vuoto-chiaro.png" width="220" alt="Budget vuoto in chiaro"> | <img src="render/budget-vuoto-scuro.png" width="220" alt="Budget vuoto in scuro"> |
+| Un budget | <img src="render/modifica-budget-chiaro.png" width="220" alt="Un budget in chiaro"> | <img src="render/modifica-budget-scuro.png" width="220" alt="Un budget in scuro"> |
+| Aggiungi budget | <img src="render/aggiungi-budget-chiaro.png" width="220" alt="Aggiungi budget in chiaro"> | <img src="render/aggiungi-budget-scuro.png" width="220" alt="Aggiungi budget in scuro"> |
+| Avviso nella notifica | <img src="render/notifica-budget-chiaro.png" width="220" alt="Avviso nella notifica in chiaro"> | <img src="render/notifica-budget-scuro.png" width="220" alt="Avviso nella notifica in scuro"> |
+| Data con «Ripeti» | <img src="render/foglio-ripeti-chiaro.png" width="220" alt="Data con «Ripeti» in chiaro"> | <img src="render/foglio-ripeti-scuro.png" width="220" alt="Data con «Ripeti» in scuro"> |
+| Aggiunta rapida, ripetuta | <img src="render/nuova-ricorrente-chiaro.png" width="220" alt="Aggiunta rapida, ripetuta in chiaro"> | <img src="render/nuova-ricorrente-scuro.png" width="220" alt="Aggiunta rapida, ripetuta in scuro"> |
+| Ricorrenze | <img src="render/ricorrenze-chiaro.png" width="220" alt="Ricorrenze in chiaro"> | <img src="render/ricorrenze-scuro.png" width="220" alt="Ricorrenze in scuro"> |
+| Una serie, in modifica | <img src="render/modifica-serie-chiaro.png" width="220" alt="Una serie, in modifica in chiaro"> | <img src="render/modifica-serie-scuro.png" width="220" alt="Una serie, in modifica in scuro"> |
+| Un movimento della serie | <img src="render/movimento-generato-chiaro.png" width="220" alt="Un movimento della serie in chiaro"> | <img src="render/movimento-generato-scuro.png" width="220" alt="Un movimento della serie in scuro"> |
+| Movimenti, righe ricorrenti | <img src="render/movimenti-ricorrenti-chiaro.png" width="220" alt="Movimenti, righe ricorrenti in chiaro"> | <img src="render/movimenti-ricorrenti-scuro.png" width="220" alt="Movimenti, righe ricorrenti in scuro"> |
+| Impostazioni | <img src="render/impostazioni-ricorrenze-chiaro.png" width="220" alt="Impostazioni in chiaro"> | <img src="render/impostazioni-ricorrenze-scuro.png" width="220" alt="Impostazioni in scuro"> |
+
+
 Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
 
 ## File di design
