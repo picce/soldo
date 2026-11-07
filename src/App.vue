@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import AppToast from '@/app/components/AppToast.vue'
 import BottomNav from '@/app/components/BottomNav.vue'
 import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
+import RotateNotice from '@/app/components/RotateNotice.vue'
 import { dismissToast } from '@/app/toast'
 
 const route = useRoute()
@@ -27,6 +28,7 @@ watch(fullscreen, (isFullscreen) => {
     <ReloadPrompt />
     <AppToast />
     <BottomNav v-if="!fullscreen" />
+    <RotateNotice />
   </div>
 </template>
 

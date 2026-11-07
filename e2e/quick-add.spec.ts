@@ -88,13 +88,27 @@ test('edits a transaction, then deletes it and undoes', async ({ page }) => {
   await expect.poll(async () => (await storedTransactions(page))[0]?.deletedAt).toBeNull()
 })
 
-test('offers a "Nuova uscita" shortcut in the manifest', async ({ page, request }) => {
+test('offers a "Nuova uscita" shortcut in the manifest, for an app that stays upright', async ({ page, request }) => {
   await page.goto('/')
   const href = await page.locator('link[rel="manifest"]').getAttribute('href')
   const manifest = await (await request.get(href!)).json()
+  expect(manifest.orientation).toBe('portrait')
   expect(manifest.shortcuts).toEqual([
     expect.objectContaining({ name: 'Nuova uscita', url: '/nuovo/uscita' }),
   ])
   const icon = await request.get(manifest.shortcuts[0].icons[0].src)
   expect(icon.ok()).toBe(true)
+})
+
+test('on a short screen every category is above the keypad, with keys still big enough', async ({ page }) => {
+  // A 360px phone in the browser, with its bars: about 640px left for the page.
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/nuovo/uscita')
+  const keypad = page.getByRole('group', { name: 'Tastierino' })
+  await expect(page.getByRole('button', { name: 'Altro', exact: true })).toBeVisible()
+  const lastCategory = (await page.getByRole('button', { name: 'Altro', exact: true }).boundingBox())!
+  const keys = (await keypad.boundingBox())!
+  expect(lastCategory.y + lastCategory.height).toBeLessThanOrEqual(keys.y)
+  const key = (await keypad.getByRole('button', { name: '7', exact: true }).boundingBox())!
+  expect(key.height).toBeGreaterThanOrEqual(44)
 })

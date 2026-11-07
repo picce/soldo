@@ -605,6 +605,10 @@
     "deleted": "Eliminato: {amount} · {category}",
     "duplicated": "Duplicato: {amount} · {category}"
   },
+  "rotate": {
+    "title": "Gira il telefono",
+    "text": "Soldo si usa in verticale."
+  },
   "presets": {
     "categories": {
       "groceries": "Spesa",
