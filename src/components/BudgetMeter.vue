@@ -6,7 +6,7 @@ import { formatAmount } from '@/domain/money'
 import { useIntlLocale } from '@/i18n/locale'
 
 /**
- * How much of a budget is spent (docs/specs/budget-mensili.md, «Barra»): the fill is `biro` below
+ * How much of a budget is spent (docs/specs/released/budget-mensili.md, «Barra»): the fill is `biro` below
  * 80%, `avviso` from 80% and `pericolo` over the budget, on a track that is a lighter step of the
  * same color. The text next to it says the same, so color is never the only cue.
  */

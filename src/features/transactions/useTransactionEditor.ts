@@ -46,7 +46,7 @@ export type EditorKind = Transaction['kind']
 
 /**
  * What the screen works on: a new transaction (a series too, with `repeat` already chosen), a
- * saved one, or a series (docs/specs/ricorrenze.md).
+ * saved one, or a series (docs/specs/released/ricorrenze.md).
  */
 export type EditorTarget
   = | { mode: 'new', kind: EditorKind, repeat?: RecurrenceFrequency }
@@ -78,7 +78,7 @@ export interface EditorOptions {
  * docs/specs/released/conti-pagamenti-trasferimenti.md). A new expense or income is saved by tapping a
  * category; an existing one and a transfer with «Salva». An expense names how it is paid, and its
  * account comes from there; an income names its account; a transfer names two. With a repeat, a
- * new one is saved as a series, and a series is edited on the same screen (docs/specs/ricorrenze.md).
+ * new one is saved as a series, and a series is edited on the same screen (docs/specs/released/ricorrenze.md).
  */
 export function useTransactionEditor(target: EditorTarget, options: EditorOptions) {
   const { t } = useI18n()

@@ -138,7 +138,7 @@ export interface Transaction extends BaseRecord {
   externalId?: string
 }
 
-/** Monthly budget, total (`categoryId` null) or per category (docs/specs/budget-mensili.md). */
+/** Monthly budget, total (`categoryId` null) or per category (docs/specs/released/budget-mensili.md). */
 export interface Budget extends BaseRecord {
   /** `YYYY-MM`. */
   month: string
@@ -155,7 +155,7 @@ export type RecurrenceFrequency = typeof RECURRENCE_FREQUENCIES[number]
 /** What every transaction of a series has in common: all but the date. */
 export type RecurrenceTemplate = Pick<Transaction, 'kind' | 'amountCents' | 'currency' | 'accountId' | 'toAccountId' | 'paymentMethodId' | 'categoryId' | 'note'>
 
-/** Rule that generates transactions (docs/specs/ricorrenze.md). */
+/** Rule that generates transactions (docs/specs/released/ricorrenze.md). */
 export interface Recurrence extends BaseRecord {
   template: RecurrenceTemplate
   freq: RecurrenceFrequency

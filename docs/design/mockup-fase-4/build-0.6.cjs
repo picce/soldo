@@ -1,4 +1,4 @@
-// Mockups of docs/specs/budget-mensili.md and docs/specs/ricorrenze.md, step 1, with the pieces of
+// Mockups of docs/specs/released/budget-mensili.md and docs/specs/released/ricorrenze.md, step 1, with the pieces of
 // build.cjs (same tokens, fonts and icons). Usage: node build-0.6.cjs <repo> <outDir>
 const { icon, cat, status, back, check, nav, label, button, seg, chip, field, sheet, keypad, row, amount, writeMockups } = require('./build.cjs')
 

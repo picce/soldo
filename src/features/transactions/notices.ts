@@ -64,7 +64,7 @@ export function showSaved(transaction: Pick<Transaction, 'kind' | 'amountCents'>
 }
 
 /**
- * After saving a series (docs/specs/ricorrenze.md): «Salvato: −750,00 € · Casa. Si ripete ogni
+ * After saving a series (docs/specs/released/ricorrenze.md): «Salvato: −750,00 € · Casa. Si ripete ogni
  * mese.», or «Programmato: −750,00 € · Casa, dal 1 dicembre, ogni mese.» when it starts later.
  */
 export function showSeriesSaved(

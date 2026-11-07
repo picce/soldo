@@ -41,7 +41,7 @@ async function warningText({ key, level, spentCents, budgetCents }: Crossing): P
 
 /**
  * Runs `write`, which saves `transaction`, and says whether it took a budget of its month past 80%
- * or over it (docs/specs/budget-mensili.md, «Avvisi»): «Budget di Spesa: 82% usato.». Over counts
+ * or over it (docs/specs/released/budget-mensili.md, «Avvisi»): «Budget di Spesa: 82% usato.». Over counts
  * more than near, and the category more than the total. Only expenses are checked.
  */
 export async function withBudgetCheck<T>(

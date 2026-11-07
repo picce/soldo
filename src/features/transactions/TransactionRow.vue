@@ -122,7 +122,7 @@ const cents = computed(() => isTransfer.value
   color: var(--color-ink-2);
 }
 
-/* A transaction added by a series (docs/specs/ricorrenze.md). */
+/* A transaction added by a series (docs/specs/released/ricorrenze.md). */
 .transaction-row__repeat {
   --app-icon-size: 0.875rem;
 

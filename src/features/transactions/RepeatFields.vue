@@ -10,7 +10,7 @@ import { MAX_INTERVAL } from '@/domain/recurrences'
 import { describeEvery } from '@/features/recurrences/describe'
 
 /**
- * «Ripeti» in the date sheet (docs/specs/ricorrenze.md, mockup "Foglio Ripeti"): how often, every
+ * «Ripeti» in the date sheet (docs/specs/released/ricorrenze.md, mockup "Foglio Ripeti"): how often, every
  * how many, and until when. Without `optional` there is no «Non si ripete»: a series always
  * repeats. The start is the date chosen above it.
  */

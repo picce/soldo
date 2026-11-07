@@ -1,9 +1,9 @@
 # Ricorrenze
 
-> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.6.0
+> **Stato**: Rilasciata (versione 0.6.0, 2026-11-07)
 > **Data**: 2026-11-07
 > **Ambito**: Ultima parte della Fase 4. Un movimento si può segnare come ricorrente (ogni giorno, settimana, mese o anno, con intervallo e fine facoltativi): Soldo lo aggiunge da solo quando arriva il giorno, senza doppioni. Una pagina elenca le ricorrenze e i prossimi addebiti; da lì una serie si modifica, si interrompe e si riprende.
-> **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md); estende [`aggiunta-rapida.md`](./released/aggiunta-rapida.md) e [`movimenti.md`](./released/movimenti.md); usa conti e pagamenti di [`conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md); condivide il formato di backup 3 con i [budget mensili](./budget-mensili.md).
+> **Spec collegate**: usa il modello di [`dati-locali.md`](./dati-locali.md); estende [`aggiunta-rapida.md`](./aggiunta-rapida.md) e [`movimenti.md`](./movimenti.md); usa conti e pagamenti di [`conti-pagamenti-trasferimenti.md`](./conti-pagamenti-trasferimenti.md); condivide il formato di backup 3 con i [budget mensili](./budget-mensili.md).
 
 ## Panoramica
 

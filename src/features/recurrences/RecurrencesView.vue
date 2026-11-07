@@ -19,7 +19,7 @@ import { useIntlLocale } from '@/i18n/locale'
 import { describeEvery, recurrenceName } from './describe'
 
 /**
- * Series of transactions (docs/specs/ricorrenze.md, mockup "Ricorrenze"): what comes in the next
+ * Series of transactions (docs/specs/released/ricorrenze.md, mockup "Ricorrenze"): what comes in the next
  * 30 days, the active series and, closed at the end, those that are over. A series opens on the
  * quick-add screen; «Nuova ricorrenza» opens the quick add with «Ogni mese» chosen.
  */

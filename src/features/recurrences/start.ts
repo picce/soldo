@@ -44,7 +44,7 @@ function run() {
 
 /**
  * The series add their transactions when the app opens and when it comes back to the front: the
- * day may have changed while it stayed open in the background (docs/specs/ricorrenze.md).
+ * day may have changed while it stayed open in the background (docs/specs/released/ricorrenze.md).
  */
 export function startRecurrences() {
   run()

@@ -10,7 +10,7 @@ import RepeatFields from './RepeatFields.vue'
 
 /**
  * Date of a transaction (mockup "Data"): today, yesterday or any other day. With `repeatMode` it
- * also has «Ripeti» (docs/specs/ricorrenze.md): `optional` in the quick add, `required` for a
+ * also has «Ripeti» (docs/specs/released/ricorrenze.md): `optional` in the quick add, `required` for a
  * series. While a repeat is chosen a tap on a day does not close the sheet: «Fatto» does.
  */
 const props = withDefaults(defineProps<{

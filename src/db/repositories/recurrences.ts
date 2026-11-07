@@ -7,7 +7,7 @@ import { newRecord, now } from '../records'
 import { DEFAULT_CURRENCY, RECURRENCE_FREQUENCIES } from '../schema'
 import { validateKind } from './transactions'
 
-/** What the user chooses for a series (docs/specs/ricorrenze.md); the currency defaults to EUR. */
+/** What the user chooses for a series (docs/specs/released/ricorrenze.md); the currency defaults to EUR. */
 export interface RecurrenceInput {
   template: Omit<RecurrenceTemplate, 'currency'> & Partial<Pick<RecurrenceTemplate, 'currency'>>
   freq: Recurrence['freq']

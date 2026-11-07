@@ -39,7 +39,7 @@ import { useTransactionEditor } from './useTransactionEditor'
  * keypad, then a tap on the category saves. Editing adds Salva, Duplica and Elimina. An expense
  * also says how it is paid, an income on which account, and a transfer between which two
  * (docs/specs/released/conti-pagamenti-trasferimenti.md). The same screen makes and edits a series
- * (docs/specs/ricorrenze.md): «Ripeti» in the date sheet, and on a transaction of a series a row
+ * (docs/specs/released/ricorrenze.md): «Ripeti» in the date sheet, and on a transaction of a series a row
  * that leads to it.
  */
 const props = defineProps<{

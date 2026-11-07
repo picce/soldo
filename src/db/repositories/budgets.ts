@@ -4,7 +4,7 @@ import { isValidAmountCents } from '@/domain/money'
 import { db } from '../database'
 import { newRecord, now } from '../records'
 
-/** What the user chooses for a budget (docs/specs/budget-mensili.md). */
+/** What the user chooses for a budget (docs/specs/released/budget-mensili.md). */
 export interface BudgetInput {
   /** `YYYY-MM`: the month it starts from. */
   month: string

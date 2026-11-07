@@ -3,7 +3,7 @@ import { categoryName } from '@/db/names'
 import { i18n } from '@/i18n'
 
 /**
- * Words for a series (docs/specs/ricorrenze.md): how often it repeats and what it is called.
+ * Words for a series (docs/specs/released/ricorrenze.md): how often it repeats and what it is called.
  * Through the global i18n, so notices outside components can use them too.
  */
 

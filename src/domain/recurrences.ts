@@ -11,7 +11,7 @@ import {
 import { fromIsoDate, toIsoDate } from './dates'
 
 /**
- * Dates of a recurrence (docs/specs/ricorrenze.md, "Le date"). Occurrence `k` is always counted
+ * Dates of a recurrence (docs/specs/released/ricorrenze.md, "Le date"). Occurrence `k` is always counted
  * from the start, never from the previous one, so the day does not drift: monthly from 31 January
  * gives 28 or 29 February and then 31 March again.
  */

@@ -21,7 +21,7 @@ import { periodLabel } from '@/domain/periods'
 import { useIntlLocale } from '@/i18n/locale'
 
 /**
- * The budget of a month, total or of a category (docs/specs/budget-mensili.md, mockup "Un
+ * The budget of a month, total or of a category (docs/specs/released/budget-mensili.md, mockup "Un
  * budget"): it repeats from this month on, or holds for this month only. «Togli» takes it away
  * from this month on, with «Annulla».
  */

@@ -5,7 +5,7 @@ import { fromIsoDate, toIsoDate } from './dates'
 import { periodRange } from './periods'
 
 /**
- * Monthly budgets (docs/specs/budget-mensili.md): which budget is in force in a month, how much
+ * Monthly budgets (docs/specs/released/budget-mensili.md): which budget is in force in a month, how much
  * was spent, and when a save takes a budget past 80% or over it. Months are `YYYY-MM`.
  */
 

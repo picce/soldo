@@ -53,7 +53,7 @@ Conti, pagamenti e trasferimenti ([spec](../specs/released/conti-pagamenti-trasf
 | Riga del trasferimento | <img src="render/movimenti-trasferimento-chiaro.png" width="220" alt="Riga del trasferimento in chiaro"> | <img src="render/movimenti-trasferimento-scuro.png" width="220" alt="Riga del trasferimento in scuro"> |
 | Home a 360 px | <img src="render/home-360-chiaro.png" width="220" alt="Home a 360 px in chiaro"> | <img src="render/home-360-scuro.png" width="220" alt="Home a 360 px in scuro"> |
 
-Budget e ricorrenze ([budget](../specs/budget-mensili.md), [ricorrenze](../specs/ricorrenze.md)), del 2026-11-07, con lo stesso metodo: sorgente in [mockup-fase-4/build-0.6.cjs](mockup-fase-4/build-0.6.cjs), immagini con `node shoot.cjs <cartella>`. A 360 px: [Budget](render/budget-360-chiaro.png), [aggiunta rapida ripetuta](render/nuova-ricorrente-360-chiaro.png), [Data con «Ripeti»](render/foglio-ripeti-360-chiaro.png).
+Budget e ricorrenze ([budget](../specs/released/budget-mensili.md), [ricorrenze](../specs/released/ricorrenze.md)), del 2026-11-07, con lo stesso metodo: sorgente in [mockup-fase-4/build-0.6.cjs](mockup-fase-4/build-0.6.cjs), immagini con `node shoot.cjs <cartella>`. A 360 px: [Budget](render/budget-360-chiaro.png), [aggiunta rapida ripetuta](render/nuova-ricorrente-360-chiaro.png), [Data con «Ripeti»](render/foglio-ripeti-360-chiaro.png).
 
 | Schermata | Chiaro | Scuro |
 |---|---|---|

@@ -35,7 +35,7 @@ import { useIntlLocale } from '@/i18n/locale'
 import BudgetFlag from './BudgetFlag.vue'
 
 /**
- * Budgets of a month (docs/specs/budget-mensili.md, mockup "Budget"): the total and each category
+ * Budgets of a month (docs/specs/released/budget-mensili.md, mockup "Budget"): the total and each category
  * with spent, budget, bar and what is left. The month lives in the address (`?mese=2026-11`), so
  * Indietro from a budget comes back to it. Budgets count every account: no account selector here.
  */

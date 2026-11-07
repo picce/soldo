@@ -1,9 +1,9 @@
 # Budget mensili
 
-> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.6.0
+> **Stato**: Rilasciata (versione 0.6.0, 2026-11-07)
 > **Data**: 2026-11-07
 > **Ambito**: Seconda parte della Fase 4. La pagina Budget, oggi vuota, mostra per ogni mese il budget totale e quelli per categoria, quanto è stato speso e quanto resta. Un budget vale per un solo mese o si ripete ogni mese; salvando una spesa, un avviso dice quando un budget arriva all'80% o lo supera.
-> **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md) e il formato di [`backup-manuale.md`](./released/backup-manuale.md); riprende le soluzioni di [`conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md) (saldo iniziale, elenchi, «Annulla»). Le [ricorrenze](./ricorrenze.md) aggiungono spese che il budget conta come le altre.
+> **Spec collegate**: usa il modello di [`dati-locali.md`](./dati-locali.md) e il formato di [`backup-manuale.md`](./backup-manuale.md); riprende le soluzioni di [`conti-pagamenti-trasferimenti.md`](./conti-pagamenti-trasferimenti.md) (saldo iniziale, elenchi, «Annulla»). Le [ricorrenze](./ricorrenze.md) aggiungono spese che il budget conta come le altre.
 
 ## Panoramica
 

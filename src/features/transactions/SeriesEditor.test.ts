@@ -20,7 +20,7 @@ import { seedDefaults } from '@/db/seed'
 import { testPlugins } from '@/test/plugins'
 import TransactionEditorView from './TransactionEditorView.vue'
 
-/** Series on the quick-add screen (docs/specs/ricorrenze.md); today is Saturday 7 November 2026. */
+/** Series on the quick-add screen (docs/specs/released/ricorrenze.md); today is Saturday 7 November 2026. */
 
 const { toast } = useToast()
 
