@@ -2,7 +2,9 @@ import type { BackupFile } from './format'
 import type { Account } from '@/db/schema'
 import { db } from '@/db/database'
 import { defaultPaymentMethods, firstActiveAccount } from '@/db/payment-defaults'
+import { generateDueOccurrences } from '@/db/repositories/recurrences'
 import { SCHEMA_VERSION } from '@/db/schema'
+import { today } from '@/domain/dates'
 import { backupFileSchema } from './format'
 import { gunzip, isGzip, sha256Hex } from './pack'
 import { BACKUP_FORMAT } from './version'
@@ -131,4 +133,6 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
       { key: 'schemaVersion', value: SCHEMA_VERSION },
     ])
   })
+  // The series of the file go on from where they were: what came due since is added now.
+  await generateDueOccurrences(today())
 }

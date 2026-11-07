@@ -2,6 +2,7 @@ import type { BaseRecord, Category, CategoryKind, PaletteColor } from '../schema
 import { db } from '../database'
 import { categoryName } from '../names'
 import { newRecord, now } from '../records'
+import { countRecurrenceUses } from './recurrences'
 
 export interface CategoryQuery {
   kind?: CategoryKind
@@ -150,10 +151,10 @@ export async function countCategoryTransactions(id: string): Promise<number> {
   return db.transactions.where('categoryId').equals(id).filter(transaction => transaction.deletedAt === null).count()
 }
 
-/** Soft delete, only for a category no transaction uses: otherwise CategoryInUseError. */
+/** Soft delete, only for a category no transaction or series uses: otherwise CategoryInUseError. */
 export async function deleteCategory(id: string): Promise<void> {
-  await db.transaction('rw', db.categories, db.transactions, async () => {
-    const count = await countCategoryTransactions(id)
+  await db.transaction('rw', db.categories, db.transactions, db.recurrences, async () => {
+    const count = await countCategoryTransactions(id) + await countRecurrenceUses({ categoryId: id })
     if (count > 0)
       throw new CategoryInUseError(id, count)
     const timestamp = now()

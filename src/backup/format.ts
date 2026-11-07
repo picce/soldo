@@ -104,6 +104,7 @@ const recurrenceSchema: z.ZodType<Recurrence> = z.object({
     currency: z.string(),
     accountId: z.string(),
     toAccountId: z.string().optional(),
+    paymentMethodId: z.string().optional(),
     categoryId: z.string().nullable(),
     note: z.string(),
   }),
