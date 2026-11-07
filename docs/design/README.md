@@ -273,6 +273,7 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 - **Data, conto e nota**: pulsanti piccoli alti 36 px su `superficie`, da toccare solo se servono. Di base: oggi, il conto predefinito, nessuna nota.
 - **Categorie**: griglia di 4 colonne. Ogni casella ha l'icona da 26 px nel colore della categoria e il nome in Didascalia. Sopra la griglia c'è l'indicazione «tocca per salvare».
 - **Tastierino**: una tabella a righe sottili, come un foglio di calcolo. Tasti alti 58 px, cifre in Mono 24 su `superficie`, operatori (÷ × − +) su `carta` in `testo-2`, `backspace` per cancellare l'ultima cifra. Il risultato si calcola mentre si scrive, quindi non serve il tasto =.
+- **Schermi bassi** (fino a 740 px di altezza, come un telefono nel browser): l'aggiunta rapida si stringe perché le categorie, che salvano, non finiscano sotto il tastierino. Tasti alti 46 px (mai sotto 44), importo in Mono 32, riquadri delle categorie alti 60 px, spazi più corti. Quando le categorie continuano sotto il tastierino, l'ultima riga sfuma: si capisce che si può scorrere.
 - Dopo il salvataggio si torna alla Home con l'avviso «Salvato: −12,40 € · Spesa».
 
 ### Movimenti
