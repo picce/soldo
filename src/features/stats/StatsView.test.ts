@@ -93,6 +93,8 @@ describe('statsView', () => {
     expect(card).toContain('Risparmiato 1.720,00')
     expect(card).toContain('Al giorno 18,57')
 
+    // The categories come from their own query, maybe a moment after the figures: two expenses, one income.
+    await vi.waitFor(() => expect(wrapper.findAll('.stats-categories__row')).toHaveLength(3))
     const rows = wrapper.findAll('.stats-categories__row').map(row => words(row.element))
     expect(rows[0]).toContain('Spesa')
     expect(rows[0]).toContain('13% · +10,00 €')
@@ -168,7 +170,7 @@ describe('categoryTrendView', () => {
     await seed()
     const groceries = (await listCategories()).find(item => item.preset === 'groceries')!
     const wrapper = await mountTrend(groceries.id, '2026-10')
-    expect(wrapper.get('h1').text()).toBe('Spesa')
+    await vi.waitFor(() => expect(wrapper.get('h1').text()).toBe('Spesa'))
     const card = text(wrapper, '.trend-card')
     expect(card).toContain('Ottobre 2026')
     expect(card).toContain('170,00 €')
