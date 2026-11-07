@@ -49,11 +49,6 @@
     "restoreDrive": "Ripristina da Google Drive",
     "restoreFile": "Ripristina da un file"
   },
-  "pages": {
-    "stats": {
-      "intro": "Qui vedrai come cambiano entrate e uscite nel tempo."
-    }
-  },
   "period": {
     "label": "Periodo",
     "day": "Giorno",
@@ -217,6 +212,48 @@
     "categoryOver": "Budget di {category} superato di {amount}.",
     "totalNear": "Budget del mese: {percent}% usato.",
     "totalOver": "Budget del mese superato di {amount}."
+  },
+  "stats": {
+    "expenses": "Uscite",
+    "income": "Entrate",
+    "saved": "Risparmiato",
+    "perDay": "Al giorno",
+    "perMonth": "Al mese",
+    "against": {
+      "monthSoFar": "rispetto a {range}",
+      "month": "rispetto a {month}",
+      "yearSoFar": "rispetto al {year}, fino al {date}",
+      "year": "rispetto al {year}"
+    },
+    "same": "come prima",
+    "new": "nuova",
+    "daily": "Giorno per giorno",
+    "monthly": "Mese per mese",
+    "dailyChart": "Uscite accumulate giorno per giorno",
+    "monthlyChart": "Entrate e uscite mese per mese",
+    "noExpensesMonth": "Nessuna uscita a {month}",
+    "noExpensesYear": "Nessuna uscita nel {year}",
+    "open": "Apri {month}",
+    "byCategory": {
+      "expense": "Uscite per categoria",
+      "income": "Entrate per categoria"
+    },
+    "empty": {
+      "title": "Ancora niente da confrontare",
+      "text": "Con i primi movimenti qui vedi come cambiano le spese: giorno per giorno, mese per mese e per categoria.",
+      "action": "Aggiungi una spesa"
+    },
+    "trend": {
+      "soFar": "finora",
+      "onAverage": "sulla media",
+      "average": "Media al mese",
+      "total": "Negli ultimi 12 mesi",
+      "months": "Ultimi 12 mesi",
+      "chart": "{category} negli ultimi 12 mesi",
+      "averageShort": "media",
+      "noAverage": "Nessun mese intero per la media, per ora",
+      "transactions": "Vedi i movimenti di {month}"
+    }
   },
   "recurrences": {
     "title": "Ricorrenze",
