@@ -8,6 +8,7 @@ import { showToast } from '@/app/toast'
 import ActionChip from '@/components/ActionChip.vue'
 import AmountText from '@/components/AmountText.vue'
 import ArchivedSection from '@/components/ArchivedSection.vue'
+import BarChart from '@/components/BarChart.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import BudgetMeter from '@/components/BudgetMeter.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
@@ -18,6 +19,7 @@ import FilterChip from '@/components/FilterChip.vue'
 import IconButton from '@/components/IconButton.vue'
 import IconPicker from '@/components/IconPicker.vue'
 import Keypad from '@/components/Keypad.vue'
+import LineChart from '@/components/LineChart.vue'
 import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
 import SearchField from '@/components/SearchField.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
@@ -39,6 +41,61 @@ import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 const { t } = useI18n()
 
 const THEMES = ['light', 'dark'] as const
+
+// Charts of the Statistics, with made-up figures.
+const chartDays = Array.from({ length: 30 }, (_, index) => index)
+const chartLines = [
+  {
+    key: 'now',
+    label: 'novembre',
+    values: [
+      1240,
+      5820,
+      9680,
+      12030,
+      19860,
+      25100,
+      31240,
+    ],
+    color: 'var(--color-chart-expense)',
+  },
+  {
+    key: 'before',
+    label: 'ottobre',
+    values: chartDays.map(day => 4200 * (day + 1)),
+    color: 'var(--color-ink-2)',
+    dashed: true,
+  },
+]
+const chartBars = [
+  {
+    key: 'income',
+    label: 'Entrate',
+    values: [
+      185000,
+      185000,
+      185000,
+      320000,
+      185000,
+      0,
+    ],
+    color: 'var(--color-chart-income)',
+  },
+  {
+    key: 'expense',
+    label: 'Uscite',
+    values: [
+      118000,
+      102000,
+      124000,
+      162000,
+      126430,
+      0,
+    ],
+    color: 'var(--color-chart-expense)',
+  },
+]
+const chartEuros = (cents: number) => `${Math.round(cents / 100)} €`
 
 function sampleCategory(preset: CategoryPreset, icon: string, color: PaletteColor, order: number): Category {
   return {
@@ -262,6 +319,33 @@ function toast() {
       <h3 class="dev-ui__name type-note">
         BudgetMeter and BudgetFlag: below 80%, from 80%, over the budget
       </h3>
+      <h3 class="dev-ui__name type-note">
+        LineChart, BarChart
+      </h3>
+      <LineChart
+        label="LineChart"
+        :series="chartLines"
+        :length="30"
+        :ticks="[0, 7, 14, 21, 29]"
+        :tick-label="index => String(index + 1)"
+        :point-label="index => `${index + 1} nov`"
+        :format-value="chartEuros"
+        :format-tick="chartEuros"
+        :marker="6"
+      />
+      <BarChart
+        label="BarChart"
+        :series="chartBars"
+        :labels="['G', 'F', 'M', 'A', 'M', 'G']"
+        :point-label="index => String(index + 1)"
+        :format-value="chartEuros"
+        :format-tick="chartEuros"
+        :average="140000"
+        average-label="media"
+        :emphasis="4"
+        class="dev-ui__spaced"
+      />
+
       <div v-for="spent in [4000, 8600, 12100]" :key="spent" class="dev-ui__meter">
         <BudgetMeter :spent-cents="spent" :budget-cents="10000" :label="t('budgets.total')" />
         <BudgetFlag :spent-cents="spent" :budget-cents="10000" class="type-small" />

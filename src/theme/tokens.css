@@ -19,6 +19,9 @@
   --color-danger: #b3261e;
   /* Status only (a budget near its limit), always with an icon and a label: never a series. */
   --color-warning: #e9a100;
+  /* Series of the Statistics charts (docs/specs/statistiche.md), checked with the dataviz skill. */
+  --color-chart-expense: #2340c8;
+  --color-chart-income: #1f7a45;
   --color-on-danger: #fff;
   --color-category-1: #3a66c4;
   --color-category-2: #d9663b;
@@ -44,6 +47,9 @@
     --color-income: #4cc184;
     --color-danger: #f2b8b5;
   --color-warning: #f5c04a;
+  /* A step darker than pen and income: bars stay in the lightness band on a dark surface. */
+  --color-chart-expense: #6b84f2;
+  --color-chart-income: #3aa86d;
     --color-on-danger: #601410;
     --color-category-1: #5c86e0;
     --color-category-2: #d8653f;
@@ -69,6 +75,9 @@
   --color-income: #4cc184;
   --color-danger: #f2b8b5;
   --color-warning: #f5c04a;
+  /* A step darker than pen and income: bars stay in the lightness band on a dark surface. */
+  --color-chart-expense: #6b84f2;
+  --color-chart-income: #3aa86d;
   --color-on-danger: #601410;
   --color-category-1: #5c86e0;
   --color-category-2: #d8653f;
