@@ -37,6 +37,8 @@ const LIGHT = [
   'money',
   'arrows-left-right',
   'arrows-down-up',
+  // Phone turned sideways (RotateNotice)
+  'device-rotate',
   // Recurrences
   'repeat',
   'pause',

@@ -79,3 +79,17 @@ test('goes back from the privacy page to the app', async ({ page }) => {
   await expect(page).toHaveURL(/\/impostazioni$/)
   await expect(page.getByRole('heading', { level: 1, name: 'Impostazioni' })).toBeVisible()
 })
+
+test('a phone turned sideways is asked to turn back upright', async ({ page }) => {
+  await page.goto('/')
+  const notice = page.getByText('Gira il telefono')
+  await expect(notice).toBeHidden()
+
+  await page.setViewportSize({ width: 863, height: 412 })
+  await expect(notice).toBeVisible()
+  await expect(page.getByText('Soldo si usa in verticale.')).toBeVisible()
+
+  await page.setViewportSize({ width: 412, height: 863 })
+  await expect(notice).toBeHidden()
+  await expect(page.getByRole('navigation')).toBeVisible()
+})
