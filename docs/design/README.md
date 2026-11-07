@@ -71,6 +71,17 @@ Budget e ricorrenze ([budget](../specs/released/budget-mensili.md), [ricorrenze]
 | Impostazioni | <img src="render/impostazioni-ricorrenze-chiaro.png" width="220" alt="Impostazioni in chiaro"> | <img src="render/impostazioni-ricorrenze-scuro.png" width="220" alt="Impostazioni in scuro"> |
 
 
+### Fase 5
+
+Statistiche ([spec](../specs/released/statistiche.md)), del 2026-11-07, con lo stesso metodo della Fase 4: sorgente in [mockup-fase-5/build-0.8.cjs](mockup-fase-5/build-0.8.cjs) (usa i pezzi di `mockup-fase-4/build.cjs`), immagini con `node mockup-fase-4/shoot.cjs <cartella>`. A 360 px: [mese](render/statistiche-mese-360-chiaro.png), [anno](render/statistiche-anno-360-chiaro.png). Colori dei grafici: `--color-chart-expense` e `--color-chart-income`, controllati con lo script della skill `dataviz`.
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Statistiche, mese | <img src="render/statistiche-mese-chiaro.png" width="220" alt="Statistiche, mese in chiaro"> | <img src="render/statistiche-mese-scuro.png" width="220" alt="Statistiche, mese in scuro"> |
+| Statistiche, anno | <img src="render/statistiche-anno-chiaro.png" width="220" alt="Statistiche, anno in chiaro"> | <img src="render/statistiche-anno-scuro.png" width="220" alt="Statistiche, anno in scuro"> |
+| Andamento di una categoria | <img src="render/andamento-categoria-chiaro.png" width="220" alt="Andamento di una categoria in chiaro"> | <img src="render/andamento-categoria-scuro.png" width="220" alt="Andamento di una categoria in scuro"> |
+| Statistiche vuote | <img src="render/statistiche-vuoto-chiaro.png" width="220" alt="Statistiche vuote in chiaro"> | <img src="render/statistiche-vuoto-scuro.png" width="220" alt="Statistiche vuote in scuro"> |
+
 Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
 
 ## File di design
