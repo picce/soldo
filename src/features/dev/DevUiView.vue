@@ -8,6 +8,7 @@ import ActionChip from '@/components/ActionChip.vue'
 import AmountText from '@/components/AmountText.vue'
 import ArchivedSection from '@/components/ArchivedSection.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
+import BudgetMeter from '@/components/BudgetMeter.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
 import ChoiceList from '@/components/ChoiceList.vue'
@@ -25,6 +26,7 @@ import TextField from '@/components/TextField.vue'
 import { shiftPeriod } from '@/domain/periods'
 import AccountSelector from '@/features/accounts/AccountSelector.vue'
 import AccountSheet from '@/features/accounts/AccountSheet.vue'
+import BudgetFlag from '@/features/budgets/BudgetFlag.vue'
 import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
 import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 
@@ -257,6 +259,14 @@ function toast() {
       </SortableList>
 
       <h3 class="dev-ui__name type-note">
+        BudgetMeter and BudgetFlag: below 80%, from 80%, over the budget
+      </h3>
+      <div v-for="spent in [4000, 8600, 12100]" :key="spent" class="dev-ui__meter">
+        <BudgetMeter :spent-cents="spent" :budget-cents="10000" :label="t('budgets.total')" />
+        <BudgetFlag :spent-cents="spent" :budget-cents="10000" class="type-small" />
+      </div>
+
+      <h3 class="dev-ui__name type-note">
         ArchivedSection
       </h3>
       <ArchivedSection :label="t('accounts.archived', { count: 1 })">
@@ -399,5 +409,12 @@ function toast() {
 
 .dev-ui__spaced {
   margin-top: 0.75rem;
+}
+.dev-ui__meter {
+  display: grid;
+  grid-template-columns: 1fr 3rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 </style>

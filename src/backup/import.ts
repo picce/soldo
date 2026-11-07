@@ -34,7 +34,9 @@ const NOT_SOLDO: BackupReading = { ok: false, error: 'notSoldo' }
 
 /**
  * Format 1 had no payment methods: the file gets the default ones, on its first account, as the
- * database does when it upgrades. A file with broken data fails the check that follows.
+ * database does when it upgrades. Format 2 needs nothing: format 3 only adds optional fields (the
+ * end of a budget, the payment method of a recurrence). A file with broken data fails the check
+ * that follows.
  */
 function upgradeFormat1(raw: object): object {
   const data = (raw as { data?: { accounts?: unknown } }).data
@@ -83,9 +85,12 @@ export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: 
   if (checksum && await sha256Hex(JSON.stringify((raw as { data?: unknown }).data)) !== checksum)
     return { ok: false, error: 'invalid' }
 
-  const parsed = backupFileSchema.safeParse(format === 1
-    ? upgradeFormat1(raw)
-    : raw)
+  const parsed = backupFileSchema.safeParse({
+    ...(format === 1
+      ? upgradeFormat1(raw)
+      : raw),
+    format: BACKUP_FORMAT,
+  })
   if (!parsed.success)
     return { ok: false, error: 'invalid' }
   const backup = parsed.data

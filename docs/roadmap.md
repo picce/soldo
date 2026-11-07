@@ -19,7 +19,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
-| [Budget mensili](specs/budget-mensili.md) | Fase 4 | da definire | Nessuna | Bozza |
+| [Budget mensili](specs/budget-mensili.md) | Fase 4 | da definire | Nessuna | Su `develop`, da pubblicare |
 | [Ricorrenze](specs/ricorrenze.md) | Fase 4 | da definire | [Budget mensili](specs/budget-mensili.md) (formato di backup 3) | Bozza |
 
 ## Contesto

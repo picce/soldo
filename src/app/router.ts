@@ -31,6 +31,22 @@ export const routes: RouteRecordRaw[] = [
     meta: { titleKey: 'nav.budget' },
   },
   {
+    path: '/budget/:categoria',
+    name: 'budget-edit',
+    component: () => import('@/features/budgets/BudgetEditView.vue'),
+    props: route => ({
+      categoryKey: route.params.categoria,
+      month: route.query.mese,
+    }),
+    meta: {
+      titleKey: route => route.params.categoria === 'totale'
+        ? 'budgetEdit.totalTitle'
+        : 'budgetEdit.title',
+      fullscreen: true,
+      depth: 1,
+    },
+  },
+  {
     path: '/statistiche',
     name: 'stats',
     component: () => import('@/features/stats/StatsView.vue'),

@@ -98,6 +98,9 @@ const REGULAR = [
   'check',
   'trash',
   'copy',
+  // Budget levels, small next to a percentage (BudgetFlag)
+  'warning',
+  'warning-circle',
 ]
 
 const OUTPUT = new URL('../src/assets/icons/ph.json', import.meta.url)

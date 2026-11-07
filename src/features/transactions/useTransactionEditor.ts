@@ -24,6 +24,7 @@ import {
   pressKey,
 } from '@/domain/calculator'
 import { today } from '@/domain/dates'
+import { withBudgetCheck } from '@/features/budgets/warnings'
 import { useAccountFilterStore } from '@/stores/account-filter'
 import { showDeleted, showDuplicated, showSaved } from './notices'
 
@@ -268,15 +269,16 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
       const side = moneySide()
       if (!side.accountId)
         throw new Error('No account to save the transaction to')
-      const saved = await addTransaction({
+      const fields = {
         kind: currentKind.value,
         amountCents: amount,
         date: date.value,
         categoryId: category.id,
         note: note.value,
         ...side,
-      })
-      showSaved(saved, category)
+      }
+      const { result: saved, warning } = await withBudgetCheck(fields, () => addTransaction(fields))
+      showSaved(saved, category, warning)
       options.onDone()
     })
   }
@@ -353,8 +355,8 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     if (!edited || !transaction)
       return
     void run(async () => {
-      await updateTransaction(transaction.id, edited.fields)
-      showSaved(edited.fields, edited.category)
+      const { warning } = await withBudgetCheck(edited.fields, () => updateTransaction(transaction.id, edited.fields))
+      showSaved(edited.fields, edited.category, warning)
       options.onDone()
     })
   }
@@ -380,11 +382,12 @@ export function useTransactionEditor(target: EditorTarget, options: EditorOption
     if (!edited || !transaction)
       return
     void run(async () => {
-      const copy = await addTransaction({
+      const fields = {
         ...edited.fields,
         date: today(),
-      })
-      showDuplicated(copy, edited.category)
+      }
+      const { result: copy, warning } = await withBudgetCheck(fields, () => addTransaction(fields))
+      showDuplicated(copy, edited.category, warning)
       options.onDone()
     })
   }

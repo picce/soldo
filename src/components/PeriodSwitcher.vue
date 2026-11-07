@@ -11,12 +11,18 @@ import { useIntlLocale } from '@/i18n/locale'
  * back and forth (mockup "Home"). Tabs follow the ARIA pattern: arrow keys, Home and End.
  * `controls` is the id of the element the tabs drive; tab ids are `period-tab-<unit>`.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   period: Period
   /** Moving between periods: −1 back, 1 forward. Picks the direction of the title animation. */
   direction?: -1 | 0 | 1
   controls?: string
-}>()
+  /** False for a page with a single unit, such as Budget: only the title and the arrows. */
+  showTabs?: boolean
+}>(), {
+  direction: 0,
+  controls: undefined,
+  showTabs: true,
+})
 
 const emit = defineEmits<{
   'update:unit': [unit: PeriodUnit]
@@ -62,7 +68,7 @@ function onKeydown(event: KeyboardEvent) {
 
 <template>
   <div class="period-switcher">
-    <div class="period-switcher__tabs" role="tablist" :aria-label="t('period.label')" @keydown="onKeydown">
+    <div v-if="showTabs" class="period-switcher__tabs" role="tablist" :aria-label="t('period.label')" @keydown="onKeydown">
       <button
         v-for="unit in UNITS"
         :id="`period-tab-${unit}`"

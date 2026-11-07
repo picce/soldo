@@ -1,6 +1,6 @@
 # Budget mensili
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Su `develop`, da provare sull'anteprima e da pubblicare con la versione 0.6.0
 > **Data**: 2026-11-07
 > **Ambito**: Seconda parte della Fase 4. La pagina Budget, oggi vuota, mostra per ogni mese il budget totale e quelli per categoria, quanto è stato speso e quanto resta. Un budget vale per un solo mese o si ripete ogni mese; salvando una spesa, un avviso dice quando un budget arriva all'80% o lo supera.
 > **Spec collegate**: usa il modello di [`dati-locali.md`](./released/dati-locali.md) e il formato di [`backup-manuale.md`](./released/backup-manuale.md); riprende le soluzioni di [`conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md) (saldo iniziale, elenchi, «Annulla»). Le [ricorrenze](./ricorrenze.md) aggiungono spese che il budget conta come le altre.
@@ -73,11 +73,11 @@ Un budget di una categoria eliminata non si mostra; uno di una categoria archivi
 
 `src/features/budgets/BudgetView.vue`, al posto della pagina vuota, su `/budget?mese=2026-11` (senza `mese`, il mese di oggi). Il mese sta nell'indirizzo, così «Indietro» da un budget torna allo stesso mese.
 
-- **Mese**: `PeriodSwitcher` con una nuova prop `tabs` (di base `true`): qui `false`, solo titolo e frecce.
-- **Budget del mese**: scheda con «Spesi 680,00 € di 1.000,00 €», la barra, a destra «Restano 320,00 €» oppure «Oltre di 12,40 €», e nel mese in corso «Mancano 24 giorni: 13,33 € al giorno». Senza budget totale, al suo posto il totale speso e «Imposta il budget del mese».
+- **Mese**: `PeriodSwitcher` con una nuova prop `showTabs` (di base `true`): qui `false`, solo titolo e frecce.
+- **Budget del mese**: scheda con la quota usata in alto a destra, «Spesi 680,00 € di 1.000,00 €», la barra, a destra «Restano 320,00 €» oppure «Oltre di 12,40 €», e nel mese in corso «Mancano 24 giorni: 13,33 € al giorno». Senza budget totale, al suo posto il totale speso e «Imposta il budget del mese».
 - **Per categoria**: una scheda con una riga per ogni categoria con budget (icona e colore della categoria, nome, «120,40 € di 200,00 €», quanto resta a destra, barra sotto), nell'ordine delle categorie. In fondo, in grigio, «Senza budget: 234,50 €» con le spese delle altre categorie.
-- **Barra** (`src/components/BudgetMeter.vue`): binario in `linea`, riempimento in `biro` sotto l'80%, in `inchiostro` dall'80%, in `pericolo` oltre il budget, quando la barra resta piena. I colori dicono il livello, ma lo dice anche il testo («Restano», «Oltre di»): il colore non è mai l'unica informazione. `role="meter"` con valore, minimo, massimo e un testo letto dagli screen reader.
-- **«Aggiungi budget»** nella barra in basso: apre un foglio (`ChoiceList`) con «Totale del mese», se manca, e le categorie di uscita attive senza budget nel mese; la scelta apre il budget.
+- **Barra** (`src/components/BudgetMeter.vue`): riempimento in `biro` sotto l'80%, in `avviso` (nuovo token `--color-warning`, solo per gli stati) dall'80% e in `pericolo` oltre il budget, quando la barra resta piena. Il binario è un passo più chiaro dello stesso colore, come chiede la skill `dataviz`. Accanto, dall'80%, la percentuale con un'icona in peso Regular (`warning`, `warning-circle`), perché a quella misura il Light non si legge (`src/features/budgets/BudgetFlag.vue`). I colori dicono il livello, ma lo dice anche il testo («Restano», «Oltre di»): il colore non è mai l'unica informazione. `role="meter"` con valore, minimo, massimo e un testo letto dagli screen reader.
+- **«Aggiungi budget»** nella barra in basso: apre un foglio (`ChoiceList`) con «Budget del mese», se manca, e le categorie di uscita attive senza budget nel mese; la scelta apre il budget.
 - **Vuoto**: senza nessun budget nel mese, una frase su a cosa serve e «Imposta un budget».
 - Il selettore del conto qui non c'è: il budget conta tutti i conti.
 
@@ -93,7 +93,7 @@ Un budget di una categoria eliminata non si mostra; uno di una categoria archivi
 
 ### Avvisi
 
-`src/features/budgets/warnings.ts` (nuovo): `withBudgetCheck(date, write)` legge lo speso del mese della data prima e dopo la scrittura e restituisce la soglia passata più importante. Conta di più `over` di `near`, e a pari livello la categoria del totale.
+`src/features/budgets/warnings.ts` (nuovo): `withBudgetCheck(transaction, write)` legge lo speso del mese della data del movimento prima e dopo la scrittura e restituisce la soglia passata più importante. Conta di più `over` di `near`, e a pari livello la categoria del totale.
 
 Il testo si aggiunge a quello della notifica, che resta aperta 8 secondi invece di 5:
 
@@ -123,6 +123,6 @@ Un rilascio insieme alle ricorrenze, la versione 0.6.0, sul branch `feature/budg
 
 1. **Mockup** in chiaro e in scuro, a 390 e 360 px: Budget con budget, Budget vuoto, un budget, foglio «Aggiungi budget», notifica con l'avviso. Come per la 0.5.0 si disegnano in HTML in `docs/design/mockup-fase-4/` e vanno riportati in `design/soldo.figcraft` alla prima sessione in locale.
 2. **Dati**: dominio, repository, `endMonth` e formato di backup 3, con i test.
-3. **Pagine**: Budget e un budget, `BudgetMeter`, `PeriodSwitcher` senza schede.
+3. **Pagine**: Budget e un budget, `BudgetMeter`, `PeriodSwitcher` senza schede (`showTabs`).
 4. **Avvisi** nell'editor e in Movimenti.
 5. **Test end-to-end**, confronto con i mockup, chiusura su `develop`.

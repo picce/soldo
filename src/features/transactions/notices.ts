@@ -34,10 +34,18 @@ export function transactionNotice(kind: NoticeKind, transaction: Pick<Transactio
   })
 }
 
-export function showSaved(transaction: Pick<Transaction, 'kind' | 'amountCents'>, category?: NoticeSubject) {
-  showToast({
-    message: transactionNotice('saved', transaction, category),
-  })
+/** A notice with a budget warning stays longer: it has more to read. */
+const WARNING_DURATION = 8000
+
+function withWarning(message: string, warning?: string) {
+  return warning
+    ? { message: `${message}. ${warning}`, duration: WARNING_DURATION }
+    : { message }
+}
+
+/** After a save; `warning` is a budget that went past 80% or over it (features/budgets/warnings.ts). */
+export function showSaved(transaction: Pick<Transaction, 'kind' | 'amountCents'>, category?: NoticeSubject, warning?: string) {
+  showToast(withWarning(transactionNotice('saved', transaction, category), warning))
 }
 
 /** After a deletion: «Annulla» restores the transaction. */
@@ -52,9 +60,9 @@ export function showDeleted(transaction: Transaction, category?: NoticeSubject) 
 }
 
 /** After a duplication: «Annulla» deletes the copy. */
-export function showDuplicated(copy: Transaction, category?: NoticeSubject) {
+export function showDuplicated(copy: Transaction, category?: NoticeSubject, warning?: string) {
   showToast({
-    message: transactionNotice('duplicated', copy, category),
+    ...withWarning(transactionNotice('duplicated', copy, category), warning),
     action: {
       label: i18n.global.t('common.undo'),
       run: () => deleteTransaction(copy.id),

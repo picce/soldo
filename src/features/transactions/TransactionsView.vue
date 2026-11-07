@@ -24,6 +24,7 @@ import { groupByDay } from '@/domain/days'
 import { periodLabel, periodRange } from '@/domain/periods'
 import { matchesSearch } from '@/domain/search'
 import AccountSelector from '@/features/accounts/AccountSelector.vue'
+import { withBudgetCheck } from '@/features/budgets/warnings'
 import { useIntlLocale } from '@/i18n/locale'
 import { useAccountFilterStore } from '@/stores/account-filter'
 import DayGroup from './DayGroup.vue'
@@ -248,8 +249,14 @@ async function onSwipe(transaction: Transaction, direction: 'left' | 'right') {
     showDeleted(transaction, subject)
   }
   else {
-    const copy = await duplicateTransaction(transaction.id, today())
-    showDuplicated(copy, subject)
+    const { result: copy, warning } = await withBudgetCheck(
+      {
+        ...transaction,
+        date: today(),
+      },
+      () => duplicateTransaction(transaction.id, today()),
+    )
+    showDuplicated(copy, subject, warning)
   }
 }
 
