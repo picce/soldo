@@ -14,6 +14,7 @@ import CategoryGrid from '@/components/CategoryGrid.vue'
 import IconButton from '@/components/IconButton.vue'
 import Keypad from '@/components/Keypad.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
+import { useMoreBelow } from '@/components/useMoreBelow'
 import { accountName } from '@/db/names'
 import {
   formatExpression,
@@ -137,6 +138,8 @@ function balanceOf(id: string | null) {
 
 // On an installed iPhone app a swipe from the left edge closes, like Chiudi.
 const page = useTemplateRef<HTMLElement>('page')
+/** The categories fade out at the bottom while more of them are under the keypad. */
+const moreCategories = useMoreBelow(useTemplateRef<HTMLElement>('categoriesSection'))
 const edgeSwipe = needsEdgeSwipe()
 const { offset, dragging } = useEdgeSwipeBack(page, close, edgeSwipe)
 
@@ -371,7 +374,13 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
         </VvButton>
       </section>
 
-      <section v-else class="editor__categories" aria-labelledby="editor-categories-title">
+      <section
+        v-else
+        ref="categoriesSection"
+        class="editor__categories"
+        :class="{ 'editor__categories--more': moreCategories }"
+        aria-labelledby="editor-categories-title"
+      >
         <div class="editor__categories-head">
           <h2 id="editor-categories-title" class="editor__categories-title type-label">
             {{ t('editor.category') }}
@@ -770,5 +779,64 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 .editor--edit .editor__keypad {
   --keypad-key-height: 3.25rem;
+}
+
+/* The last row fades out while the list goes on under the keypad: there is more to scroll. */
+.editor__categories--more {
+  /* An alpha mask, not a color: black is opaque, transparent hides. */
+  mask-image: linear-gradient(to bottom, black calc(100% - 2rem), transparent);
+}
+
+/*
+ * Short screens (a phone in the browser, with its bars, or a small phone): everything a little
+ * tighter, so that the categories, which save, are not hidden under the keypad. The keys stay
+ * above 44px, the least for a finger.
+ */
+@media (max-height: 740px) {
+  .editor {
+    padding-top: calc(0.5rem + env(safe-area-inset-top));
+  }
+
+  .editor__top {
+    margin-top: 0.25rem;
+  }
+
+  .editor__amount {
+    padding-top: 0.5rem;
+  }
+
+  .editor__value {
+    font-size: 2rem;
+  }
+
+  .editor__value--long {
+    font-size: 1.625rem;
+  }
+
+  .editor__chips {
+    padding-top: 0.75rem;
+  }
+
+  .editor__categories {
+    --category-tile-height: 3.75rem;
+    --category-tile-padding-top: 0.5rem;
+    --category-tile-padding-bottom: 0.375rem;
+    --category-tile-gap: 0.25rem;
+
+    padding-top: 1rem;
+  }
+
+  .editor__actions {
+    padding-block: 0.5rem;
+  }
+
+  .editor__action {
+    min-height: 2.875rem;
+  }
+
+  .editor__keypad,
+  .editor--edit .editor__keypad {
+    --keypad-key-height: 2.875rem;
+  }
 }
 </style>

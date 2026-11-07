@@ -54,10 +54,11 @@ const emit = defineEmits<{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.375rem;
+  gap: var(--category-tile-gap, 0.375rem);
   width: 100%;
-  min-height: 4.25rem;
-  padding: 0.625rem 0.25rem 0.5rem;
+  /* Smaller on short screens: the quick add sets these (TransactionEditorView.vue). */
+  min-height: var(--category-tile-height, 4.25rem);
+  padding: var(--category-tile-padding-top, 0.625rem) 0.25rem var(--category-tile-padding-bottom, 0.5rem);
   background: var(--color-card);
   border: 1px solid var(--color-line);
   border-radius: var(--rounded);
@@ -92,7 +93,10 @@ const emit = defineEmits<{
 
 .category-grid__item[aria-pressed='true'] {
   /* 2px pen border; the padding shrinks by 1px so the content does not move. */
-  padding: calc(0.625rem - 1px) calc(0.25rem - 1px) calc(0.5rem - 1px);
+  padding:
+    calc(var(--category-tile-padding-top, 0.625rem) - 1px)
+    calc(0.25rem - 1px)
+    calc(var(--category-tile-padding-bottom, 0.5rem) - 1px);
   border: 2px solid var(--color-pen);
 }
 
