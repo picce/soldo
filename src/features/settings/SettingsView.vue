@@ -4,6 +4,7 @@ import type { RemoteBackup } from '@/backup/provider'
 import type { LocalePreference } from '@/i18n/locale'
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { appLock, DELAY_NAMES } from '@/app/lock'
 import { showToast } from '@/app/toast'
 import { markRestoredFromDrive } from '@/backup/auto'
 import { backupEncryption } from '@/backup/encryption'
@@ -23,6 +24,7 @@ import { useIntlLocale, useLocalePreference } from '@/i18n/locale'
 import DriveRestoreSheet from './DriveRestoreSheet.vue'
 import DriveSheet from './DriveSheet.vue'
 import EncryptionSheet from './EncryptionSheet.vue'
+import LockSheet from './LockSheet.vue'
 import RestoreBackup from './RestoreBackup.vue'
 import SettingsRow from './SettingsRow.vue'
 import { useDriveStatus } from './useDriveStatus'
@@ -155,6 +157,14 @@ const encryptionDetail = computed(() => {
     : t('settings.security.off')
 })
 
+// PIN lock (docs/specs/blocco-pin.md): «Attivo · dopo 1 minuto».
+const lockOpen = ref(false)
+const lockDetail = computed(() => appLock.value
+  ? t('settings.security.lockOn', {
+      when: t(`settings.security.lockDelays.${DELAY_NAMES[appLock.value.after]}`),
+    })
+  : t('settings.security.lockOff'))
+
 // Version and commit are fixed at build time (build-info.ts); the commit tells apart two
 // builds with the same version, e.g. the develop preview and production.
 const versionLine = computed(() =>
@@ -237,8 +247,15 @@ const versionLine = computed(() =>
           :detail="encryptionDetail"
           @click="encryptionOpen = true"
         />
+        <SettingsRow
+          icon="lock-key"
+          :title="t('settings.security.lock')"
+          :detail="lockDetail"
+          @click="lockOpen = true"
+        />
       </div>
       <EncryptionSheet v-model:open="encryptionOpen" />
+      <LockSheet v-model:open="lockOpen" />
     </section>
     <section v-if="driveVisible" class="settings-section" aria-labelledby="settings-drive">
       <h2 id="settings-drive" class="settings-section__title type-label">

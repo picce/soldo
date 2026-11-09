@@ -144,7 +144,15 @@
       "label": "Sicurezza",
       "encryption": "Cifratura dei backup",
       "off": "Disattivata",
-      "on": "Attiva dal {date}"
+      "on": "Attiva dal {date}",
+      "lock": "Blocco con PIN",
+      "lockOff": "Disattivato",
+      "lockOn": "Attivo · {when}",
+      "lockDelays": {
+        "now": "subito",
+        "minute": "dopo 1 minuto",
+        "fiveMinutes": "dopo 5 minuti"
+      }
     },
     "backup": {
       "label": "Backup su file",
@@ -508,6 +516,38 @@
       "failed": "Non è stato possibile salvare la passphrase. Riprova."
     }
   },
+  "lock": {
+    "title": "Scrivi il PIN",
+    "wrong": "PIN sbagliato.",
+    "wait": "Troppi tentativi. Riprova tra {time}.",
+    "seconds": "{n} secondi | {n} secondo | {n} secondi",
+    "minutes": "{n} minuti | {n} minuto | {n} minuti",
+    "forgot": "Hai dimenticato il PIN?",
+    "forgotText": "Senza il PIN Soldo non si apre. Puoi solo cancellare i dati di questo telefono e poi ripristinarli da un backup, su Google Drive o in un file.",
+    "erase": "Cancella i dati",
+    "eraseConfirm": "Sì, cancella tutto"
+  },
+  "lockSheet": {
+    "title": "Blocco con PIN",
+    "intro": "Nasconde Soldo a chi prende in mano il telefono: all'apertura e quando torni all'app chiede il PIN. Non cifra i dati: per i backup c'è la cifratura.",
+    "when": "Blocca",
+    "delays": {
+      "now": "Subito",
+      "minute": "1 minuto",
+      "fiveMinutes": "5 minuti"
+    },
+    "choose": "Scegli un PIN di {n} cifre",
+    "repeat": "Scrivilo di nuovo",
+    "mismatch": "I due PIN non coincidono. Riprova.",
+    "enable": "Scegli un PIN",
+    "change": "Cambia PIN",
+    "disable": "Disattiva il blocco",
+    "toast": {
+      "enabled": "Blocco attivato.",
+      "changed": "PIN cambiato.",
+      "disabled": "Blocco disattivato."
+    }
+  },
   "drive": {
     "label": "Backup automatico",
     "title": "Google Drive",
@@ -676,6 +716,11 @@
     "subtract": "Meno",
     "multiply": "Per",
     "divide": "Diviso"
+  },
+  "pinPad": {
+    "label": "Tastierino del PIN",
+    "delete": "Cancella",
+    "typed": "{n} cifre su {total}"
   },
   "toast": {
     "saved": "Salvato: {amount} · {category}",

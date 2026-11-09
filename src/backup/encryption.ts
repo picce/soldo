@@ -26,7 +26,7 @@ export interface BackupEncryption {
   since: string
 }
 
-const STORAGE_KEY = 'soldo.encryption'
+export const ENCRYPTION_KEY = 'soldo.encryption'
 
 function toBase64(bytes: Uint8Array): string {
   return btoa(String.fromCharCode(...bytes))
@@ -38,7 +38,7 @@ function fromBase64(text: string): Uint8Array<ArrayBuffer> {
 
 function load(): StoredEncryption | null {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(ENCRYPTION_KEY)
     if (!stored)
       return null
     const value = JSON.parse(stored) as Partial<StoredEncryption>
@@ -58,7 +58,7 @@ let imported: { from: StoredEncryption, key: Promise<BackupKey> } | undefined
 /** Another tab (the installed app and the browser) changed it: follow. */
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (event) => {
-    if (event.key === STORAGE_KEY)
+    if (event.key === ENCRYPTION_KEY)
       set(load())
   })
 }
@@ -75,9 +75,9 @@ function save(next: StoredEncryption | null): void {
   set(next)
   try {
     if (next)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+      localStorage.setItem(ENCRYPTION_KEY, JSON.stringify(next))
     else
-      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(ENCRYPTION_KEY)
   }
   catch {
     // Storage full or blocked: it lasts for this session.

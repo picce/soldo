@@ -71,6 +71,7 @@ const LIGHT = [
   'google-drive-logo',
   'shield-check',
   'lock',
+  'lock-key',
   // Categories: drag handle, move buttons, archive
   'dots-six-vertical',
   'caret-up',

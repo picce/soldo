@@ -2,6 +2,7 @@ import { VolverPlugin } from '@volverjs/ui-vue'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import { listenForInstall } from '@/app/install'
+import { startLock } from '@/app/lock'
 import { animatePageChanges } from '@/app/page-transitions'
 import { createAppRouter, requireOnboarding } from '@/app/router'
 // Only the Phosphor icons the app uses (scripts/build-icons.js): nothing is fetched at runtime.
@@ -25,6 +26,9 @@ listenForInstall()
 
 // Safari on iPhone shows the pressed state (:active) only on pages that listen to touches.
 document.addEventListener('touchstart', () => {}, { passive: true })
+
+// The lock screen, if the PIN lock is on, is the first thing shown (docs/specs/blocco-pin.md).
+startLock()
 
 // Before the router reads the address: it may carry the return from Google's sign-in
 // (docs/specs/backup-google-drive.md).

@@ -30,7 +30,7 @@ export interface BackupState {
   choice: boolean
 }
 
-const STORAGE_KEY = 'soldo.backup'
+export const BACKUP_STATE_KEY = 'soldo.backup'
 
 export const DISCONNECTED: BackupState = {
   connected: false,
@@ -45,7 +45,7 @@ export const DISCONNECTED: BackupState = {
 
 function load(): BackupState {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(BACKUP_STATE_KEY)
     return stored
       ? {
           ...DISCONNECTED,
@@ -63,7 +63,7 @@ const state = shallowRef<BackupState>(load())
 /** Another tab (the installed app and the browser) changed the state: follow it. */
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (event) => {
-    if (event.key === STORAGE_KEY)
+    if (event.key === BACKUP_STATE_KEY)
       state.value = load()
   })
 }
@@ -76,7 +76,7 @@ export function patchBackupState(patch: Partial<BackupState>): void {
     ...patch,
   }
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.value))
+    localStorage.setItem(BACKUP_STATE_KEY, JSON.stringify(state.value))
   }
   catch {
     // Storage full or blocked: the state lasts for this session.

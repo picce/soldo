@@ -144,7 +144,15 @@
       "label": "Security",
       "encryption": "Backup encryption",
       "off": "Off",
-      "on": "On since {date}"
+      "on": "On since {date}",
+      "lock": "PIN lock",
+      "lockOff": "Off",
+      "lockOn": "On · {when}",
+      "lockDelays": {
+        "now": "at once",
+        "minute": "after 1 minute",
+        "fiveMinutes": "after 5 minutes"
+      }
     },
     "backup": {
       "label": "File backup",
@@ -508,6 +516,38 @@
       "failed": "Could not save the passphrase. Please try again."
     }
   },
+  "lock": {
+    "title": "Enter your PIN",
+    "wrong": "Wrong PIN.",
+    "wait": "Too many attempts. Try again in {time}.",
+    "seconds": "{n} seconds | {n} second | {n} seconds",
+    "minutes": "{n} minutes | {n} minute | {n} minutes",
+    "forgot": "Forgot your PIN?",
+    "forgotText": "Without the PIN Soldo does not open. You can only erase the data on this phone and then restore it from a backup, on Google Drive or in a file.",
+    "erase": "Erase the data",
+    "eraseConfirm": "Yes, erase everything"
+  },
+  "lockSheet": {
+    "title": "PIN lock",
+    "intro": "Hides Soldo from whoever picks up the phone: it asks for the PIN when it opens and when you come back to it. It does not encrypt the data: backups have their own encryption.",
+    "when": "Lock",
+    "delays": {
+      "now": "At once",
+      "minute": "1 minute",
+      "fiveMinutes": "5 minutes"
+    },
+    "choose": "Choose a {n}-digit PIN",
+    "repeat": "Type it again",
+    "mismatch": "The two PINs do not match. Try again.",
+    "enable": "Choose a PIN",
+    "change": "Change PIN",
+    "disable": "Turn off the lock",
+    "toast": {
+      "enabled": "Lock turned on.",
+      "changed": "PIN changed.",
+      "disabled": "Lock turned off."
+    }
+  },
   "drive": {
     "label": "Automatic backup",
     "title": "Google Drive",
@@ -676,6 +716,11 @@
     "subtract": "Minus",
     "multiply": "Times",
     "divide": "Divided by"
+  },
+  "pinPad": {
+    "label": "PIN keypad",
+    "delete": "Delete",
+    "typed": "{n} of {total} digits"
   },
   "toast": {
     "saved": "Saved: {amount} · {category}",
