@@ -59,7 +59,7 @@ describe('welcomeView', () => {
   it('offers Google Drive first where the site can reach it, a file as the third way', async () => {
     vi.stubGlobal('fetch', fakeDriveFetch(createFakeDrive()))
     const { wrapper } = await mountWelcome()
-    await vi.waitFor(() => expect(wrapper.text()).toContain('Il backup va sul tuo Drive'))
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Il backup va sul tuo Google Drive'))
     expect(wrapper.get('.welcome__actions').findAll('button').map(button => button.text())).toEqual([
       'Inizia da zero',
       'Ripristina da Google Drive',

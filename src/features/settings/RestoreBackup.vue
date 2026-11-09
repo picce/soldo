@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { BackupReading } from '@/backup/import'
-import { computed, ref, shallowRef, useId, useTemplateRef } from 'vue'
+import type { BackupReading, LockedBackup, OpenableReading } from '@/backup/import'
+import { computed, nextTick, ref, shallowRef, useId, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
 import AppIcon from '@/components/AppIcon.vue'
+import TextField from '@/components/TextField.vue'
 import { useIntlLocale } from '@/i18n/locale'
 
 type ValidReading = Extract<BackupReading, { ok: true }>
@@ -12,7 +13,8 @@ type ValidReading = Extract<BackupReading, { ok: true }>
  * Restore of a backup file (docs/specs/released/backup-manuale.md, mockup "Importa backup"): `pick()`
  * opens the file chooser; a valid file shows what it holds and asks for confirmation,
  * because the data on the device is replaced. `show(reading)` asks the same for a backup
- * read elsewhere (Google Drive). Used by Settings and by the onboarding.
+ * read elsewhere (Google Drive). An encrypted backup first asks its passphrase, in the same
+ * window (docs/specs/released/backup-cifrati.md). Used by Settings and by the onboarding.
  */
 const emit = defineEmits<{
   restored: []
@@ -23,6 +25,10 @@ const intlLocale = useIntlLocale()
 const titleId = useId()
 const input = useTemplateRef<HTMLInputElement>('input')
 const reading = shallowRef<ValidReading>()
+const locked = shallowRef<LockedBackup>()
+const passphrase = ref('')
+const passphraseError = ref<string>()
+const passphraseField = useTemplateRef<InstanceType<typeof TextField>>('passphraseField')
 const open = ref(false)
 const busy = ref(false)
 
@@ -30,8 +36,18 @@ function pick() {
   input.value?.click()
 }
 
-function show(next: ValidReading) {
-  reading.value = next
+function show(next: OpenableReading) {
+  if (next.ok) {
+    locked.value = undefined
+    reading.value = next
+  }
+  else {
+    locked.value = next.locked
+    reading.value = undefined
+    passphrase.value = ''
+    passphraseError.value = undefined
+    void nextTick(() => passphraseField.value?.focus())
+  }
   open.value = true
 }
 
@@ -46,14 +62,41 @@ async function onChange() {
   // The validation library is loaded only now, not with the Settings page.
   const { readBackup } = await import('@/backup/import')
   const result = await readBackup(file)
-  if (!result.ok) {
+  if (!result.ok && result.error !== 'locked') {
     showToast({
       message: t(`backup.errors.${result.error}`),
     })
     return
   }
-  reading.value = result
-  open.value = true
+  show(result)
+}
+
+/** The passphrase opens the backup: the window moves on to what it holds. */
+async function unlock() {
+  const backup = locked.value
+  if (!backup || busy.value)
+    return
+  busy.value = true
+  try {
+    const { unlockBackup } = await import('@/backup/import')
+    const result = await unlockBackup(backup, passphrase.value)
+    if (result.ok) {
+      show(result)
+    }
+    else if (result.error === 'wrongPassphrase') {
+      passphraseError.value = t('backup.errors.wrongPassphrase')
+      passphraseField.value?.focus()
+    }
+    else {
+      open.value = false
+      showToast({
+        message: t(`backup.errors.${result.error}`),
+      })
+    }
+  }
+  finally {
+    busy.value = false
+  }
 }
 
 async function confirm() {
@@ -63,7 +106,7 @@ async function confirm() {
   busy.value = true
   try {
     const { restoreBackup } = await import('@/backup/import')
-    await restoreBackup(backup)
+    await restoreBackup(backup, reading.value?.key)
     open.value = false
     showToast({
       message: t('backup.restored'),
@@ -115,17 +158,33 @@ const preview = computed(() => {
   <input
     ref="input"
     type="file"
-    accept=".json,.gz,application/json,application/gzip"
+    accept=".json,.gz,.soldo,application/json,application/gzip,application/octet-stream"
     hidden
     @change="onChange"
   >
   <VvDialog v-model="open" class="restore-backup" :aria-labelledby="titleId" :keep-open="busy">
     <template #header>
       <h2 :id="titleId" class="restore-backup__title type-title">
-        {{ t('backup.restoreTitle') }}
+        {{ locked ? t('backup.unlock.title') : t('backup.restoreTitle') }}
       </h2>
     </template>
-    <dl class="restore-backup__preview">
+    <template v-if="locked">
+      <p class="restore-backup__text type-body">
+        {{ t('backup.unlock.text') }}
+      </p>
+      <TextField
+        ref="passphraseField"
+        v-model="passphrase"
+        type="password"
+        :label="t('encryption.passphrase')"
+        :error="passphraseError"
+        autocomplete="current-password"
+        enterkeyhint="go"
+        @keydown.enter.prevent="unlock"
+        @input="passphraseError = undefined"
+      />
+    </template>
+    <dl v-else class="restore-backup__preview">
       <div v-for="row in preview" :key="row.label" class="restore-backup__row">
         <dt class="restore-backup__label type-body">
           {{ row.label }}
@@ -136,13 +195,14 @@ const preview = computed(() => {
         </dd>
       </div>
     </dl>
-    <p class="restore-backup__warning type-body">
+    <p v-if="!locked" class="restore-backup__warning type-body">
       <AppIcon name="warning" class="restore-backup__warning-icon" />
       <span>{{ t('backup.warning') }}</span>
     </p>
     <template #footer>
       <VvButton :label="t('common.cancel')" modifiers="secondary" class="restore-backup__button" :disabled="busy" @click="open = false" />
-      <VvButton :label="t('backup.restore')" modifiers="danger" class="restore-backup__button" :loading="busy" @click="confirm" />
+      <VvButton v-if="locked" :label="t('backup.unlock.open')" modifiers="primary" class="restore-backup__button" :loading="busy" @click="unlock" />
+      <VvButton v-else :label="t('backup.restore')" modifiers="danger" class="restore-backup__button" :loading="busy" @click="confirm" />
     </template>
   </VvDialog>
 </template>
@@ -193,6 +253,11 @@ const preview = computed(() => {
 
 .restore-backup__title {
   margin: 0;
+}
+
+.restore-backup__text {
+  margin: 0;
+  color: var(--color-ink-2);
 }
 
 .restore-backup__preview {

@@ -12,6 +12,8 @@ export interface BackupSummary {
   accounts: number
   /** SHA-256 of the data, hex: the same data gives the same checksum. */
   checksum: string
+  /** The file is encrypted with a passphrase (docs/specs/released/backup-cifrati.md). */
+  encrypted?: boolean
 }
 
 export interface RemoteBackup extends BackupSummary {
@@ -23,7 +25,7 @@ export interface RemoteBackup extends BackupSummary {
 
 export interface BackupUpload {
   day: string
-  /** The backup file, compressed (pack.ts). */
+  /** The backup file, compressed and maybe encrypted (`sealBackup` of pack.ts). */
   bytes: Uint8Array<ArrayBuffer>
   summary: BackupSummary
   /** Today's file, to update instead of adding one; a new file if it is gone. */
@@ -58,4 +60,11 @@ export function errorCode(error: unknown): BackupErrorCode {
   return error instanceof BackupProviderError
     ? error.code
     : 'unavailable'
+}
+
+/** One file per day: compressed JSON, or encrypted (docs/specs/released/backup-cifrati.md). */
+export function backupName(day: string, encrypted = false): string {
+  return encrypted
+    ? `soldo-backup-${day}.soldo`
+    : `soldo-backup-${day}.json.gz`
 }

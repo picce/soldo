@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import type { BackupReading } from '@/backup/import'
+import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
+import type { ServiceId } from '@/backup/services'
 import type { LocalePreference } from '@/i18n/locale'
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { appLock, DELAY_NAMES } from '@/app/lock'
 import { showToast } from '@/app/toast'
 import { markRestoredFromDrive } from '@/backup/auto'
+import { backupEncryption } from '@/backup/encryption'
 import { exportBackup, exportTransactionsCsv } from '@/backup/export'
-import { connectGoogle, useDriveAvailable } from '@/backup/google/auth'
+import { SERVICE_ICONS, serviceAuths, useAvailableServices } from '@/backup/services'
 import AppPage from '@/components/AppPage.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import { listAccounts } from '@/db/repositories/accounts'
@@ -21,6 +24,8 @@ import { isFinished } from '@/domain/recurrences'
 import { useIntlLocale, useLocalePreference } from '@/i18n/locale'
 import DriveRestoreSheet from './DriveRestoreSheet.vue'
 import DriveSheet from './DriveSheet.vue'
+import EncryptionSheet from './EncryptionSheet.vue'
+import LockSheet from './LockSheet.vue'
 import RestoreBackup from './RestoreBackup.vue'
 import SettingsRow from './SettingsRow.vue'
 import { useDriveStatus } from './useDriveStatus'
@@ -106,30 +111,34 @@ async function runExport(run: () => Promise<'done' | 'cancelled'>, done: string)
   }
 }
 
-// Automatic backup on Google Drive (docs/specs/backup-google-drive.md): shown where the
-// Worker can sign in to Google, or once Drive is connected.
-const driveAvailable = useDriveAvailable()
+// Automatic backup (docs/specs/backup-google-drive.md, docs/specs/backup-dropbox-onedrive.md):
+// a row for each service the Worker can sign in to; once one is connected, only that one.
+const availableServices = useAvailableServices()
 const { state: drive, detail: driveDetail, alert: driveAlert, online } = useDriveStatus()
-const driveVisible = computed(() => driveAvailable.value || drive.value.connected)
+const driveServices = computed(() => drive.value.connected
+  ? [drive.value.service]
+  : availableServices.value)
 const driveSheetOpen = ref(false)
 const driveRestoreOpen = ref(false)
 let driveBackup: RemoteBackup | undefined
 
-function openDrive() {
+function openDrive(service: ServiceId) {
   if (drive.value.connected) {
     driveSheetOpen.value = true
   }
   else if (!online.value) {
     showToast({
-      message: t('drive.offline'),
+      message: t('drive.offline', {
+        service: t(`services.${service}`),
+      }),
     })
   }
   else {
-    connectGoogle('/impostazioni')
+    serviceAuths[service].connect('/impostazioni')
   }
 }
 
-function restoreFromDrive(reading: Extract<BackupReading, { ok: true }>, backup: RemoteBackup) {
+function restoreFromDrive(reading: OpenableReading, backup: RemoteBackup) {
   driveBackup = backup
   restore.value?.show(reading)
 }
@@ -141,6 +150,25 @@ async function onRestored() {
   if (backup)
     await markRestoredFromDrive(backup)
 }
+
+// Encryption of the backups (docs/specs/released/backup-cifrati.md): «Attiva dal 9 novembre».
+const encryptionOpen = ref(false)
+const encryptionDetail = computed(() => {
+  const since = backupEncryption.value?.since
+  return since
+    ? t('settings.security.on', {
+        date: new Intl.DateTimeFormat(intlLocale.value, { day: 'numeric', month: 'long' }).format(new Date(since)),
+      })
+    : t('settings.security.off')
+})
+
+// PIN lock (docs/specs/released/blocco-pin.md): «Attivo · dopo 1 minuto».
+const lockOpen = ref(false)
+const lockDetail = computed(() => appLock.value
+  ? t('settings.security.lockOn', {
+      when: t(`settings.security.lockDelays.${DELAY_NAMES[appLock.value.after]}`),
+    })
+  : t('settings.security.lockOff'))
 
 // Version and commit are fixed at build time (build-info.ts); the commit tells apart two
 // builds with the same version, e.g. the develop preview and production.
@@ -213,17 +241,40 @@ const versionLine = computed(() =>
         />
       </div>
     </section>
-    <section v-if="driveVisible" class="settings-section" aria-labelledby="settings-drive">
+    <section class="settings-section" aria-labelledby="settings-security">
+      <h2 id="settings-security" class="settings-section__title type-label">
+        {{ t('settings.security.label') }}
+      </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="lock"
+          :title="t('settings.security.encryption')"
+          :detail="encryptionDetail"
+          @click="encryptionOpen = true"
+        />
+        <SettingsRow
+          icon="lock-key"
+          :title="t('settings.security.lock')"
+          :detail="lockDetail"
+          @click="lockOpen = true"
+        />
+      </div>
+      <EncryptionSheet v-model:open="encryptionOpen" />
+      <LockSheet v-model:open="lockOpen" />
+    </section>
+    <section v-if="driveServices.length" class="settings-section" aria-labelledby="settings-drive">
       <h2 id="settings-drive" class="settings-section__title type-label">
         {{ t('drive.label') }}
       </h2>
       <div class="settings-section__card">
         <SettingsRow
-          icon="google-drive-logo"
-          :title="t('drive.title')"
+          v-for="service in driveServices"
+          :key="service"
+          :icon="SERVICE_ICONS[service]"
+          :title="t(`services.${service}`)"
           :detail="driveDetail"
           :alert="driveAlert"
-          @click="openDrive"
+          @click="openDrive(service)"
         />
       </div>
       <DriveSheet v-model:open="driveSheetOpen" @restore="driveRestoreOpen = true" />
@@ -240,7 +291,7 @@ const versionLine = computed(() =>
         <SettingsRow
           icon="export"
           :title="t('settings.backup.export')"
-          :detail="t('settings.backup.exportDetail')"
+          :detail="backupEncryption ? t('settings.backup.exportDetailEncrypted') : t('settings.backup.exportDetail')"
           :disabled="exporting"
           @click="runExport(exportBackup, t('backup.exported'))"
         />

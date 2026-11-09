@@ -7,6 +7,7 @@ import {
   deleteTransaction,
   duplicateTransaction,
   getTransaction,
+  listRecentTransactions,
   listTransactions,
   restoreTransaction,
   updateTransaction,
@@ -157,5 +158,38 @@ describe('transactions repository', () => {
       const ids = (await listTransactions({ accountId: 'bank' })).map(item => item.id)
       expect(ids.sort()).toEqual([onBank.id, sent.id, received.id].sort())
     })
+  })
+})
+
+describe('recent transactions', () => {
+  it('reads about the newest ones, in whole days, newest first', async () => {
+    for (const [date, count] of [
+      ['2026-11-05', 2],
+      ['2026-11-04', 3],
+      ['2026-11-03', 2],
+      ['2026-11-01', 1],
+    ] as const) {
+      for (let index = 0; index < count; index++)
+        await addTransaction(expense({ date }))
+    }
+    const deleted = await addTransaction(expense({ date: '2026-11-05' }))
+    await deleteTransaction(deleted.id)
+
+    // Four asked: the 4th of November would be cut after two rows, so it is left out.
+    const recent = await listRecentTransactions({}, 4)
+    expect(recent.map(row => row.date)).toEqual(['2026-11-05', '2026-11-05'])
+    expect(recent).toEqual((await listTransactions()).slice(0, 2))
+
+    expect((await listRecentTransactions({}, 5)).map(row => row.date)).toEqual([
+      '2026-11-05',
+      '2026-11-05',
+      '2026-11-04',
+      '2026-11-04',
+      '2026-11-04',
+    ])
+    // Fewer than asked: all of them.
+    expect(await listRecentTransactions({}, 50)).toEqual(await listTransactions())
+    // The same filters as the full list.
+    expect(await listRecentTransactions({ from: '2026-11-01', to: '2026-11-03' }, 50)).toEqual(await listTransactions({ from: '2026-11-01', to: '2026-11-03' }))
   })
 })

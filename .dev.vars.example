@@ -3,3 +3,8 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 # Any long random string, e.g. node -e "console.log(crypto.randomBytes(32).toString('base64url'))"
 COOKIE_SECRET=
+# Optional: Dropbox and OneDrive (docs/dropbox-onedrive.md)
+DROPBOX_CLIENT_ID=
+DROPBOX_CLIENT_SECRET=
+ONEDRIVE_CLIENT_ID=
+ONEDRIVE_CLIENT_SECRET=

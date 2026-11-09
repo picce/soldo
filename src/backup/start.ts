@@ -1,5 +1,7 @@
+import type { ServiceId } from './services'
 import { showToast } from '@/app/toast'
 import { i18n } from '@/i18n'
+import { SERVICE_IDS } from './services'
 import { backupState } from './state'
 
 /**
@@ -17,33 +19,41 @@ const OUTCOMES = [
 ] as const
 type ConnectOutcome = typeof OUTCOMES[number]
 
-/** Reads `?google=…` left by the Worker and removes it, before the router reads the address. */
-function takeConnectOutcome(): ConnectOutcome | undefined {
+/**
+ * Reads `?google=…` (or `?dropbox=…`, `?onedrive=…`) left by the Worker and removes it,
+ * before the router reads the address.
+ */
+function takeConnectOutcome(): { service: ServiceId, outcome: ConnectOutcome } | undefined {
   const url = new URL(window.location.href)
-  const value = url.searchParams.get('google')
-  if (value === null)
+  const service = SERVICE_IDS.find(id => url.searchParams.has(id))
+  if (!service)
     return undefined
-  url.searchParams.delete('google')
+  const value = url.searchParams.get(service)!
+  url.searchParams.delete(service)
   history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`)
-  return (OUTCOMES as readonly string[]).includes(value)
-    ? value as ConnectOutcome
-    : 'error'
+  return {
+    service,
+    outcome: (OUTCOMES as readonly string[]).includes(value)
+      ? value as ConnectOutcome
+      : 'error',
+  }
 }
 
 export function startBackup(): void {
-  const outcome = takeConnectOutcome()
-  if (outcome === 'connected') {
-    void import('./auto').then(async ({ completeConnection }) => {
-      await completeConnection()
-      showToast({
-        message: i18n.global.t('drive.toast.connected'),
+  const back = takeConnectOutcome()
+  if (back) {
+    const service = i18n.global.t(`services.${back.service}`)
+    if (back.outcome === 'connected') {
+      void import('./auto').then(async ({ completeConnection }) => {
+        await completeConnection(back.service)
+        showToast({
+          message: i18n.global.t('drive.toast.connected', { service }),
+        })
       })
-    })
-    return
-  }
-  if (outcome) {
+      return
+    }
     showToast({
-      message: i18n.global.t(`drive.toast.${outcome}`),
+      message: i18n.global.t(`drive.toast.${back.outcome}`, { service }),
     })
   }
   if (backupState.value.connected)

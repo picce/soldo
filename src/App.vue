@@ -3,8 +3,10 @@ import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import AppToast from '@/app/components/AppToast.vue'
 import BottomNav from '@/app/components/BottomNav.vue'
+import LockScreen from '@/app/components/LockScreen.vue'
 import ReloadPrompt from '@/app/components/ReloadPrompt.vue'
 import RotateNotice from '@/app/components/RotateNotice.vue'
+import { locked } from '@/app/lock'
 import { dismissToast } from '@/app/toast'
 
 const route = useRoute()
@@ -18,7 +20,8 @@ watch(fullscreen, (isFullscreen) => {
 </script>
 
 <template>
-  <div class="app-shell" :class="{ 'app-shell--fullscreen': fullscreen }">
+  <!-- Behind the lock screen the app is inert: neither a finger nor a screen reader reaches it. -->
+  <div class="app-shell" :class="{ 'app-shell--fullscreen': fullscreen }" :inert="locked || undefined">
     <main class="app-shell__main">
       <!-- Keyed by path: /movimenti/a and /movimenti/b are two screens, not one reused. -->
       <RouterView v-slot="{ Component, route: current }">
@@ -30,6 +33,7 @@ watch(fullscreen, (isFullscreen) => {
     <BottomNav v-if="!fullscreen" />
     <RotateNotice />
   </div>
+  <LockScreen v-if="locked" />
 </template>
 
 <style scoped>
