@@ -1,10 +1,12 @@
 import type { BackupData, BackupFile } from './format'
 import type { BackupSummary } from './provider'
+import { encryptBytes } from './crypto'
+import { encryptionKey } from './encryption'
 
 /**
  * The backup file as it travels to Drive (docs/specs/backup-google-drive.md): the JSON of
  * Phase 2 compressed with gzip, and a checksum of the data that tells whether anything
- * changed since the last backup. Type imports only: packing does not load Zod.
+ * changed since the last backup. No Zod here: packing does not load it.
  */
 
 const encoder = new TextEncoder()
@@ -74,7 +76,19 @@ export async function summarize(backup: BackupFile): Promise<BackupSummary> {
   }
 }
 
-/** The file as it goes to Drive: the JSON of the backup, compressed. */
+/** The JSON of the backup, compressed. */
 export function packBackup(backup: BackupFile): Promise<Uint8Array<ArrayBuffer>> {
   return gzip(JSON.stringify(backup))
+}
+
+/**
+ * The file as it leaves the device: compressed and, when this device encrypts the backups
+ * (docs/specs/backup-cifrati.md), encrypted.
+ */
+export async function sealBackup(backup: BackupFile): Promise<{ bytes: Uint8Array<ArrayBuffer>, encrypted: boolean }> {
+  const packed = await packBackup(backup)
+  const key = encryptionKey()
+  return key
+    ? { bytes: await encryptBytes(packed, await key), encrypted: true }
+    : { bytes: packed, encrypted: false }
 }

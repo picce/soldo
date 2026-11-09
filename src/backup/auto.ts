@@ -7,7 +7,7 @@ import { today } from '@/domain/dates'
 import { createBackup } from './export'
 import { disconnectGoogle } from './google/auth'
 import { googleDrive } from './google/drive'
-import { checksumOf, packBackup, summarize } from './pack'
+import { checksumOf, sealBackup, summarize } from './pack'
 import { errorCode } from './provider'
 import { backupsToRemove } from './retention'
 import { backupPending, backupRunning, backupState, patchBackupState, resetBackupState } from './state'
@@ -128,11 +128,11 @@ async function backUp(): Promise<BackupOutcome> {
   }
   const day = today()
   // Compressed only now: most runs (at start, after a change undone) stop at the checksum.
-  const bytes = await packBackup(backup)
+  const { bytes, encrypted } = await sealBackup(backup)
   const file = await provider.upload({
     day,
     bytes,
-    summary,
+    summary: { ...summary, encrypted },
     replaceId: state.todayFile?.day === day
       ? state.todayFile.id
       : undefined,

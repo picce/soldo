@@ -20,6 +20,7 @@ import {
   startAutoBackup,
   stopAutoBackup,
 } from './auto'
+import { disableEncryption, enableEncryption } from './encryption'
 import { resetGoogleAuth } from './google/auth'
 import { forgetDriveFolder, googleDrive } from './google/drive'
 import { gunzip, gzip } from './pack'
@@ -41,6 +42,7 @@ beforeEach(async () => {
 })
 
 afterEach(() => {
+  disableEncryption()
   stopAutoBackup()
   vi.useRealTimers()
   vi.restoreAllMocks()
@@ -110,6 +112,33 @@ describe('automatic backup', () => {
     const all = await uploaded()
     expect(all).toHaveLength(1)
     expect(all[0]!.data.transactions).toHaveLength(1)
+  })
+
+  it('encrypts what goes to Drive once the device has a passphrase, replacing today\'s file', async () => {
+    expect(await runBackup()).toBe('uploaded')
+    expect(await runBackup()).toBe('unchanged')
+    await enableEncryption('correct horse battery', 10)
+    // Same data, but the file of today is replaced by an encrypted one.
+    expect(await runBackup()).toBe('uploaded')
+    const [file, ...others] = drive.backups()
+    expect(others).toEqual([])
+    expect(file!.name).toBe(`soldo-backup-${today()}.soldo`)
+    expect(file!.appProperties.encrypted).toBe('1')
+    const [remote] = await googleDrive.list()
+    expect(remote!.encrypted).toBe(true)
+
+    const { readBackupBytes, unlockBackup } = await import('./import')
+    const reading = await readBackupBytes(await googleDrive.download(remote!.id), remote!.name, remote!.checksum)
+    if (reading.ok || reading.error !== 'locked')
+      throw new Error('expected a locked backup')
+    const opened = await unlockBackup(reading.locked, 'correct horse battery')
+    expect(opened.ok && opened.backup.data.categories).toHaveLength(16)
+
+    // Off again: the next file is plain, and says so.
+    disableEncryption()
+    expect(await runBackup()).toBe('uploaded')
+    expect(drive.backups()[0]!.name).toBe(`soldo-backup-${today()}.json.gz`)
+    expect((await googleDrive.list())[0]!.encrypted).toBe(false)
   })
 
   it('asks before writing over the backups of another device', async () => {
