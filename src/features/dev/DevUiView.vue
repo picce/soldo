@@ -32,6 +32,7 @@ import AccountSheet from '@/features/accounts/AccountSheet.vue'
 import BudgetFlag from '@/features/budgets/BudgetFlag.vue'
 import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
 import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
+import EncryptionSheet from '@/features/settings/EncryptionSheet.vue'
 
 /**
  * Internal page, registered only in development (/dev/ui): every app component, in the
@@ -197,6 +198,7 @@ const choices = [
 const pickedChoice = ref('all')
 const accountSheetOpen = ref(false)
 const paymentSheetOpen = ref(false)
+const encryptionSheetOpen = ref(false)
 
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
@@ -375,6 +377,14 @@ function toast() {
       </p>
       <AccountSheet v-model:open="accountSheetOpen" :accounts="accounts" selected="bank" />
       <PaymentMethodSheet v-model:open="paymentSheetOpen" :methods="paymentMethods" :accounts="accounts" selected="card" />
+
+      <h3 class="dev-ui__name type-note">
+        EncryptionSheet (the real setting of this device)
+      </h3>
+      <p>
+        <ActionChip icon="lock" :label="t('encryption.title')" @click="encryptionSheetOpen = true" />
+      </p>
+      <EncryptionSheet v-model:open="encryptionSheetOpen" />
 
       <h3 class="dev-ui__name type-note">
         SearchField

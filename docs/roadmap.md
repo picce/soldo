@@ -10,7 +10,7 @@
 | Prima della Fase 3 | Pubblicata con la versione 0.3.0 (2026-11-05): [sensazione da app nativa](specs/released/sensazione-nativa.md), cioè risposta al tocco, transizioni tra le pagine, gesti, liste e cifre animate |
 | 3 — Backup su Google Drive | Pubblicata con la versione 0.4.0 (2026-11-05), da attivare: serve la configurazione di Google ([docs/google-drive.md](google-drive.md)), poi la prova con un Drive vero chiude la [spec](specs/backup-google-drive.md) |
 | 4 — Conti, trasferimenti, budget, ricorrenze | Completata e pubblicata: [conti, pagamenti e trasferimenti](specs/released/conti-pagamenti-trasferimenti.md) con la versione 0.5.0 (2026-11-06), [budget](specs/released/budget-mensili.md) e [ricorrenze](specs/released/ricorrenze.md) con la versione 0.6.0 (2026-11-07). `design/soldo.figcraft` da allineare ai mockup in `docs/design/mockup-fase-4/` |
-| 5 — Statistiche, altri provider, rifiniture | In corso: [statistiche](specs/released/statistiche.md) pubblicate con la versione 0.8.0 (2026-11-07); poi Dropbox e OneDrive, backup cifrati, blocco con PIN e rifiniture |
+| 5 — Statistiche, altri provider, rifiniture | In corso: [statistiche](specs/released/statistiche.md) pubblicate con la versione 0.8.0 (2026-11-07); [backup cifrati](specs/backup-cifrati.md) implementati, da provare sul telefono; poi Dropbox e OneDrive, blocco con PIN e rifiniture |
 | 6–7 | Da iniziare |
 
 ## Spec attive
@@ -20,7 +20,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
-| [Backup cifrati](specs/backup-cifrati.md) | Fase 5 | da definire | Nessuna | Bozza |
+| [Backup cifrati](specs/backup-cifrati.md) | Fase 5 | da definire | Nessuna | Parziale |
 
 ## Contesto
 

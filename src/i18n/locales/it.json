@@ -140,12 +140,19 @@
       "expenses": "nessuna uscita | {n} uscita | {n} uscite",
       "income": "nessuna entrata | {n} entrata | {n} entrate"
     },
+    "security": {
+      "label": "Sicurezza",
+      "encryption": "Cifratura dei backup",
+      "off": "Disattivata",
+      "on": "Attiva dal {date}"
+    },
     "backup": {
       "label": "Backup su file",
       "last": "ultimo: {when}",
       "never": "mai",
       "export": "Esporta backup",
       "exportDetail": "File JSON con tutti i dati",
+      "exportDetailEncrypted": "File cifrato con tutti i dati",
       "csv": "Esporta movimenti",
       "csvDetail": "File CSV per un foglio di calcolo",
       "import": "Importa backup",
@@ -457,9 +464,15 @@
     "errors": {
       "notSoldo": "Questo file non è un backup di Soldo.",
       "newerFormat": "Questo backup viene da una versione più recente di Soldo: aggiorna l'app e riprova.",
-      "invalid": "Il backup è danneggiato: i dati di questo telefono non sono stati toccati."
+      "invalid": "Il backup è danneggiato: i dati di questo telefono non sono stati toccati.",
+      "wrongPassphrase": "Passphrase sbagliata."
     },
     "restoreTitle": "Ripristinare questo backup?",
+    "unlock": {
+      "title": "Backup cifrato",
+      "text": "Scrivi la passphrase scelta quando hai attivato la cifratura.",
+      "open": "Apri"
+    },
     "file": "File",
     "created": "Creato",
     "transactions": "Movimenti",
@@ -468,6 +481,32 @@
     "restore": "Ripristina",
     "restored": "Backup ripristinato.",
     "restoreError": "Non è stato possibile ripristinare il backup: i dati di questo telefono non sono stati toccati."
+  },
+  "encryption": {
+    "title": "Cifratura dei backup",
+    "intro": "Chi apre i tuoi backup, su Google Drive o in un file, non può leggerli senza la passphrase. Questo telefono la ricorda: la chiede solo il ripristino.",
+    "passphrase": "Passphrase",
+    "newPassphrase": "Nuova passphrase",
+    "repeat": "Ripeti la passphrase",
+    "hint": "Almeno 8 caratteri",
+    "warning": "Se perdi la passphrase, i backup cifrati non si possono più aprire. Nessuno può recuperarla, nemmeno noi.",
+    "enable": "Cifra i backup",
+    "save": "Salva la passphrase",
+    "change": "Cambia passphrase",
+    "disable": "Disattiva la cifratura",
+    "active": "I backup sono cifrati",
+    "since": "dal {date}",
+    "before": "I backup fatti prima restano come erano.",
+    "errors": {
+      "short": "Almeno 8 caratteri.",
+      "mismatch": "Le due passphrase non coincidono."
+    },
+    "toast": {
+      "enabled": "Da ora i backup sono cifrati.",
+      "changed": "Passphrase cambiata.",
+      "disabled": "Da ora i backup non sono cifrati.",
+      "failed": "Non è stato possibile salvare la passphrase. Riprova."
+    }
   },
   "drive": {
     "label": "Backup automatico",
@@ -516,6 +555,7 @@
       "error": "Non è stato possibile leggere i backup da Google Drive.",
       "retry": "Riprova",
       "transactions": "nessun movimento | {n} movimento | {n} movimenti",
+      "encrypted": "cifrato",
       "downloading": "Scarico il backup…",
       "downloadError": "Non è stato possibile scaricare il backup. Riprova."
     }

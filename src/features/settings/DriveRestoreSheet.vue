@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BackupReading } from '@/backup/import'
+import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
 import { ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -11,14 +11,13 @@ import AppIcon from '@/components/AppIcon.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import { useIntlLocale } from '@/i18n/locale'
 
-type ValidReading = Extract<BackupReading, { ok: true }>
-
 /**
  * The backups on Google Drive, newest first (docs/specs/backup-google-drive.md): a tap
- * downloads one and hands it over for the confirmation of RestoreBackup.
+ * downloads one and hands it over for the confirmation of RestoreBackup, which first asks
+ * the passphrase of an encrypted one (docs/specs/backup-cifrati.md).
  */
 const emit = defineEmits<{
-  chosen: [reading: ValidReading, backup: RemoteBackup]
+  chosen: [reading: OpenableReading, backup: RemoteBackup]
 }>()
 
 const open = defineModel<boolean>('open', { required: true })
@@ -60,7 +59,7 @@ async function choose(backup: RemoteBackup) {
     const bytes = await backupProvider().download(backup.id)
     const { readBackupBytes } = await import('@/backup/import')
     const reading = await readBackupBytes(bytes, backup.name, backup.checksum)
-    if (!reading.ok) {
+    if (!reading.ok && reading.error !== 'locked') {
       showToast({
         message: t(`backup.errors.${reading.error}`),
       })
@@ -78,6 +77,14 @@ async function choose(backup: RemoteBackup) {
   finally {
     downloading.value = undefined
   }
+}
+
+/** «124 movimenti», and «· cifrato» for an encrypted backup. */
+function detail(backup: RemoteBackup) {
+  const transactions = t('drive.restore.transactions', backup.transactions)
+  return backup.encrypted
+    ? `${transactions} · ${t('drive.restore.encrypted')}`
+    : transactions
 }
 
 /** «5 novembre 2026, 21:14», in the device's time zone. */
@@ -115,7 +122,7 @@ function when(timestamp: string) {
           <span class="drive-restore__text">
             <span class="type-body">{{ when(backup.exportedAt) }}</span>
             <span class="drive-restore__detail type-small">
-              {{ downloading === backup.id ? t('drive.restore.downloading') : t('drive.restore.transactions', backup.transactions) }}
+              {{ downloading === backup.id ? t('drive.restore.downloading') : detail(backup) }}
             </span>
           </span>
           <AppIcon name="caret-right" class="drive-restore__caret" />

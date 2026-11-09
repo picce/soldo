@@ -140,12 +140,19 @@
       "expenses": "none for expenses | {n} for expenses | {n} for expenses",
       "income": "none for income | {n} for income | {n} for income"
     },
+    "security": {
+      "label": "Security",
+      "encryption": "Backup encryption",
+      "off": "Off",
+      "on": "On since {date}"
+    },
     "backup": {
       "label": "File backup",
       "last": "last: {when}",
       "never": "never",
       "export": "Export backup",
       "exportDetail": "JSON file with all your data",
+      "exportDetailEncrypted": "Encrypted file with all your data",
       "csv": "Export transactions",
       "csvDetail": "CSV file for a spreadsheet",
       "import": "Import backup",
@@ -457,9 +464,15 @@
     "errors": {
       "notSoldo": "This file is not a Soldo backup.",
       "newerFormat": "This backup comes from a newer version of Soldo: update the app and try again.",
-      "invalid": "The backup is damaged: the data on this phone was not touched."
+      "invalid": "The backup is damaged: the data on this phone was not touched.",
+      "wrongPassphrase": "Wrong passphrase."
     },
     "restoreTitle": "Restore this backup?",
+    "unlock": {
+      "title": "Encrypted backup",
+      "text": "Type the passphrase you chose when you turned on encryption.",
+      "open": "Open"
+    },
     "file": "File",
     "created": "Created",
     "transactions": "Transactions",
@@ -468,6 +481,32 @@
     "restore": "Restore",
     "restored": "Backup restored.",
     "restoreError": "Could not restore the backup: the data on this phone was not touched."
+  },
+  "encryption": {
+    "title": "Backup encryption",
+    "intro": "Whoever opens your backups, on Google Drive or in a file, cannot read them without the passphrase. This phone remembers it: only a restore asks for it.",
+    "passphrase": "Passphrase",
+    "newPassphrase": "New passphrase",
+    "repeat": "Repeat the passphrase",
+    "hint": "At least 8 characters",
+    "warning": "If you lose the passphrase, encrypted backups can no longer be opened. Nobody can recover it, not even us.",
+    "enable": "Encrypt backups",
+    "save": "Save the passphrase",
+    "change": "Change passphrase",
+    "disable": "Turn off encryption",
+    "active": "Backups are encrypted",
+    "since": "since {date}",
+    "before": "Backups made before stay as they were.",
+    "errors": {
+      "short": "At least 8 characters.",
+      "mismatch": "The two passphrases do not match."
+    },
+    "toast": {
+      "enabled": "From now on backups are encrypted.",
+      "changed": "Passphrase changed.",
+      "disabled": "From now on backups are not encrypted.",
+      "failed": "Could not save the passphrase. Please try again."
+    }
   },
   "drive": {
     "label": "Automatic backup",
@@ -516,6 +555,7 @@
       "error": "Could not read the backups from Google Drive.",
       "retry": "Try again",
       "transactions": "no transactions | {n} transaction | {n} transactions",
+      "encrypted": "encrypted",
       "downloading": "Downloading the backup…",
       "downloadError": "Could not download the backup. Please try again."
     }

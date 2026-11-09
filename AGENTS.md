@@ -43,7 +43,7 @@ src/
   db/           database Dexie (schema, repository, dati iniziali, useLiveQuery)
   domain/       funzioni pure: importi, date, periodi, riepiloghi, saldi, budget, ricorrenze, statistiche, calcolatrice, ricerca, giorni
   test/         supporto ai test: plugins.ts (Pinia, i18n e Volver con le icone locali), setup.ts (niente rete nei test unitari), fake-drive.ts (Google Drive in memoria, anche per gli e2e)
-  backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti; backup automatico: provider.ts, google/ (accesso tramite il Worker e Drive API), pack.ts (gzip e checksum), retention.ts, state.ts (stato del dispositivo in localStorage), auto.ts (il motore), start.ts (avvio da main.ts)
+  backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti; cifratura con passphrase: crypto.ts (AES-GCM e PBKDF2), encryption.ts (la chiave sul dispositivo, in localStorage); backup automatico: provider.ts, google/ (accesso tramite il Worker e Drive API), pack.ts (gzip e checksum), retention.ts, state.ts (stato del dispositivo in localStorage), auto.ts (il motore), start.ts (avvio da main.ts)
   import/       arriva in Fase 6 (vedi roadmap)
 scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto); google.ts (accesso a Google Drive) e cookies.ts (cookie cifrati)

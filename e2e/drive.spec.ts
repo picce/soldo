@@ -1,5 +1,6 @@
 import type { Browser, Page } from '@playwright/test'
 import type { FakeDrive } from '../src/test/fake-drive'
+import { Buffer } from 'node:buffer'
 import { gunzipSync } from 'node:zlib'
 import { fakeGoogle } from './drive'
 import { expect, test } from './fixtures'
@@ -94,6 +95,40 @@ test('restores the backup of another phone at the first start', async ({ page, b
   // Restored from Drive, the same data is not uploaded back.
   await other.getByRole('navigation').getByRole('link', { name: 'Impostazioni' }).click()
   await expect(driveRow(other)).toContainText('Automatico · ultimo:')
+  await other.context().close()
+})
+
+test('encrypts the backups on Drive, and another phone restores them with the passphrase', async ({ page, browser, baseURL }) => {
+  const drive = await fakeGoogle(page)
+  await page.reload()
+  await addExpense(page, ['7'], 'Ristoranti')
+  await connect(page)
+  await expect.poll(() => backedUpTransactions(drive), { timeout: 10_000 }).toEqual([1])
+
+  await page.getByRole('button', { name: /^Cifratura dei backup/ }).click()
+  const sheet = page.getByRole('dialog', { name: 'Cifratura dei backup' })
+  await sheet.getByLabel('Passphrase', { exact: true }).fill('nuvola di carta')
+  await sheet.getByLabel('Ripeti la passphrase').fill('nuvola di carta')
+  await sheet.getByRole('button', { name: 'Cifra i backup' }).click()
+  // The file of today is replaced by an encrypted one.
+  await expect.poll(() => drive.backups().map(file => file.name), { timeout: 10_000 }).toEqual([
+    expect.stringMatching(/\.soldo$/),
+  ])
+  expect(Buffer.from(drive.backups()[0]!.bytes.subarray(0, 8)).toString('latin1')).toBe('SOLDOENC')
+
+  const other = await secondDevice(browser, drive, baseURL)
+  await other.getByRole('button', { name: 'Ripristina da Google Drive' }).click()
+  const list = other.getByRole('dialog', { name: 'Backup su Google Drive' })
+  await list.getByRole('button', { name: /1 movimento · cifrato/ }).click()
+  const unlock = other.getByRole('dialog', { name: 'Backup cifrato' })
+  await unlock.getByLabel('Passphrase').fill('nuvola di carta')
+  await unlock.getByRole('button', { name: 'Apri' }).click()
+  await other.getByRole('dialog', { name: 'Ripristinare questo backup?' }).getByRole('button', { name: 'Ripristina' }).click()
+  await expect(other.getByRole('tablist', { name: 'Periodo' })).toBeVisible()
+
+  // The second phone goes on encrypting with the same passphrase.
+  await other.getByRole('navigation').getByRole('link', { name: 'Impostazioni' }).click()
+  await expect(other.getByRole('button', { name: /^Cifratura dei backup/ })).toContainText('Attiva dal')
   await other.context().close()
 })
 

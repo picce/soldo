@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { BackupReading } from '@/backup/import'
+import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
 import type { LocalePreference } from '@/i18n/locale'
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
 import { markRestoredFromDrive } from '@/backup/auto'
+import { backupEncryption } from '@/backup/encryption'
 import { exportBackup, exportTransactionsCsv } from '@/backup/export'
 import { connectGoogle, useDriveAvailable } from '@/backup/google/auth'
 import AppPage from '@/components/AppPage.vue'
@@ -21,6 +22,7 @@ import { isFinished } from '@/domain/recurrences'
 import { useIntlLocale, useLocalePreference } from '@/i18n/locale'
 import DriveRestoreSheet from './DriveRestoreSheet.vue'
 import DriveSheet from './DriveSheet.vue'
+import EncryptionSheet from './EncryptionSheet.vue'
 import RestoreBackup from './RestoreBackup.vue'
 import SettingsRow from './SettingsRow.vue'
 import { useDriveStatus } from './useDriveStatus'
@@ -129,7 +131,7 @@ function openDrive() {
   }
 }
 
-function restoreFromDrive(reading: Extract<BackupReading, { ok: true }>, backup: RemoteBackup) {
+function restoreFromDrive(reading: OpenableReading, backup: RemoteBackup) {
   driveBackup = backup
   restore.value?.show(reading)
 }
@@ -141,6 +143,17 @@ async function onRestored() {
   if (backup)
     await markRestoredFromDrive(backup)
 }
+
+// Encryption of the backups (docs/specs/backup-cifrati.md): «Attiva dal 9 novembre».
+const encryptionOpen = ref(false)
+const encryptionDetail = computed(() => {
+  const since = backupEncryption.value?.since
+  return since
+    ? t('settings.security.on', {
+        date: new Intl.DateTimeFormat(intlLocale.value, { day: 'numeric', month: 'long' }).format(new Date(since)),
+      })
+    : t('settings.security.off')
+})
 
 // Version and commit are fixed at build time (build-info.ts); the commit tells apart two
 // builds with the same version, e.g. the develop preview and production.
@@ -213,6 +226,20 @@ const versionLine = computed(() =>
         />
       </div>
     </section>
+    <section class="settings-section" aria-labelledby="settings-security">
+      <h2 id="settings-security" class="settings-section__title type-label">
+        {{ t('settings.security.label') }}
+      </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="lock"
+          :title="t('settings.security.encryption')"
+          :detail="encryptionDetail"
+          @click="encryptionOpen = true"
+        />
+      </div>
+      <EncryptionSheet v-model:open="encryptionOpen" />
+    </section>
     <section v-if="driveVisible" class="settings-section" aria-labelledby="settings-drive">
       <h2 id="settings-drive" class="settings-section__title type-label">
         {{ t('drive.label') }}
@@ -240,7 +267,7 @@ const versionLine = computed(() =>
         <SettingsRow
           icon="export"
           :title="t('settings.backup.export')"
-          :detail="t('settings.backup.exportDetail')"
+          :detail="backupEncryption ? t('settings.backup.exportDetailEncrypted') : t('settings.backup.exportDetail')"
           :disabled="exporting"
           @click="runExport(exportBackup, t('backup.exported'))"
         />

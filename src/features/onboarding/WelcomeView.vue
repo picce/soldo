@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BackupReading } from '@/backup/import'
+import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
 import { useOnline } from '@vueuse/core'
 import { computed, ref, useTemplateRef, watch } from 'vue'
@@ -77,7 +77,7 @@ if (route.query.ripristina === 'drive') {
   }, { immediate: true })
 }
 
-function confirmDriveBackup(reading: Extract<BackupReading, { ok: true }>, backup: RemoteBackup) {
+function confirmDriveBackup(reading: OpenableReading, backup: RemoteBackup) {
   driveBackup = backup
   restore.value?.show(reading)
 }

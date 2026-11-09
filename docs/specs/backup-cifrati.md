@@ -1,6 +1,6 @@
 # Backup cifrati
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Parziale (implementata e provata con i test, anche con Google Drive finto; manca la prova a mano sul telefono)
 > **Data**: 2026-11-09
 > **Ambito**: Seconda parte della Fase 5. Una passphrase scelta dall'utente cifra i backup automatici su Google Drive e quelli esportati come file; il ripristino la chiede. Il resto dell'app non cambia.
 > **Spec collegate**: cifra i file di [`released/backup-manuale.md`](./released/backup-manuale.md) e di [`backup-google-drive.md`](./backup-google-drive.md); il formato dei dati resta quello di [`released/dati-locali.md`](./released/dati-locali.md).
