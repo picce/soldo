@@ -2,7 +2,7 @@ import type { Browser, Page } from '@playwright/test'
 import type { FakeDrive } from '../src/test/fake-drive'
 import { Buffer } from 'node:buffer'
 import { gunzipSync } from 'node:zlib'
-import { fakeGoogle } from './drive'
+import { fakeDropbox, fakeGoogle } from './drive'
 import { expect, test } from './fixtures'
 
 // The service worker would fetch for the page, out of reach of page.route.
@@ -79,7 +79,7 @@ test('restores the backup of another phone at the first start', async ({ page, b
   await expect.poll(() => backedUpTransactions(drive), { timeout: 10_000 }).toEqual([1])
 
   const other = await secondDevice(browser, drive, baseURL)
-  await expect(other.getByText('Il backup va sul tuo Drive')).toBeVisible()
+  await expect(other.getByText('Il backup va sul tuo Google Drive')).toBeVisible()
   await other.getByRole('button', { name: 'Ripristina da Google Drive' }).click()
   const list = other.getByRole('dialog', { name: 'Backup su Google Drive' })
   await list.getByRole('button', { name: /1 movimento/ }).click()
@@ -152,4 +152,39 @@ test('asks before a fresh phone writes over the backups on Drive', async ({ page
   // One backup per day: today's file of the first phone went to the Drive trash.
   expect(backedUpTransactions(drive)).toEqual([0])
   await other.context().close()
+})
+
+test('backs up to Dropbox, and another phone restores from it at the first start', async ({ page, browser, baseURL }) => {
+  const cloud = await fakeDropbox(page)
+  await page.reload()
+  await addExpense(page, ['9'], 'Ristoranti')
+  await page.getByRole('navigation').getByRole('link', { name: 'Impostazioni' }).click()
+  const row = page.getByRole('button', { name: /^Dropbox/ })
+  await expect(row).toContainText('Collega il tuo account')
+  // Only the services configured on the site: here Dropbox.
+  await expect(driveRow(page)).toHaveCount(0)
+  await row.click()
+  await expect(page.getByRole('status').filter({ hasText: 'Dropbox collegato' })).toBeVisible()
+  await expect.poll(() => cloud.backups(), { timeout: 10_000 }).toEqual([
+    expect.stringMatching(/^soldo-backup-.*\.json\.gz$/),
+  ])
+  await expect(row).toContainText('ultimo: ora')
+  await row.click()
+  const sheet = page.getByRole('dialog', { name: 'Dropbox' })
+  await expect(sheet).toContainText('Applicazioni/Soldo')
+  await expect(sheet).toContainText('anna@example.com')
+
+  const context = await browser.newContext({ baseURL, serviceWorkers: 'block', locale: 'it-IT' })
+  const other = await context.newPage()
+  await fakeDropbox(other, cloud)
+  await other.goto('/')
+  await expect(other.getByText('Il backup va sul tuo Dropbox')).toBeVisible()
+  await other.getByRole('button', { name: 'Ripristina da Dropbox' }).click()
+  const list = other.getByRole('dialog', { name: 'Backup su Dropbox' })
+  await list.getByRole('button', { name: /1 movimento/ }).click()
+  await other.getByRole('dialog', { name: 'Ripristinare questo backup?' }).getByRole('button', { name: 'Ripristina' }).click()
+  await expect(other.getByRole('tablist', { name: 'Periodo' })).toBeVisible()
+  await other.getByRole('navigation').getByRole('link', { name: 'Impostazioni' }).click()
+  await expect(other.getByRole('button', { name: /^Dropbox/ })).toContainText('Automatico · ultimo:')
+  await context.close()
 })

@@ -1,3 +1,4 @@
+import type { ServiceId } from './oauth'
 import type { BackupErrorCode } from './provider'
 import { readonly, ref, shallowRef } from 'vue'
 
@@ -9,9 +10,14 @@ import { readonly, ref, shallowRef } from 'vue'
  */
 
 export interface BackupState {
-  /** Google Drive is connected (the Worker holds the sign-in in a cookie). */
+  /** A service is connected (the Worker holds the sign-in in a cookie). */
   connected: boolean
-  /** Email address of the Google account. */
+  /**
+   * Which one (docs/specs/backup-dropbox-onedrive.md); Google Drive for a state saved
+   * before Dropbox and OneDrive.
+   */
+  service: ServiceId
+  /** Email address of the account. */
   account: string | null
   /** When the last backup reached Drive, ISO 8601. */
   lastBackupAt: string | null
@@ -34,6 +40,7 @@ export const BACKUP_STATE_KEY = 'soldo.backup'
 
 export const DISCONNECTED: BackupState = {
   connected: false,
+  service: 'google',
   account: null,
   lastBackupAt: null,
   lastChecksum: null,

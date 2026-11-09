@@ -32,9 +32,10 @@
         "title": "The backup is your own file",
         "detail": "Export it whenever you like and keep it wherever you want."
       },
-      "backupDrive": {
-        "title": "The backup goes to your Drive",
-        "detail": "Automatically to Google Drive, or to a file you keep wherever you want."
+      "backupCloud": {
+        "title": "The backup goes to your {service}",
+        "titleMany": "The backup goes to your cloud",
+        "detail": "Automatically to {services}, or to a file you keep wherever you want."
       }
     },
     "install": {
@@ -46,7 +47,7 @@
     },
     "start": "Start from scratch",
     "restore": "Restore a backup",
-    "restoreDrive": "Restore from Google Drive",
+    "restoreCloud": "Restore from {service}",
     "restoreFile": "Restore from a file"
   },
   "period": {
@@ -548,51 +549,59 @@
       "disabled": "Lock turned off."
     }
   },
+  "services": {
+    "google": "Google Drive",
+    "dropbox": "Dropbox",
+    "onedrive": "OneDrive"
+  },
   "drive": {
     "label": "Automatic backup",
-    "title": "Google Drive",
     "connect": "Connect your account: the backup runs by itself",
-    "offline": "Connecting Google Drive needs the network.",
+    "offline": "Connecting {service} needs the network.",
     "status": {
       "ok": "Automatic · last: {when}",
       "never": "Automatic · no backup yet",
       "running": "Backing up…",
       "waiting": "Waiting for the network",
       "auth": "Needs reconnecting",
-      "quota": "Drive storage is full",
-      "unavailable": "Drive is not answering: trying again later",
+      "quota": "{service} storage is full",
+      "unavailable": "{service} is not answering: trying again later",
       "choice": "Choose which data to keep"
     },
+    "where": {
+      "google": "Backups go to the “Soldo” folder of your Drive, one file per day. Soldo keeps the last 14 days and one backup for each of the last 12 months.",
+      "dropbox": "Backups go to the “Apps/Soldo” folder of your Dropbox, one file per day. Soldo keeps the last 14 days and one backup for each of the last 12 months.",
+      "onedrive": "Backups go to the “Apps/Soldo” folder of your OneDrive, one file per day. Soldo keeps the last 14 days and one backup for each of the last 12 months."
+    },
     "sheet": {
-      "accountUnknown": "Google account",
-      "where": "Backups go to the “Soldo” folder of your Drive, one file per day. Soldo keeps the last 14 days and one backup for each of the last 12 months.",
-      "authText": "The permission on Google Drive expired or was withdrawn. Reconnect the account to resume the backups.",
-      "quotaText": "Your Google Drive is full: free up space and the backup resumes by itself.",
-      "choiceText": "This Google Drive already holds Soldo backups. Restore one, or keep the data on this phone: the next backups will start from it.",
+      "accountUnknown": "{service} account",
+      "authText": "The permission on {service} expired or was withdrawn. Reconnect the account to resume the backups.",
+      "quotaText": "Your {service} is full: free up space and the backup resumes by itself.",
+      "choiceText": "This {service} already holds Soldo backups. Restore one, or keep the data on this phone: the next backups will start from it.",
       "backupNow": "Back up now",
-      "restore": "Restore from Drive",
+      "restore": "Restore from {service}",
       "keepDevice": "Keep the data on this phone",
-      "reconnect": "Reconnect Google Drive",
-      "disconnect": "Disconnect Google Drive"
+      "reconnect": "Reconnect {service}",
+      "disconnect": "Disconnect {service}"
     },
     "toast": {
-      "connected": "Google Drive connected: the backup runs by itself.",
-      "denied": "Connection to Google Drive cancelled.",
-      "scope": "The backup needs the permission on Google Drive: try again and leave it ticked.",
-      "error": "Could not connect Google Drive. Please try again.",
-      "unavailable": "The backup to Google Drive is not available on this site.",
-      "done": "Backed up to Google Drive.",
-      "unchanged": "The backup on Google Drive is already up to date.",
+      "connected": "{service} connected: the backup runs by itself.",
+      "denied": "Connection to {service} cancelled.",
+      "scope": "The backup needs the permission on {service}: try again and leave it ticked.",
+      "error": "Could not connect {service}. Please try again.",
+      "unavailable": "The backup to {service} is not available on this site.",
+      "done": "Backed up to {service}.",
+      "unchanged": "The backup on {service} is already up to date.",
       "offline": "No network: the backup runs when it is back.",
-      "failed": "Google Drive is not answering. Trying again later.",
-      "quota": "Your Google Drive is full: the backup did not run.",
-      "disconnected": "Google Drive disconnected. The backups stay on your Drive."
+      "failed": "{service} is not answering. Trying again later.",
+      "quota": "Your {service} is full: the backup did not run.",
+      "disconnected": "{service} disconnected. The backups stay there."
     },
     "restore": {
-      "title": "Backups on Google Drive",
+      "title": "Backups on {service}",
       "loading": "Looking for backups…",
-      "empty": "This Google Drive holds no Soldo backups.",
-      "error": "Could not read the backups from Google Drive.",
+      "empty": "This {service} holds no Soldo backups.",
+      "error": "Could not read the backups from {service}.",
       "retry": "Try again",
       "transactions": "no transactions | {n} transaction | {n} transactions",
       "encrypted": "encrypted",

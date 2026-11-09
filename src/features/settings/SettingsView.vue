@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
+import type { ServiceId } from '@/backup/services'
 import type { LocalePreference } from '@/i18n/locale'
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -9,7 +10,7 @@ import { showToast } from '@/app/toast'
 import { markRestoredFromDrive } from '@/backup/auto'
 import { backupEncryption } from '@/backup/encryption'
 import { exportBackup, exportTransactionsCsv } from '@/backup/export'
-import { connectGoogle, useDriveAvailable } from '@/backup/google/auth'
+import { SERVICE_ICONS, serviceAuths, useAvailableServices } from '@/backup/services'
 import AppPage from '@/components/AppPage.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import { listAccounts } from '@/db/repositories/accounts'
@@ -110,26 +111,30 @@ async function runExport(run: () => Promise<'done' | 'cancelled'>, done: string)
   }
 }
 
-// Automatic backup on Google Drive (docs/specs/backup-google-drive.md): shown where the
-// Worker can sign in to Google, or once Drive is connected.
-const driveAvailable = useDriveAvailable()
+// Automatic backup (docs/specs/backup-google-drive.md, docs/specs/backup-dropbox-onedrive.md):
+// a row for each service the Worker can sign in to; once one is connected, only that one.
+const availableServices = useAvailableServices()
 const { state: drive, detail: driveDetail, alert: driveAlert, online } = useDriveStatus()
-const driveVisible = computed(() => driveAvailable.value || drive.value.connected)
+const driveServices = computed(() => drive.value.connected
+  ? [drive.value.service]
+  : availableServices.value)
 const driveSheetOpen = ref(false)
 const driveRestoreOpen = ref(false)
 let driveBackup: RemoteBackup | undefined
 
-function openDrive() {
+function openDrive(service: ServiceId) {
   if (drive.value.connected) {
     driveSheetOpen.value = true
   }
   else if (!online.value) {
     showToast({
-      message: t('drive.offline'),
+      message: t('drive.offline', {
+        service: t(`services.${service}`),
+      }),
     })
   }
   else {
-    connectGoogle('/impostazioni')
+    serviceAuths[service].connect('/impostazioni')
   }
 }
 
@@ -257,17 +262,19 @@ const versionLine = computed(() =>
       <EncryptionSheet v-model:open="encryptionOpen" />
       <LockSheet v-model:open="lockOpen" />
     </section>
-    <section v-if="driveVisible" class="settings-section" aria-labelledby="settings-drive">
+    <section v-if="driveServices.length" class="settings-section" aria-labelledby="settings-drive">
       <h2 id="settings-drive" class="settings-section__title type-label">
         {{ t('drive.label') }}
       </h2>
       <div class="settings-section__card">
         <SettingsRow
-          icon="google-drive-logo"
-          :title="t('drive.title')"
+          v-for="service in driveServices"
+          :key="service"
+          :icon="SERVICE_ICONS[service]"
+          :title="t(`services.${service}`)"
           :detail="driveDetail"
           :alert="driveAlert"
-          @click="openDrive"
+          @click="openDrive(service)"
         />
       </div>
       <DriveSheet v-model:open="driveSheetOpen" @restore="driveRestoreOpen = true" />

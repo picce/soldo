@@ -69,6 +69,9 @@ const LIGHT = [
   'warning',
   // Settings: automatic backup, encryption and privacy
   'google-drive-logo',
+  'dropbox-logo',
+  'cloud',
+  'cloud-arrow-up',
   'shield-check',
   'lock',
   'lock-key',

@@ -143,7 +143,7 @@ describe('automatic backup in the settings', () => {
     expect(sheet.text()).toContain('anna@example.com')
     expect(sheet.findAll('button').map(button => button.text())).toEqual(expect.arrayContaining([
       'Esegui backup ora',
-      'Ripristina da Drive',
+      'Ripristina da Google Drive',
       'Scollega Google Drive',
     ]))
   })

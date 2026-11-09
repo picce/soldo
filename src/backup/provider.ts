@@ -61,3 +61,10 @@ export function errorCode(error: unknown): BackupErrorCode {
     ? error.code
     : 'unavailable'
 }
+
+/** One file per day: compressed JSON, or encrypted (docs/specs/backup-cifrati.md). */
+export function backupName(day: string, encrypted = false): string {
+  return encrypted
+    ? `soldo-backup-${day}.soldo`
+    : `soldo-backup-${day}.json.gz`
+}

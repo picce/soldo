@@ -1,5 +1,5 @@
 import type { BackupProvider, BackupUpload, RemoteBackup } from '../provider'
-import { BackupProviderError } from '../provider'
+import { backupName, BackupProviderError } from '../provider'
 import { BACKUP_FORMAT } from '../version'
 import { accessToken } from './auth'
 
@@ -112,11 +112,7 @@ function toRemote(file: DriveFile): RemoteBackup | undefined {
   }
 }
 
-export function backupName(day: string, encrypted = false): string {
-  return encrypted
-    ? `soldo-backup-${day}.soldo`
-    : `soldo-backup-${day}.json.gz`
-}
+export { backupName } from '../provider'
 
 let folderId: string | undefined
 

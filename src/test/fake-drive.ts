@@ -10,6 +10,8 @@ export interface FakeRequest {
   url: string
   contentType?: string
   authorization?: string
+  /** Other headers, lowercase (Dropbox puts its arguments in one). */
+  headers?: Record<string, string>
   body?: Uint8Array
 }
 

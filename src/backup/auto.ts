@@ -1,15 +1,18 @@
 import type { ObservabilitySet } from 'dexie'
+import type { ServiceId } from './oauth'
 import type { BackupErrorCode, BackupProvider, RemoteBackup } from './provider'
 import Dexie from 'dexie'
 import { db } from '@/db/database'
 import { getMeta } from '@/db/repositories/meta'
 import { today } from '@/domain/dates'
+import { dropbox } from './dropbox/dropbox'
 import { createBackup } from './export'
-import { disconnectGoogle } from './google/auth'
 import { googleDrive } from './google/drive'
+import { onedrive } from './onedrive/onedrive'
 import { checksumOf, sealBackup, summarize } from './pack'
 import { errorCode } from './provider'
 import { backupsToRemove } from './retention'
+import { serviceAuths } from './services'
 import { backupPending, backupRunning, backupState, patchBackupState, resetBackupState } from './state'
 
 /**
@@ -31,17 +34,24 @@ const LOCK_NAME = 'soldo-backup'
  */
 export type BackupOutcome = 'uploaded' | 'unchanged' | 'skipped' | 'choice' | BackupErrorCode
 
-let provider: BackupProvider = googleDrive
+const PROVIDERS: Record<ServiceId, BackupProvider> = {
+  google: googleDrive,
+  dropbox,
+  onedrive,
+}
+
+let override: BackupProvider | undefined
 let timer: ReturnType<typeof setTimeout> | undefined
 let started = false
 
-/** Another destination for the backups; tests only. Without arguments, Google Drive again. */
+/** Another destination for the backups; tests only. Without arguments, the real ones again. */
 export function setBackupProvider(next?: BackupProvider): void {
-  provider = next ?? googleDrive
+  override = next
 }
 
+/** Where the backups go: the service connected (Google Drive, Dropbox or OneDrive). */
 export function backupProvider(): BackupProvider {
-  return provider
+  return override ?? PROVIDERS[backupState.value.service]
 }
 
 function schedule(delay: number): void {
@@ -103,6 +113,7 @@ async function exclusively(work: () => Promise<BackupOutcome>): Promise<BackupOu
 }
 
 async function removeOldBackups(): Promise<void> {
+  const provider = backupProvider()
   try {
     for (const old of backupsToRemove(await provider.list()))
       await provider.remove(old.id)
@@ -116,6 +127,7 @@ async function backUp(): Promise<BackupOutcome> {
   // Never before the first start: an empty device must not go over the backups on Drive.
   if (!await getMeta('onboardedAt'))
     return 'skipped'
+  const provider = backupProvider()
   const backup = await createBackup()
   const summary = await summarize(backup)
   backupPending.value = false
@@ -188,19 +200,21 @@ async function currentChecksum(): Promise<string> {
 }
 
 /**
- * Back from Google with the permission: who the account is, and a fresh start unless it is
- * the account this device already backed up to.
+ * Back from the service with the permission: who the account is, and a fresh start unless
+ * it is the account this device already backed up to there.
  */
-export async function completeConnection(): Promise<void> {
+export async function completeConnection(service: ServiceId = 'google'): Promise<void> {
+  const previous = backupState.value
+  const sameService = previous.service === service
+  patchBackupState({ service })
   let account: string | null = null
   try {
-    account = await provider.account() ?? null
+    account = await backupProvider().account() ?? null
   }
   catch {
     // Shown later; the backup works without it.
   }
-  const previous = backupState.value
-  const sameAccount = account !== null && previous.account === account
+  const sameAccount = sameService && account !== null && previous.account === account
   patchBackupState({
     connected: true,
     account,
@@ -218,11 +232,12 @@ export async function completeConnection(): Promise<void> {
   startAutoBackup()
 }
 
-/** Revokes the permission and forgets everything about Drive; the backups stay there. */
+/** Revokes the permission and forgets everything about the service; the backups stay there. */
 export async function disconnectDrive(): Promise<void> {
+  const { service } = backupState.value
   stopAutoBackup()
   resetBackupState()
-  await disconnectGoogle()
+  await serviceAuths[service].disconnect()
 }
 
 /** The user chose the data of this device: the next backups start from it. */

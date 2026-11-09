@@ -32,9 +32,10 @@
         "title": "Il backup è un file tuo",
         "detail": "Lo esporti quando vuoi e lo salvi dove preferisci."
       },
-      "backupDrive": {
-        "title": "Il backup va sul tuo Drive",
-        "detail": "In automatico su Google Drive, o in un file che salvi dove preferisci."
+      "backupCloud": {
+        "title": "Il backup va sul tuo {service}",
+        "titleMany": "Il backup va nel tuo cloud",
+        "detail": "In automatico su {services}, o in un file che salvi dove preferisci."
       }
     },
     "install": {
@@ -46,7 +47,7 @@
     },
     "start": "Inizia da zero",
     "restore": "Ripristina un backup",
-    "restoreDrive": "Ripristina da Google Drive",
+    "restoreCloud": "Ripristina da {service}",
     "restoreFile": "Ripristina da un file"
   },
   "period": {
@@ -548,51 +549,59 @@
       "disabled": "Blocco disattivato."
     }
   },
+  "services": {
+    "google": "Google Drive",
+    "dropbox": "Dropbox",
+    "onedrive": "OneDrive"
+  },
   "drive": {
     "label": "Backup automatico",
-    "title": "Google Drive",
     "connect": "Collega il tuo account: il backup parte da solo",
-    "offline": "Serve la rete per collegare Google Drive.",
+    "offline": "Serve la rete per collegare {service}.",
     "status": {
       "ok": "Automatico · ultimo: {when}",
       "never": "Automatico · nessun backup ancora",
       "running": "Backup in corso…",
       "waiting": "In attesa della rete",
       "auth": "Da ricollegare",
-      "quota": "Spazio su Drive esaurito",
-      "unavailable": "Drive non risponde: riprovo più tardi",
+      "quota": "Spazio su {service} esaurito",
+      "unavailable": "{service} non risponde: riprovo più tardi",
       "choice": "Scegli quali dati tenere"
     },
+    "where": {
+      "google": "I backup vanno nella cartella «Soldo» del tuo Drive, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi.",
+      "dropbox": "I backup vanno nella cartella «Applicazioni/Soldo» del tuo Dropbox, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi.",
+      "onedrive": "I backup vanno nella cartella «App/Soldo» del tuo OneDrive, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi."
+    },
     "sheet": {
-      "accountUnknown": "Account Google",
-      "where": "I backup vanno nella cartella «Soldo» del tuo Drive, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi.",
-      "authText": "Il permesso su Google Drive è scaduto o è stato ritirato. Ricollega l'account per riprendere i backup.",
-      "quotaText": "Il tuo Google Drive è pieno: libera spazio e il backup riprende da solo.",
-      "choiceText": "Su questo Google Drive ci sono già backup di Soldo. Ripristinane uno, oppure tieni i dati di questo telefono: i prossimi backup partiranno da questi.",
+      "accountUnknown": "Account {service}",
+      "authText": "Il permesso su {service} è scaduto o è stato ritirato. Ricollega l'account per riprendere i backup.",
+      "quotaText": "Il tuo {service} è pieno: libera spazio e il backup riprende da solo.",
+      "choiceText": "Su questo {service} ci sono già backup di Soldo. Ripristinane uno, oppure tieni i dati di questo telefono: i prossimi backup partiranno da questi.",
       "backupNow": "Esegui backup ora",
-      "restore": "Ripristina da Drive",
+      "restore": "Ripristina da {service}",
       "keepDevice": "Tieni i dati di questo telefono",
-      "reconnect": "Ricollega Google Drive",
-      "disconnect": "Scollega Google Drive"
+      "reconnect": "Ricollega {service}",
+      "disconnect": "Scollega {service}"
     },
     "toast": {
-      "connected": "Google Drive collegato: il backup parte da solo.",
-      "denied": "Collegamento a Google Drive annullato.",
-      "scope": "Per il backup serve il permesso su Google Drive: riprova e lascialo spuntato.",
-      "error": "Non è stato possibile collegare Google Drive. Riprova.",
-      "unavailable": "Il backup su Google Drive non è disponibile su questo sito.",
-      "done": "Backup su Google Drive fatto.",
-      "unchanged": "Il backup su Google Drive è già aggiornato.",
+      "connected": "{service} collegato: il backup parte da solo.",
+      "denied": "Collegamento a {service} annullato.",
+      "scope": "Per il backup serve il permesso su {service}: riprova e lascialo spuntato.",
+      "error": "Non è stato possibile collegare {service}. Riprova.",
+      "unavailable": "Il backup su {service} non è disponibile su questo sito.",
+      "done": "Backup su {service} fatto.",
+      "unchanged": "Il backup su {service} è già aggiornato.",
       "offline": "Senza rete: il backup parte quando torna.",
-      "failed": "Google Drive non risponde. Riprovo più tardi.",
-      "quota": "Il tuo Google Drive è pieno: il backup non è partito.",
-      "disconnected": "Google Drive scollegato. I backup restano sul tuo Drive."
+      "failed": "{service} non risponde. Riprovo più tardi.",
+      "quota": "Il tuo {service} è pieno: il backup non è partito.",
+      "disconnected": "{service} scollegato. I backup restano lì."
     },
     "restore": {
-      "title": "Backup su Google Drive",
+      "title": "Backup su {service}",
       "loading": "Cerco i backup…",
-      "empty": "Su questo Google Drive non ci sono backup di Soldo.",
-      "error": "Non è stato possibile leggere i backup da Google Drive.",
+      "empty": "Su questo {service} non ci sono backup di Soldo.",
+      "error": "Non è stato possibile leggere i backup da {service}.",
       "retry": "Riprova",
       "transactions": "nessun movimento | {n} movimento | {n} movimenti",
       "encrypted": "cifrato",

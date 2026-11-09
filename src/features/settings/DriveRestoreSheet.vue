@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
-import { ref, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
 import { backupProvider } from '@/backup/auto'
 import { errorCode } from '@/backup/provider'
-import { patchBackupState } from '@/backup/state'
+import { backupState, patchBackupState } from '@/backup/state'
 import AppIcon from '@/components/AppIcon.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import { useIntlLocale } from '@/i18n/locale'
 
 /**
- * The backups on Google Drive, newest first (docs/specs/backup-google-drive.md): a tap
+ * The backups on the service connected, newest first (docs/specs/backup-google-drive.md): a tap
  * downloads one and hands it over for the confirmation of RestoreBackup, which first asks
  * the passphrase of an encrypted one (docs/specs/backup-cifrati.md).
  */
@@ -24,6 +24,8 @@ const open = defineModel<boolean>('open', { required: true })
 
 const { t } = useI18n()
 const intlLocale = useIntlLocale()
+/** The service connected: Google Drive, Dropbox or OneDrive. */
+const service = computed(() => t(`services.${backupState.value.service}`))
 const backups = shallowRef<RemoteBackup[]>([])
 const status = ref<'loading' | 'ready' | 'error'>('loading')
 const downloading = ref<string>()
@@ -97,18 +99,18 @@ function when(timestamp: string) {
 </script>
 
 <template>
-  <BottomSheet v-model="open" :title="t('drive.restore.title')">
+  <BottomSheet v-model="open" :title="t('drive.restore.title', { service })">
     <p v-if="status === 'loading'" class="drive-restore__note type-body" role="status">
       {{ t('drive.restore.loading') }}
     </p>
     <div v-else-if="status === 'error'" class="drive-restore__note">
       <p class="type-body" role="alert">
-        {{ t('drive.restore.error') }}
+        {{ t('drive.restore.error', { service }) }}
       </p>
       <VvButton :label="t('drive.restore.retry')" modifiers="secondary" class="drive-restore__retry" @click="load" />
     </div>
     <p v-else-if="!backups.length" class="drive-restore__note type-body">
-      {{ t('drive.restore.empty') }}
+      {{ t('drive.restore.empty', { service }) }}
     </p>
     <ul v-else class="drive-restore__list">
       <li v-for="backup in backups" :key="backup.id">
