@@ -21,6 +21,8 @@ import IconPicker from '@/components/IconPicker.vue'
 import Keypad from '@/components/Keypad.vue'
 import LineChart from '@/components/LineChart.vue'
 import PeriodSwitcher from '@/components/PeriodSwitcher.vue'
+import PinDots from '@/components/PinDots.vue'
+import PinPad from '@/components/PinPad.vue'
 import SearchField from '@/components/SearchField.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import SortableList from '@/components/SortableList.vue'
@@ -32,6 +34,8 @@ import AccountSheet from '@/features/accounts/AccountSheet.vue'
 import BudgetFlag from '@/features/budgets/BudgetFlag.vue'
 import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
 import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
+import EncryptionSheet from '@/features/settings/EncryptionSheet.vue'
+import LockSheet from '@/features/settings/LockSheet.vue'
 
 /**
  * Internal page, registered only in development (/dev/ui): every app component, in the
@@ -197,6 +201,9 @@ const choices = [
 const pickedChoice = ref('all')
 const accountSheetOpen = ref(false)
 const paymentSheetOpen = ref(false)
+const encryptionSheetOpen = ref(false)
+const lockSheetOpen = ref(false)
+const typedPin = ref('')
 
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
@@ -375,6 +382,24 @@ function toast() {
       </p>
       <AccountSheet v-model:open="accountSheetOpen" :accounts="accounts" selected="bank" />
       <PaymentMethodSheet v-model:open="paymentSheetOpen" :methods="paymentMethods" :accounts="accounts" selected="card" />
+
+      <h3 class="dev-ui__name type-note">
+        EncryptionSheet (the real setting of this device)
+      </h3>
+      <p>
+        <ActionChip icon="lock" :label="t('encryption.title')" @click="encryptionSheetOpen = true" />
+      </p>
+      <EncryptionSheet v-model:open="encryptionSheetOpen" />
+
+      <h3 class="dev-ui__name type-note">
+        PinDots, PinPad, LockSheet (the real setting of this device)
+      </h3>
+      <PinDots :filled="typedPin.length" :total="4" />
+      <PinPad @digit="typedPin = (typedPin + $event).slice(-4)" @delete="typedPin = typedPin.slice(0, -1)" />
+      <p>
+        <ActionChip icon="lock-key" :label="t('lockSheet.title')" @click="lockSheetOpen = true" />
+      </p>
+      <LockSheet v-model:open="lockSheetOpen" />
 
       <h3 class="dev-ui__name type-note">
         SearchField

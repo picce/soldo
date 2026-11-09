@@ -1,3 +1,4 @@
+import type { BackupKey } from './crypto'
 import type { BackupFile } from './format'
 import type { Account } from '@/db/schema'
 import { db } from '@/db/database'
@@ -5,6 +6,8 @@ import { defaultPaymentMethods, firstActiveAccount } from '@/db/payment-defaults
 import { generateDueOccurrences } from '@/db/repositories/recurrences'
 import { SCHEMA_VERSION } from '@/db/schema'
 import { today } from '@/domain/dates'
+import { decryptBytes, isEncrypted } from './crypto'
+import { adoptEncryption } from './encryption'
 import { backupFileSchema } from './format'
 import { gunzip, isGzip, sha256Hex } from './pack'
 import { BACKUP_FORMAT } from './version'
@@ -12,8 +15,19 @@ import { BACKUP_FORMAT } from './version'
 /** Larger files are not Soldo backups (100,000 transactions take about 40 MB). */
 const MAX_FILE_BYTES = 100 * 1024 * 1024
 
-/** Why a file cannot be restored; the data on the device is untouched in every case. */
-export type BackupError = 'notSoldo' | 'newerFormat' | 'invalid'
+/**
+ * Why a file cannot be restored; the data on the device is untouched in every case. An
+ * encrypted file is not an error: it is `locked` until the passphrase opens it.
+ */
+export type BackupError = 'notSoldo' | 'newerFormat' | 'invalid' | 'wrongPassphrase'
+
+/** An encrypted backup, waiting for the passphrase (docs/specs/released/backup-cifrati.md). */
+export interface LockedBackup {
+  bytes: Uint8Array<ArrayBuffer>
+  fileName: string
+  /** Kept by Drive next to the file: checked once the file is open. */
+  checksum?: string
+}
 
 /** What the confirmation shows before replacing the data. */
 export interface BackupPreview {
@@ -25,8 +39,18 @@ export interface BackupPreview {
 }
 
 export type BackupReading
-  = | { ok: true, backup: BackupFile, preview: BackupPreview }
-    | { ok: false, error: BackupError }
+  = | {
+    ok: true
+    backup: BackupFile
+    preview: BackupPreview
+    /** The key that opened an encrypted file: the device keeps it after the restore. */
+    key?: BackupKey
+  }
+  | { ok: false, error: BackupError }
+  | { ok: false, error: 'locked', locked: LockedBackup }
+
+/** A backup that can be restored now, or once the passphrase opens it. */
+export type OpenableReading = Extract<BackupReading, { ok: true } | { error: 'locked' }>
 
 function alive<T extends { deletedAt: string | null }>(rows: T[]): number {
   return rows.filter(row => row.deletedAt === null).length
@@ -67,8 +91,31 @@ export async function readBackup(file: File): Promise<BackupReading> {
 /**
  * Reads and checks the bytes of a backup: a file, or a download from Drive. With
  * `checksum` (Drive keeps it next to the file) data that changed on the way is refused.
+ * An encrypted file comes back `locked`: `unlockBackup` opens it with the passphrase.
  */
 export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: string, checksum?: string): Promise<BackupReading> {
+  if (isEncrypted(bytes)) {
+    return {
+      ok: false,
+      error: 'locked',
+      locked: { bytes, fileName, checksum },
+    }
+  }
+  return readPlain(bytes, fileName, checksum)
+}
+
+/** Opens an encrypted backup with the passphrase, then reads it as any other. */
+export async function unlockBackup(locked: LockedBackup, passphrase: string): Promise<BackupReading> {
+  const opened = await decryptBytes(locked.bytes, passphrase)
+  if (!opened)
+    return { ok: false, error: 'wrongPassphrase' }
+  const reading = await readPlain(opened.bytes, locked.fileName, locked.checksum)
+  return reading.ok
+    ? { ...reading, key: opened.key }
+    : reading
+}
+
+async function readPlain(bytes: Uint8Array<ArrayBuffer>, fileName: string, checksum?: string): Promise<BackupReading> {
   let raw: unknown
   try {
     raw = JSON.parse(isGzip(bytes)
@@ -112,9 +159,10 @@ export async function readBackupBytes(bytes: Uint8Array<ArrayBuffer>, fileName: 
 /**
  * Replaces every table with the backup, in one transaction: either all of it is restored
  * or nothing changes. The backup's date becomes «Ultimo backup», since the data on the
- * device is now the data of that file.
+ * device is now the data of that file. With the `key` of an encrypted backup the device
+ * goes on encrypting with it, so the next backups do not go out in clear.
  */
-export async function restoreBackup(backup: BackupFile): Promise<void> {
+export async function restoreBackup(backup: BackupFile, key?: BackupKey): Promise<void> {
   const { data } = backup
   await db.transaction('rw', db.tables, async () => {
     await Promise.all(db.tables.map(table => table.clear()))
@@ -133,6 +181,8 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
       { key: 'schemaVersion', value: SCHEMA_VERSION },
     ])
   })
+  if (key)
+    await adoptEncryption(key)
   // The series of the file go on from where they were: what came due since is added now.
   await generateDueOccurrences(today())
 }

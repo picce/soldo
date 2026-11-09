@@ -8,6 +8,8 @@ import { today } from '@/domain/dates'
 import { i18n } from '@/i18n'
 import { transactionsToCsv } from './csv'
 import { deliverFile } from './deliver'
+import { encryptionKey } from './encryption'
+import { sealBackup } from './pack'
 import { BACKUP_FORMAT } from './version'
 
 // Kept apart from import.ts: exporting does not need the validation library, so the
@@ -46,20 +48,33 @@ export async function createBackup(): Promise<BackupFile> {
   })
 }
 
-export function backupFileName(date = today()): string {
-  return `soldo-backup-${date}.json`
+export function backupFileName(date = today(), encrypted = false): string {
+  return encrypted
+    ? `soldo-backup-${date}.soldo`
+    : `soldo-backup-${date}.json`
 }
 
 /**
- * Builds the backup and hands it to the user (share sheet on a phone, download elsewhere).
- * Remembers when, for «Ultimo backup», unless the user closed the share sheet.
+ * Builds the backup and hands it to the user (share sheet on a phone, download elsewhere):
+ * plain JSON, or an encrypted file when this device encrypts the backups
+ * (docs/specs/released/backup-cifrati.md). Remembers when, for «Ultimo backup», unless the user
+ * closed the share sheet.
  */
 export async function exportBackup(): Promise<'done' | 'cancelled'> {
   const backup = await createBackup()
-  const blob = new Blob([
-    JSON.stringify(backup),
-  ], { type: 'application/json' })
-  const result = await deliverFile(blob, backupFileName())
+  let blob: Blob
+  let encrypted = false
+  if (encryptionKey()) {
+    const sealed = await sealBackup(backup)
+    blob = new Blob([sealed.bytes], { type: 'application/octet-stream' })
+    encrypted = sealed.encrypted
+  }
+  else {
+    blob = new Blob([
+      JSON.stringify(backup),
+    ], { type: 'application/json' })
+  }
+  const result = await deliverFile(blob, backupFileName(today(), encrypted))
   if (result === 'cancelled')
     return result
   await setMeta('lastExportAt', backup.exportedAt)

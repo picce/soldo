@@ -67,9 +67,14 @@ const LIGHT = [
   'file-csv',
   'file-arrow-up',
   'warning',
-  // Settings: automatic backup and privacy
+  // Settings: automatic backup, encryption and privacy
   'google-drive-logo',
+  'dropbox-logo',
+  'cloud',
+  'cloud-arrow-up',
   'shield-check',
+  'lock',
+  'lock-key',
   // Categories: drag handle, move buttons, archive
   'dots-six-vertical',
   'caret-up',

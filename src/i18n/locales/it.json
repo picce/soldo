@@ -32,9 +32,10 @@
         "title": "Il backup è un file tuo",
         "detail": "Lo esporti quando vuoi e lo salvi dove preferisci."
       },
-      "backupDrive": {
-        "title": "Il backup va sul tuo Drive",
-        "detail": "In automatico su Google Drive, o in un file che salvi dove preferisci."
+      "backupCloud": {
+        "title": "Il backup va sul tuo {service}",
+        "titleMany": "Il backup va nel tuo cloud",
+        "detail": "In automatico su {services}, o in un file che salvi dove preferisci."
       }
     },
     "install": {
@@ -46,7 +47,7 @@
     },
     "start": "Inizia da zero",
     "restore": "Ripristina un backup",
-    "restoreDrive": "Ripristina da Google Drive",
+    "restoreCloud": "Ripristina da {service}",
     "restoreFile": "Ripristina da un file"
   },
   "period": {
@@ -140,12 +141,27 @@
       "expenses": "nessuna uscita | {n} uscita | {n} uscite",
       "income": "nessuna entrata | {n} entrata | {n} entrate"
     },
+    "security": {
+      "label": "Sicurezza",
+      "encryption": "Cifratura dei backup",
+      "off": "Disattivata",
+      "on": "Attiva dal {date}",
+      "lock": "Blocco con PIN",
+      "lockOff": "Disattivato",
+      "lockOn": "Attivo · {when}",
+      "lockDelays": {
+        "now": "subito",
+        "minute": "dopo 1 minuto",
+        "fiveMinutes": "dopo 5 minuti"
+      }
+    },
     "backup": {
       "label": "Backup su file",
       "last": "ultimo: {when}",
       "never": "mai",
       "export": "Esporta backup",
       "exportDetail": "File JSON con tutti i dati",
+      "exportDetailEncrypted": "File cifrato con tutti i dati",
       "csv": "Esporta movimenti",
       "csvDetail": "File CSV per un foglio di calcolo",
       "import": "Importa backup",
@@ -457,9 +473,15 @@
     "errors": {
       "notSoldo": "Questo file non è un backup di Soldo.",
       "newerFormat": "Questo backup viene da una versione più recente di Soldo: aggiorna l'app e riprova.",
-      "invalid": "Il backup è danneggiato: i dati di questo telefono non sono stati toccati."
+      "invalid": "Il backup è danneggiato: i dati di questo telefono non sono stati toccati.",
+      "wrongPassphrase": "Passphrase sbagliata."
     },
     "restoreTitle": "Ripristinare questo backup?",
+    "unlock": {
+      "title": "Backup cifrato",
+      "text": "Scrivi la passphrase scelta quando hai attivato la cifratura.",
+      "open": "Apri"
+    },
     "file": "File",
     "created": "Creato",
     "transactions": "Movimenti",
@@ -469,53 +491,120 @@
     "restored": "Backup ripristinato.",
     "restoreError": "Non è stato possibile ripristinare il backup: i dati di questo telefono non sono stati toccati."
   },
+  "encryption": {
+    "title": "Cifratura dei backup",
+    "intro": "Chi apre i tuoi backup, su Google Drive o in un file, non può leggerli senza la passphrase. Questo telefono la ricorda: la chiede solo il ripristino.",
+    "passphrase": "Passphrase",
+    "newPassphrase": "Nuova passphrase",
+    "repeat": "Ripeti la passphrase",
+    "hint": "Almeno 8 caratteri",
+    "warning": "Se perdi la passphrase, i backup cifrati non si possono più aprire. Nessuno può recuperarla, nemmeno noi.",
+    "enable": "Cifra i backup",
+    "save": "Salva la passphrase",
+    "change": "Cambia passphrase",
+    "disable": "Disattiva la cifratura",
+    "active": "I backup sono cifrati",
+    "since": "dal {date}",
+    "before": "I backup fatti prima restano come erano.",
+    "errors": {
+      "short": "Almeno 8 caratteri.",
+      "mismatch": "Le due passphrase non coincidono."
+    },
+    "toast": {
+      "enabled": "Da ora i backup sono cifrati.",
+      "changed": "Passphrase cambiata.",
+      "disabled": "Da ora i backup non sono cifrati.",
+      "failed": "Non è stato possibile salvare la passphrase. Riprova."
+    }
+  },
+  "lock": {
+    "title": "Scrivi il PIN",
+    "wrong": "PIN sbagliato.",
+    "wait": "Troppi tentativi. Riprova tra {time}.",
+    "seconds": "{n} secondi | {n} secondo | {n} secondi",
+    "minutes": "{n} minuti | {n} minuto | {n} minuti",
+    "forgot": "Hai dimenticato il PIN?",
+    "forgotText": "Senza il PIN Soldo non si apre. Puoi solo cancellare i dati di questo telefono e poi ripristinarli da un backup, su Google Drive o in un file.",
+    "erase": "Cancella i dati",
+    "eraseConfirm": "Sì, cancella tutto"
+  },
+  "lockSheet": {
+    "title": "Blocco con PIN",
+    "intro": "Nasconde Soldo a chi prende in mano il telefono: all'apertura e quando torni all'app chiede il PIN. Non cifra i dati: per i backup c'è la cifratura.",
+    "when": "Blocca",
+    "delays": {
+      "now": "Subito",
+      "minute": "1 minuto",
+      "fiveMinutes": "5 minuti"
+    },
+    "choose": "Scegli un PIN di {n} cifre",
+    "repeat": "Scrivilo di nuovo",
+    "mismatch": "I due PIN non coincidono. Riprova.",
+    "enable": "Scegli un PIN",
+    "change": "Cambia PIN",
+    "disable": "Disattiva il blocco",
+    "toast": {
+      "enabled": "Blocco attivato.",
+      "changed": "PIN cambiato.",
+      "disabled": "Blocco disattivato."
+    }
+  },
+  "services": {
+    "google": "Google Drive",
+    "dropbox": "Dropbox",
+    "onedrive": "OneDrive"
+  },
   "drive": {
     "label": "Backup automatico",
-    "title": "Google Drive",
     "connect": "Collega il tuo account: il backup parte da solo",
-    "offline": "Serve la rete per collegare Google Drive.",
+    "offline": "Serve la rete per collegare {service}.",
     "status": {
       "ok": "Automatico · ultimo: {when}",
       "never": "Automatico · nessun backup ancora",
       "running": "Backup in corso…",
       "waiting": "In attesa della rete",
       "auth": "Da ricollegare",
-      "quota": "Spazio su Drive esaurito",
-      "unavailable": "Drive non risponde: riprovo più tardi",
+      "quota": "Spazio su {service} esaurito",
+      "unavailable": "{service} non risponde: riprovo più tardi",
       "choice": "Scegli quali dati tenere"
     },
+    "where": {
+      "google": "I backup vanno nella cartella «Soldo» del tuo Drive, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi.",
+      "dropbox": "I backup vanno nella cartella «Applicazioni/Soldo» del tuo Dropbox, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi.",
+      "onedrive": "I backup vanno nella cartella «App/Soldo» del tuo OneDrive, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi."
+    },
     "sheet": {
-      "accountUnknown": "Account Google",
-      "where": "I backup vanno nella cartella «Soldo» del tuo Drive, un file al giorno. Soldo tiene gli ultimi 14 giorni e un backup per ognuno degli ultimi 12 mesi.",
-      "authText": "Il permesso su Google Drive è scaduto o è stato ritirato. Ricollega l'account per riprendere i backup.",
-      "quotaText": "Il tuo Google Drive è pieno: libera spazio e il backup riprende da solo.",
-      "choiceText": "Su questo Google Drive ci sono già backup di Soldo. Ripristinane uno, oppure tieni i dati di questo telefono: i prossimi backup partiranno da questi.",
+      "accountUnknown": "Account {service}",
+      "authText": "Il permesso su {service} è scaduto o è stato ritirato. Ricollega l'account per riprendere i backup.",
+      "quotaText": "Il tuo {service} è pieno: libera spazio e il backup riprende da solo.",
+      "choiceText": "Su questo {service} ci sono già backup di Soldo. Ripristinane uno, oppure tieni i dati di questo telefono: i prossimi backup partiranno da questi.",
       "backupNow": "Esegui backup ora",
-      "restore": "Ripristina da Drive",
+      "restore": "Ripristina da {service}",
       "keepDevice": "Tieni i dati di questo telefono",
-      "reconnect": "Ricollega Google Drive",
-      "disconnect": "Scollega Google Drive"
+      "reconnect": "Ricollega {service}",
+      "disconnect": "Scollega {service}"
     },
     "toast": {
-      "connected": "Google Drive collegato: il backup parte da solo.",
-      "denied": "Collegamento a Google Drive annullato.",
-      "scope": "Per il backup serve il permesso su Google Drive: riprova e lascialo spuntato.",
-      "error": "Non è stato possibile collegare Google Drive. Riprova.",
-      "unavailable": "Il backup su Google Drive non è disponibile su questo sito.",
-      "done": "Backup su Google Drive fatto.",
-      "unchanged": "Il backup su Google Drive è già aggiornato.",
+      "connected": "{service} collegato: il backup parte da solo.",
+      "denied": "Collegamento a {service} annullato.",
+      "scope": "Per il backup serve il permesso su {service}: riprova e lascialo spuntato.",
+      "error": "Non è stato possibile collegare {service}. Riprova.",
+      "unavailable": "Il backup su {service} non è disponibile su questo sito.",
+      "done": "Backup su {service} fatto.",
+      "unchanged": "Il backup su {service} è già aggiornato.",
       "offline": "Senza rete: il backup parte quando torna.",
-      "failed": "Google Drive non risponde. Riprovo più tardi.",
-      "quota": "Il tuo Google Drive è pieno: il backup non è partito.",
-      "disconnected": "Google Drive scollegato. I backup restano sul tuo Drive."
+      "failed": "{service} non risponde. Riprovo più tardi.",
+      "quota": "Il tuo {service} è pieno: il backup non è partito.",
+      "disconnected": "{service} scollegato. I backup restano lì."
     },
     "restore": {
-      "title": "Backup su Google Drive",
+      "title": "Backup su {service}",
       "loading": "Cerco i backup…",
-      "empty": "Su questo Google Drive non ci sono backup di Soldo.",
-      "error": "Non è stato possibile leggere i backup da Google Drive.",
+      "empty": "Su questo {service} non ci sono backup di Soldo.",
+      "error": "Non è stato possibile leggere i backup da {service}.",
       "retry": "Riprova",
       "transactions": "nessun movimento | {n} movimento | {n} movimenti",
+      "encrypted": "cifrato",
       "downloading": "Scarico il backup…",
       "downloadError": "Non è stato possibile scaricare il backup. Riprova."
     }
@@ -636,6 +725,11 @@
     "subtract": "Meno",
     "multiply": "Per",
     "divide": "Diviso"
+  },
+  "pinPad": {
+    "label": "Tastierino del PIN",
+    "delete": "Cancella",
+    "typed": "nessuna cifra su {total} | {n} cifra su {total} | {n} cifre su {total}"
   },
   "toast": {
     "saved": "Salvato: {amount} · {category}",

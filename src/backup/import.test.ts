@@ -11,9 +11,11 @@ import { createRecurrence, getRecurrence } from '@/db/repositories/recurrences'
 import { addTransaction, deleteTransaction, listTransactions } from '@/db/repositories/transactions'
 import { SCHEMA_VERSION } from '@/db/schema'
 import { seedDefaults } from '@/db/seed'
+import { createBackupKey, encryptBytes } from './crypto'
+import { backupEncryption, disableEncryption } from './encryption'
 import { createBackup } from './export'
-import { readBackup, readBackupBytes, restoreBackup } from './import'
-import { gzip, sha256Hex } from './pack'
+import { readBackup, readBackupBytes, restoreBackup, unlockBackup } from './import'
+import { gzip, packBackup, sha256Hex } from './pack'
 
 let tick = 0
 
@@ -305,5 +307,69 @@ describe('backup', () => {
 
     await expect(restoreBackup(clash)).rejects.toThrow()
     expect(await snapshot()).toEqual(before)
+  })
+})
+
+describe('an encrypted backup', () => {
+  afterEach(() => disableEncryption())
+
+  async function encrypted(passphrase = 'correct horse battery') {
+    await addSome()
+    const backup = await createBackup()
+    const bytes = await encryptBytes(await packBackup(backup), await createBackupKey(passphrase, 10))
+    return { backup, bytes }
+  }
+
+  it('waits for the passphrase before reading anything', async () => {
+    const { bytes } = await encrypted()
+    const reading = await readBackup(new File([bytes], 'soldo-backup-2026-11-02.soldo'))
+    expect(reading).toMatchObject({
+      ok: false,
+      error: 'locked',
+      locked: { fileName: 'soldo-backup-2026-11-02.soldo' },
+    })
+  })
+
+  it('does not open with the wrong passphrase, and opens with the right one', async () => {
+    const { backup, bytes } = await encrypted()
+    const reading = await readBackupBytes(bytes, 'soldo-backup-2026-11-02.soldo')
+    if (reading.ok || reading.error !== 'locked')
+      throw new Error('expected a locked backup')
+    expect(await unlockBackup(reading.locked, 'wrong horse battery')).toEqual({ ok: false, error: 'wrongPassphrase' })
+    const opened = await unlockBackup(reading.locked, 'correct horse battery')
+    expect(opened.ok && opened.preview).toMatchObject({ exportedAt: backup.exportedAt, transactions: 2 })
+    expect(opened.ok && opened.key?.iterations).toBe(10)
+  })
+
+  it('still checks the checksum Drive keeps, once open', async () => {
+    const { backup, bytes } = await encrypted()
+    const good = await sha256Hex(JSON.stringify(backup.data))
+    for (const [checksum, ok] of [
+      [good, true],
+      [
+        'a'.repeat(64),
+        false,
+      ],
+    ] as const) {
+      const reading = await readBackupBytes(bytes, 'soldo-backup-2026-11-02.soldo', checksum)
+      if (reading.ok || reading.error !== 'locked')
+        throw new Error('expected a locked backup')
+      expect((await unlockBackup(reading.locked, 'correct horse battery')).ok).toBe(ok)
+    }
+  })
+
+  it('once restored, leaves the device encrypting with the same passphrase', async () => {
+    const { bytes } = await encrypted()
+    const reading = await readBackupBytes(bytes, 'soldo-backup-2026-11-02.soldo')
+    if (reading.ok || reading.error !== 'locked')
+      throw new Error('expected a locked backup')
+    const opened = await unlockBackup(reading.locked, 'correct horse battery')
+    if (!opened.ok)
+      throw new Error('expected an open backup')
+    expect(backupEncryption.value).toBeNull()
+    await Promise.all(db.tables.map(table => table.clear()))
+    await restoreBackup(opened.backup, opened.key)
+    expect(await listTransactions()).toHaveLength(2)
+    expect(backupEncryption.value).not.toBeNull()
   })
 })

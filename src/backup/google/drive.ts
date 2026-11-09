@@ -1,5 +1,5 @@
 import type { BackupProvider, BackupUpload, RemoteBackup } from '../provider'
-import { BackupProviderError } from '../provider'
+import { backupName, BackupProviderError } from '../provider'
 import { BACKUP_FORMAT } from '../version'
 import { accessToken } from './auth'
 
@@ -108,12 +108,11 @@ function toRemote(file: DriveFile): RemoteBackup | undefined {
     transactions: count('transactions'),
     categories: count('categories'),
     accounts: count('accounts'),
+    encrypted: properties.encrypted === '1',
   }
 }
 
-export function backupName(day: string): string {
-  return `soldo-backup-${day}.json.gz`
-}
+export { backupName } from '../provider'
 
 let folderId: string | undefined
 
@@ -170,9 +169,13 @@ export const googleDrive: BackupProvider = {
   },
 
   async upload({ day, bytes, summary, replaceId }: BackupUpload) {
+    const encrypted = summary.encrypted === true
+    const mimeType = encrypted
+      ? 'application/octet-stream'
+      : 'application/gzip'
     const metadata = {
-      name: backupName(day),
-      mimeType: 'application/gzip',
+      name: backupName(day, encrypted),
+      mimeType,
       appProperties: {
         soldo: 'backup',
         format: String(BACKUP_FORMAT),
@@ -182,13 +185,17 @@ export const googleDrive: BackupProvider = {
         categories: String(summary.categories),
         accounts: String(summary.accounts),
         checksum: summary.checksum,
+        // Always written: an update merges the properties, so a plain file must say '0'.
+        encrypted: encrypted
+          ? '1'
+          : '0',
       },
     }
     if (replaceId) {
       // Today's file again: new content, same file. Gone (deleted by the user)? A new one.
       const updated = await call(`${UPLOAD_API}/files/${encodeURIComponent(replaceId)}?${query({ uploadType: 'multipart', fields: FILE_FIELDS })}`, {
         method: 'PATCH',
-        ...multipart(metadata, bytes, 'application/gzip'),
+        ...multipart(metadata, bytes, mimeType),
       }, { missing: true })
       if (updated)
         return toRemote(await updated.json() as DriveFile)!
@@ -199,7 +206,7 @@ export const googleDrive: BackupProvider = {
       ...multipart({
         ...metadata,
         parents: [parent],
-      }, bytes, 'application/gzip'),
+      }, bytes, mimeType),
     })
     return toRemote(created)!
   },

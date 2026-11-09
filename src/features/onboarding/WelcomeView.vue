@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { BackupReading } from '@/backup/import'
+import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
+import type { ServiceId } from '@/backup/services'
 import { useOnline } from '@vueuse/core'
 import { computed, ref, useTemplateRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { markOnboarded } from '@/app/onboarding'
 import { showToast } from '@/app/toast'
-import { connectGoogle, useDriveAvailable } from '@/backup/google/auth'
+import { isServiceId, SERVICE_ICONS, serviceAuths, useAvailableServices } from '@/backup/services'
 import { backupState } from '@/backup/state'
 import AppIcon from '@/components/AppIcon.vue'
 import AppLogo from '@/components/AppLogo.vue'
@@ -20,8 +21,8 @@ import InstallCard from './InstallCard.vue'
 /**
  * First start (docs/specs/released/onboarding.md, mockup "Onboarding"): what Soldo is, how to
  * install it, and the ways in: from scratch (default categories and the cash account), from
- * Google Drive where the site can reach it (docs/specs/backup-google-drive.md), or from a
- * backup file.
+ * the backup services the site can reach (Google Drive, Dropbox, OneDrive:
+ * docs/specs/backup-dropbox-onedrive.md), or from a backup file.
  */
 const { t } = useI18n()
 const route = useRoute()
@@ -30,17 +31,51 @@ const online = useOnline()
 const restore = useTemplateRef<InstanceType<typeof RestoreBackup>>('restore')
 const busy = ref(false)
 
-const driveAvailable = useDriveAvailable()
+const services = useAvailableServices()
 const driveOpen = ref(false)
 let driveBackup: RemoteBackup | undefined
 
-const points = computed(() => [
-  { icon: 'receipt', key: 'twoTaps' },
-  { icon: 'device-mobile', key: 'onDevice' },
-  driveAvailable.value
-    ? { icon: 'google-drive-logo', key: 'backupDrive' }
-    : { icon: 'file-arrow-up', key: 'backupFile' },
-])
+const serviceName = (service: ServiceId) => t(`services.${service}`)
+
+const points = computed(() => {
+  const available = services.value
+  const backup = available.length
+    ? {
+        icon: available.length === 1
+          ? SERVICE_ICONS[available[0]!]
+          : 'cloud-arrow-up',
+        key: 'backupCloud',
+        title: available.length === 1
+          ? t('welcome.points.backupCloud.title', {
+              service: serviceName(available[0]!),
+            })
+          : t('welcome.points.backupCloud.titleMany'),
+        detail: t('welcome.points.backupCloud.detail', {
+          services: available.map(serviceName).join(', ').replace(/, ([^,]*)$/, ` ${t('welcome.or')} $1`),
+        }),
+      }
+    : {
+        icon: 'file-arrow-up',
+        key: 'backupFile',
+        title: t('welcome.points.backupFile.title'),
+        detail: t('welcome.points.backupFile.detail'),
+      }
+  return [
+    {
+      icon: 'receipt',
+      key: 'twoTaps',
+      title: t('welcome.points.twoTaps.title'),
+      detail: t('welcome.points.twoTaps.detail'),
+    },
+    {
+      icon: 'device-mobile',
+      key: 'onDevice',
+      title: t('welcome.points.onDevice.title'),
+      detail: t('welcome.points.onDevice.detail'),
+    },
+    backup,
+  ]
+})
 
 /** `then` runs once the first start is marked, before the Home: it may count as data. */
 async function enter(then?: () => Promise<void>) {
@@ -51,23 +86,27 @@ async function enter(then?: () => Promise<void>) {
   await router.replace({ name: 'home' })
 }
 
-/** Connected already: the list. Otherwise to Google, which comes back here with the list. */
-function restoreFromDrive() {
-  if (backupState.value.connected) {
+/** Connected already: the list. Otherwise to the service, which comes back here with the list. */
+function restoreFromDrive(service: ServiceId) {
+  if (backupState.value.connected && backupState.value.service === service) {
     driveOpen.value = true
   }
   else if (!online.value) {
     showToast({
-      message: t('drive.offline'),
+      message: t('drive.offline', {
+        service: serviceName(service),
+      }),
     })
   }
   else {
-    connectGoogle('/benvenuto?ripristina=drive')
+    serviceAuths[service].connect(`/benvenuto?ripristina=${service}`)
   }
 }
 
-// Back from Google (`?ripristina=drive`): the list opens once the connection is complete.
-if (route.query.ripristina === 'drive') {
+// Back from the service (`?ripristina=dropbox`; `drive` from before, for Google): the list
+// opens once the connection is complete.
+const returning = route.query.ripristina
+if (returning === 'drive' || isServiceId(returning)) {
   void router.replace({ query: {} })
   const stop = watch(() => backupState.value.connected, (connected) => {
     if (!connected)
@@ -77,7 +116,7 @@ if (route.query.ripristina === 'drive') {
   }, { immediate: true })
 }
 
-function confirmDriveBackup(reading: Extract<BackupReading, { ok: true }>, backup: RemoteBackup) {
+function confirmDriveBackup(reading: OpenableReading, backup: RemoteBackup) {
   driveBackup = backup
   restore.value?.show(reading)
 }
@@ -123,10 +162,10 @@ async function start() {
         <AppIcon :name="point.icon" class="welcome__point-icon" />
         <div>
           <p class="welcome__point-title type-body-strong">
-            {{ t(`welcome.points.${point.key}.title`) }}
+            {{ point.title }}
           </p>
           <p class="welcome__point-detail type-small">
-            {{ t(`welcome.points.${point.key}.detail`) }}
+            {{ point.detail }}
           </p>
         </div>
       </li>
@@ -136,8 +175,16 @@ async function start() {
 
     <div class="welcome__actions">
       <VvButton :label="t('welcome.start')" modifiers="primary" class="welcome__button" :disabled="busy" @click="start" />
-      <template v-if="driveAvailable">
-        <VvButton :label="t('welcome.restoreDrive')" modifiers="secondary" class="welcome__button" :disabled="busy" @click="restoreFromDrive" />
+      <template v-if="services.length">
+        <VvButton
+          v-for="service in services"
+          :key="service"
+          :label="t('welcome.restoreCloud', { service: serviceName(service) })"
+          modifiers="secondary"
+          class="welcome__button"
+          :disabled="busy"
+          @click="restoreFromDrive(service)"
+        />
         <button type="button" class="welcome__file type-body" :disabled="busy" @click="restore?.pick()">
           {{ t('welcome.restoreFile') }}
         </button>
@@ -145,7 +192,7 @@ async function start() {
       <VvButton v-else :label="t('welcome.restore')" modifiers="secondary" class="welcome__button" :disabled="busy" @click="restore?.pick()" />
     </div>
     <RestoreBackup ref="restore" @restored="onRestored" />
-    <DriveRestoreSheet v-if="driveAvailable || backupState.connected" v-model:open="driveOpen" @chosen="confirmDriveBackup" />
+    <DriveRestoreSheet v-if="services.length || backupState.connected" v-model:open="driveOpen" @chosen="confirmDriveBackup" />
   </div>
 </template>
 
@@ -214,7 +261,7 @@ async function start() {
   font-size: 1rem;
 }
 
-/* The third way in, quieter: a file is the rarer case once Drive is there. */
+/* The last way in, quieter: a file is the rarer case once a cloud service is there. */
 .welcome__file {
   align-self: center;
   min-height: 2.75rem;

@@ -1,3 +1,4 @@
+import type { ServiceId } from './oauth'
 import type { BackupErrorCode } from './provider'
 import { readonly, ref, shallowRef } from 'vue'
 
@@ -9,9 +10,14 @@ import { readonly, ref, shallowRef } from 'vue'
  */
 
 export interface BackupState {
-  /** Google Drive is connected (the Worker holds the sign-in in a cookie). */
+  /** A service is connected (the Worker holds the sign-in in a cookie). */
   connected: boolean
-  /** Email address of the Google account. */
+  /**
+   * Which one (docs/specs/backup-dropbox-onedrive.md); Google Drive for a state saved
+   * before Dropbox and OneDrive.
+   */
+  service: ServiceId
+  /** Email address of the account. */
   account: string | null
   /** When the last backup reached Drive, ISO 8601. */
   lastBackupAt: string | null
@@ -30,10 +36,11 @@ export interface BackupState {
   choice: boolean
 }
 
-const STORAGE_KEY = 'soldo.backup'
+export const BACKUP_STATE_KEY = 'soldo.backup'
 
 export const DISCONNECTED: BackupState = {
   connected: false,
+  service: 'google',
   account: null,
   lastBackupAt: null,
   lastChecksum: null,
@@ -45,7 +52,7 @@ export const DISCONNECTED: BackupState = {
 
 function load(): BackupState {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(BACKUP_STATE_KEY)
     return stored
       ? {
           ...DISCONNECTED,
@@ -63,7 +70,7 @@ const state = shallowRef<BackupState>(load())
 /** Another tab (the installed app and the browser) changed the state: follow it. */
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (event) => {
-    if (event.key === STORAGE_KEY)
+    if (event.key === BACKUP_STATE_KEY)
       state.value = load()
   })
 }
@@ -76,7 +83,7 @@ export function patchBackupState(patch: Partial<BackupState>): void {
     ...patch,
   }
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.value))
+    localStorage.setItem(BACKUP_STATE_KEY, JSON.stringify(state.value))
   }
   catch {
     // Storage full or blocked: the state lasts for this session.

@@ -8,12 +8,16 @@ defineOptions({ inheritAttrs: false })
  * radius 8, `testo-2` outline, `biro` while active. `error` replaces the hint and marks
  * the field invalid. Other attributes (autocomplete, enterkeyhint, …) go to the input.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   label: string
   hint?: string
   error?: string
   maxlength?: number
-}>()
+  /** `password` hides what is typed (the passphrase of the backups). */
+  type?: 'text' | 'password'
+}>(), {
+  type: 'text',
+})
 
 const model = defineModel<string>({ required: true })
 
@@ -35,7 +39,7 @@ defineExpose({
       ref="input"
       v-model="model"
       v-bind="$attrs"
-      type="text"
+      :type="type"
       class="text-field__input type-body"
       :maxlength="maxlength"
       :aria-invalid="error ? 'true' : undefined"

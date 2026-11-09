@@ -4,16 +4,17 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { showToast } from '@/app/toast'
 import { disconnectDrive, keepDeviceData, runBackup } from '@/backup/auto'
-import { connectGoogle } from '@/backup/google/auth'
+import { SERVICE_ICONS, serviceAuths } from '@/backup/services'
 import { backupRunning } from '@/backup/state'
 import AppIcon from '@/components/AppIcon.vue'
 import BottomSheet from '@/components/BottomSheet.vue'
 import { useDriveStatus } from './useDriveStatus'
 
 /**
- * Google Drive in the Settings (docs/specs/backup-google-drive.md, "Interfaccia"): the
- * account and the state of the backup, then what can be done. What needs the user (the
- * choice after connecting, an expired permission) replaces the usual actions.
+ * The service of the automatic backup in the Settings (docs/specs/backup-google-drive.md,
+ * "Interfaccia"; Dropbox and OneDrive the same): the account and the state of the backup,
+ * then what can be done. What needs the user (the choice after connecting, an expired
+ * permission) replaces the usual actions.
  */
 const emit = defineEmits<{
   restore: []
@@ -22,7 +23,8 @@ const emit = defineEmits<{
 const open = defineModel<boolean>('open', { required: true })
 
 const { t } = useI18n()
-const { state, detail, alert, online } = useDriveStatus()
+const { state, service, detail, alert, online } = useDriveStatus()
+const icon = computed(() => SERVICE_ICONS[state.value.service])
 
 const mode = computed(() => {
   if (state.value.choice)
@@ -33,13 +35,14 @@ const mode = computed(() => {
 })
 
 const explanation = computed(() => {
+  const named = { service: service.value }
   if (mode.value === 'choice')
-    return t('drive.sheet.choiceText')
+    return t('drive.sheet.choiceText', named)
   if (mode.value === 'auth')
-    return t('drive.sheet.authText')
+    return t('drive.sheet.authText', named)
   return state.value.error === 'quota'
-    ? t('drive.sheet.quotaText')
-    : t('drive.sheet.where')
+    ? t('drive.sheet.quotaText', named)
+    : t(`drive.where.${state.value.service}`)
 })
 
 const OUTCOME_MESSAGES: Partial<Record<BackupOutcome, string>> = {
@@ -54,7 +57,7 @@ function report(outcome: BackupOutcome) {
   const key = OUTCOME_MESSAGES[outcome]
   if (key) {
     showToast({
-      message: t(key),
+      message: t(key, { service: service.value }),
     })
   }
 }
@@ -75,29 +78,30 @@ function restore() {
 function reconnect() {
   if (!online.value) {
     showToast({
-      message: t('drive.offline'),
+      message: t('drive.offline', { service: service.value }),
     })
     return
   }
-  connectGoogle('/impostazioni')
+  serviceAuths[state.value.service].connect('/impostazioni')
 }
 
 async function disconnect() {
+  const name = service.value
   open.value = false
   await disconnectDrive()
   showToast({
-    message: t('drive.toast.disconnected'),
+    message: t('drive.toast.disconnected', { service: name }),
   })
 }
 </script>
 
 <template>
-  <BottomSheet v-model="open" :title="t('drive.title')">
+  <BottomSheet v-model="open" :title="service">
     <div class="drive-sheet">
       <p class="drive-sheet__account">
-        <AppIcon name="google-drive-logo" class="drive-sheet__icon" />
+        <AppIcon :name="icon" class="drive-sheet__icon" />
         <span class="drive-sheet__lines">
-          <span class="drive-sheet__email type-body">{{ state.account ?? t('drive.sheet.accountUnknown') }}</span>
+          <span class="drive-sheet__email type-body">{{ state.account ?? t('drive.sheet.accountUnknown', { service }) }}</span>
           <span class="drive-sheet__status type-small" :class="{ 'drive-sheet__status--alert': alert }">{{ detail }}</span>
         </span>
       </p>
@@ -108,11 +112,11 @@ async function disconnect() {
     <template #footer>
       <div class="drive-sheet__actions">
         <template v-if="mode === 'choice'">
-          <VvButton :label="t('drive.sheet.restore')" modifiers="primary" class="drive-sheet__button" @click="restore" />
+          <VvButton :label="t('drive.sheet.restore', { service })" modifiers="primary" class="drive-sheet__button" @click="restore" />
           <VvButton :label="t('drive.sheet.keepDevice')" modifiers="secondary" class="drive-sheet__button" @click="keepDevice" />
         </template>
         <template v-else-if="mode === 'auth'">
-          <VvButton :label="t('drive.sheet.reconnect')" modifiers="primary" class="drive-sheet__button" @click="reconnect" />
+          <VvButton :label="t('drive.sheet.reconnect', { service })" modifiers="primary" class="drive-sheet__button" @click="reconnect" />
         </template>
         <template v-else>
           <VvButton
@@ -122,10 +126,10 @@ async function disconnect() {
             :loading="backupRunning"
             @click="backUpNow"
           />
-          <VvButton :label="t('drive.sheet.restore')" modifiers="secondary" class="drive-sheet__button" @click="restore" />
+          <VvButton :label="t('drive.sheet.restore', { service })" modifiers="secondary" class="drive-sheet__button" @click="restore" />
         </template>
         <button type="button" class="drive-sheet__disconnect type-body" @click="disconnect">
-          {{ t('drive.sheet.disconnect') }}
+          {{ t('drive.sheet.disconnect', { service }) }}
         </button>
       </div>
     </template>

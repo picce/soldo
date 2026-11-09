@@ -121,18 +121,44 @@ export async function hasTransactions(): Promise<boolean> {
   return !!(await db.transactions.filter(transaction => transaction.deletedAt === null).first())
 }
 
+function matcher({ kinds, categoryIds, accountId }: TransactionQuery) {
+  return (transaction: Transaction) =>
+    transaction.deletedAt === null
+    && (!kinds || kinds.includes(transaction.kind))
+    && (!categoryIds || (transaction.categoryId !== null && categoryIds.includes(transaction.categoryId)))
+    && (!accountId || transaction.accountId === accountId || transaction.toAccountId === accountId)
+}
+
+function newestFirst(a: Transaction, b: Transaction): number {
+  return b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt)
+}
+
 export async function listTransactions(query: TransactionQuery = {}): Promise<Transaction[]> {
-  const { from, to, kinds, categoryIds, accountId } = query
+  const { from, to } = query
   const collection = from || to
     ? db.transactions.where('date').between(from ?? '0000-01-01', to ?? '9999-12-31', true, true)
     : db.transactions.toCollection()
-  const rows = await collection
-    .filter(transaction =>
-      transaction.deletedAt === null
-      && (!kinds || kinds.includes(transaction.kind))
-      && (!categoryIds || (transaction.categoryId !== null && categoryIds.includes(transaction.categoryId)))
-      && (!accountId || transaction.accountId === accountId || transaction.toAccountId === accountId),
-    )
+  const rows = await collection.filter(matcher(query)).toArray()
+  return rows.sort(newestFirst)
+}
+
+/**
+ * The newest transactions of `listTransactions`, about `limit` of them, in whole days: read
+ * from the date index from today backwards, they stop early instead of reading the whole
+ * history. For the first screen of a long history, while the rest loads.
+ */
+export async function listRecentTransactions(query: TransactionQuery, limit: number): Promise<Transaction[]> {
+  const { from, to } = query
+  const rows = await db.transactions
+    .where('date')
+    .between(from ?? '0000-01-01', to ?? '9999-12-31', true, true)
+    .reverse()
+    .filter(matcher(query))
+    .limit(limit + 1)
     .toArray()
-  return rows.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt))
+  if (rows.length <= limit)
+    return rows.sort(newestFirst)
+  // The oldest day read may be cut: left out, so no day shows only some of its rows.
+  const cut = rows.at(-1)!.date
+  return rows.filter(row => row.date !== cut).sort(newestFirst)
 }

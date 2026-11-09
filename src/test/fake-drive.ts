@@ -10,6 +10,8 @@ export interface FakeRequest {
   url: string
   contentType?: string
   authorization?: string
+  /** Other headers, lowercase (Dropbox puts its arguments in one). */
+  headers?: Record<string, string>
   body?: Uint8Array
 }
 
@@ -155,7 +157,11 @@ export function createFakeDrive() {
       }
       const { metadata, bytes } = parseMultipart(request.contentType ?? '', request.body ?? new Uint8Array())
       file.name = String(metadata.name ?? file.name)
-      file.appProperties = (metadata.appProperties ?? file.appProperties) as Record<string, string>
+      // As Drive does: the properties sent are merged into those of the file.
+      file.appProperties = {
+        ...file.appProperties,
+        ...metadata.appProperties as Record<string, string> | undefined,
+      }
       file.bytes = bytes
       return json(resource(file))
     }
