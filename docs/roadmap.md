@@ -20,6 +20,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | Spec | Ondata | Effort | Dipendenze | Stato |
 |---|---|---|---|---|
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
+| [Backup cifrati](specs/backup-cifrati.md) | Fase 5 | da definire | Nessuna | Bozza |
 
 ## Contesto
 
