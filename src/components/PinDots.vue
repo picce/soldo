@@ -23,7 +23,7 @@ const { t } = useI18n()
     class="pin-dots"
     :class="{ 'pin-dots--shake': shake }"
     role="img"
-    :aria-label="t('pinPad.typed', { n: filled, total })"
+    :aria-label="t('pinPad.typed', { n: filled, total }, filled)"
     @animationend="emit('shaken')"
   >
     <span

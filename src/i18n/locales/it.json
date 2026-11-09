@@ -729,7 +729,7 @@
   "pinPad": {
     "label": "Tastierino del PIN",
     "delete": "Cancella",
-    "typed": "{n} cifre su {total}"
+    "typed": "nessuna cifra su {total} | {n} cifra su {total} | {n} cifre su {total}"
   },
   "toast": {
     "saved": "Salvato: {amount} · {category}",

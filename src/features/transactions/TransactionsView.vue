@@ -17,7 +17,7 @@ import { accountName, categoryName, paymentMethodName, transferRoute } from '@/d
 import { listAccounts } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
 import { listPaymentMethods } from '@/db/repositories/payment-methods'
-import { deleteTransaction, duplicateTransaction, listTransactions } from '@/db/repositories/transactions'
+import { deleteTransaction, duplicateTransaction, listRecentTransactions, listTransactions } from '@/db/repositories/transactions'
 import { useLiveQuery } from '@/db/useLiveQuery'
 import { formatDate, today } from '@/domain/dates'
 import { groupByDay } from '@/domain/days'
@@ -44,8 +44,12 @@ const intlLocale = useIntlLocale()
 const filters = useTransactionFilters()
 const { accountId } = storeToRefs(useAccountFilterStore())
 
-/** Days drawn at first; scrolling to the end adds as many again. */
-const DAYS_PER_PAGE = 30
+/**
+ * Rows drawn at first; scrolling to the end adds as many again. Counted in rows, not days:
+ * a busy history (dozens of transactions a day) would otherwise draw a thousand rows at
+ * once, and drawing them is what takes time. Whole days only: a day is never cut in two.
+ */
+const ROWS_PER_PAGE = 80
 
 // The field updates the URL a moment after typing stops; the URL drives the list.
 const searchText = ref(filters.search.value)
@@ -55,17 +59,36 @@ watch(filters.search, (value) => {
     searchText.value = value
 })
 
-const { data: transactions } = useLiveQuery(
-  () => listTransactions({
+function transactionQuery() {
+  return {
     from: filters.range.value?.from,
     to: filters.range.value?.to,
     kinds: filters.kind.value
       ? [filters.kind.value]
       : undefined,
     accountId: accountId.value ?? undefined,
-  }),
+  }
+}
+
+const { data: allTransactions } = useLiveQuery(
+  () => listTransactions(transactionQuery()),
   [filters.range, filters.kind, accountId],
 )
+// A long history takes a while to read: the newest days show at once, the rest follows.
+const { data: recentTransactions } = useLiveQuery(
+  () => listRecentTransactions(transactionQuery(), ROWS_PER_PAGE),
+  [filters.range, filters.kind, accountId],
+)
+// A search or a filter on the categories needs all of them: the newest alone would say
+// «nothing found» for a moment.
+const transactions = computed(() => {
+  if (allTransactions.value)
+    return allTransactions.value
+  const narrowed = filters.search.value || filters.categoryIds.value.length || filters.paymentIds.value.length
+  return narrowed
+    ? undefined
+    : recentTransactions.value
+})
 const { data: categories } = useLiveQuery(() => listCategories({ includeArchived: true }))
 // Archived too: their transactions keep showing the name.
 const { data: accounts } = useLiveQuery(() => listAccounts({ includeArchived: true }))
@@ -134,8 +157,18 @@ const visible = computed(() => {
 })
 
 const days = computed(() => groupByDay(visible.value))
-const dayLimit = ref(DAYS_PER_PAGE)
-const shownDays = computed(() => days.value.slice(0, dayLimit.value))
+const rowLimit = ref(ROWS_PER_PAGE)
+const shownDays = computed(() => {
+  let rows = 0
+  let count = 0
+  for (const day of days.value) {
+    if (count > 0 && rows >= rowLimit.value)
+      break
+    rows += day.transactions.length
+    count++
+  }
+  return days.value.slice(0, count)
+})
 
 watch([
   filters.search,
@@ -145,16 +178,16 @@ watch([
   filters.range,
   accountId,
 ], () => {
-  dayLimit.value = DAYS_PER_PAGE
+  rowLimit.value = ROWS_PER_PAGE
 })
 
-// The days added by scrolling just appear: opening thirty of them would be wasted work.
+// The days added by scrolling just appear: opening a page of them would be wasted work.
 let growing = false
 const sentinel = useTemplateRef<HTMLElement>('sentinel')
 useIntersectionObserver(sentinel, async ([entry]) => {
-  if (entry?.isIntersecting && dayLimit.value < days.value.length) {
+  if (entry?.isIntersecting && shownDays.value.length < days.value.length) {
     growing = true
-    dayLimit.value += DAYS_PER_PAGE
+    rowLimit.value += ROWS_PER_PAGE
     await nextTick()
     growing = false
   }

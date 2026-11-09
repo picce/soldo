@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useId } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useId, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PIN_LENGTH, unlock, waitUntil } from '@/app/lock'
 import AppLogo from '@/components/AppLogo.vue'
@@ -23,14 +23,6 @@ const waitingUntil = ref(waitUntil())
 /** «Hai dimenticato il PIN?»: the explanation, then the second confirmation. */
 const forgot = ref<'no' | 'explain' | 'confirm'>('no')
 const erasing = ref(false)
-
-let timer: ReturnType<typeof setInterval> | undefined
-onMounted(() => {
-  timer = setInterval(() => {
-    now.value = Date.now()
-  }, 1000)
-})
-onBeforeUnmount(() => clearInterval(timer))
 
 const secondsLeft = computed(() => Math.max(0, Math.ceil((waitingUntil.value - now.value) / 1000)))
 const waiting = computed(() => secondsLeft.value > 0)
@@ -94,10 +86,39 @@ async function erase() {
   const { eraseDeviceData } = await import('@/app/reset')
   await eraseDeviceData()
 }
+const screen = useTemplateRef<HTMLElement>('screen')
+
+/** A keyboard types the PIN too: digits, and Backspace to delete. */
+function onKeydown(event: KeyboardEvent) {
+  if (forgot.value !== 'no' || waiting.value || event.metaKey || event.ctrlKey || event.altKey)
+    return
+  if (/^\d$/.test(event.key)) {
+    event.preventDefault()
+    onDigit(event.key)
+  }
+  else if (event.key === 'Backspace') {
+    event.preventDefault()
+    onDelete()
+  }
+}
+
+let timer: ReturnType<typeof setInterval> | undefined
+onMounted(() => {
+  timer = setInterval(() => {
+    now.value = Date.now()
+  }, 1000)
+  window.addEventListener('keydown', onKeydown)
+  // The focus moves into the screen: what had it is behind, inert.
+  screen.value?.focus()
+})
+onBeforeUnmount(() => {
+  clearInterval(timer)
+  window.removeEventListener('keydown', onKeydown)
+})
 </script>
 
 <template>
-  <div class="lock-screen" role="dialog" aria-modal="true" :aria-labelledby="titleId">
+  <div ref="screen" class="lock-screen" role="dialog" aria-modal="true" :aria-labelledby="titleId" tabindex="-1">
     <div class="lock-screen__top">
       <p class="lock-screen__logo">
         <AppLogo />
@@ -134,6 +155,10 @@ async function erase() {
 
 <style scoped>
 /* Over everything, notices and navigation included; the app behind is inert (App.vue). */
+.lock-screen:focus {
+  outline: none;
+}
+
 .lock-screen {
   position: fixed;
   inset: 0;

@@ -729,7 +729,7 @@
   "pinPad": {
     "label": "PIN keypad",
     "delete": "Delete",
-    "typed": "{n} of {total} digits"
+    "typed": "no digits of {total} | {n} digit of {total} | {n} digits of {total}"
   },
   "toast": {
     "saved": "Saved: {amount} · {category}",

@@ -40,7 +40,8 @@ test('asks the PIN when the app opens, and opens only with the right one', async
 
   await typePin(lockScreen(page), '1357')
   await expect(lockScreen(page)).toContainText('PIN sbagliato.')
-  await typePin(lockScreen(page), '2468')
+  // A keyboard types it too.
+  await page.keyboard.type('2468')
   await expect(lockScreen(page)).toHaveCount(0)
   await expect(page.getByRole('heading', { name: 'Impostazioni' })).toBeVisible()
 
