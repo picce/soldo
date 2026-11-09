@@ -1,5 +1,5 @@
 /**
- * Encryption of the backup files with a passphrase (docs/specs/backup-cifrati.md,
+ * Encryption of the backup files with a passphrase (docs/specs/released/backup-cifrati.md,
  * "Crittografia"): PBKDF2-SHA-256 gives an AES-GCM key, and an encrypted file is a 41-byte
  * header followed by the ciphertext. Web Crypto only.
  */

@@ -2,7 +2,7 @@
 import { useI18n } from 'vue-i18n'
 
 /**
- * How many digits of the PIN are typed (docs/specs/blocco-pin.md): empty and full dots.
+ * How many digits of the PIN are typed (docs/specs/released/blocco-pin.md): empty and full dots.
  * `shake` makes them tremble once, after a wrong PIN; still with «Riduci movimento».
  */
 defineProps<{

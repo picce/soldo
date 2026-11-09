@@ -1,9 +1,9 @@
 # Blocco con PIN
 
-> **Stato**: Parziale (implementata e provata con i test; manca la prova a mano sul telefono installato)
+> **Stato**: Rilasciata (versione 0.9.0, 2026-11-09)
 > **Data**: 2026-11-09
 > **Ambito**: Terza parte della Fase 5. Un PIN di 4 cifre, facoltativo, nasconde Soldo all'apertura e quando si torna all'app dopo un po'. È un blocco dell'interfaccia, non una cifratura.
-> **Spec collegate**: sta nella sezione Sicurezza delle Impostazioni, con [`backup-cifrati.md`](./backup-cifrati.md); «Cancella i dati» riporta all'onboarding di [`released/onboarding.md`](./released/onboarding.md).
+> **Spec collegate**: sta nella sezione Sicurezza delle Impostazioni, con [`backup-cifrati.md`](./backup-cifrati.md); «Cancella i dati» riporta all'onboarding di [`released/onboarding.md`](./onboarding.md).
 
 ## Panoramica
 

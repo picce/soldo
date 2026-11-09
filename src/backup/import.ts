@@ -21,7 +21,7 @@ const MAX_FILE_BYTES = 100 * 1024 * 1024
  */
 export type BackupError = 'notSoldo' | 'newerFormat' | 'invalid' | 'wrongPassphrase'
 
-/** An encrypted backup, waiting for the passphrase (docs/specs/backup-cifrati.md). */
+/** An encrypted backup, waiting for the passphrase (docs/specs/released/backup-cifrati.md). */
 export interface LockedBackup {
   bytes: Uint8Array<ArrayBuffer>
   fileName: string

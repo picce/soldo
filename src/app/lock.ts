@@ -1,7 +1,7 @@
 import { computed, readonly, ref, shallowRef } from 'vue'
 
 /**
- * The PIN lock (docs/specs/blocco-pin.md): a screen over the app at start and when it comes
+ * The PIN lock (docs/specs/released/blocco-pin.md): a screen over the app at start and when it comes
  * back after a while. It hides the app, it does not encrypt the data. The PIN is never
  * kept: only its PBKDF2 hash, in localStorage, so it does not travel inside the backups.
  * Light on purpose: main.ts loads it with the first chunk.

@@ -3,7 +3,7 @@
 > **Stato**: Parziale (storico lungo e accessibilità fatti; la passata con la skill `de-slopify` resta da fare, perché la skill non è in questo repository)
 > **Data**: 2026-11-09
 > **Ambito**: Ultima parte della Fase 5: Movimenti veloce anche con uno storico lungo, un controllo di accessibilità delle schermate principali e le correzioni che ne vengono.
-> **Spec collegate**: la lista di [`released/movimenti.md`](./released/movimenti.md); la schermata di [`blocco-pin.md`](./blocco-pin.md).
+> **Spec collegate**: la lista di [`released/movimenti.md`](./released/movimenti.md); la schermata di [`blocco-pin.md`](./released/blocco-pin.md).
 
 ## Panoramica
 

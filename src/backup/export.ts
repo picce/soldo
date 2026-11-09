@@ -57,7 +57,7 @@ export function backupFileName(date = today(), encrypted = false): string {
 /**
  * Builds the backup and hands it to the user (share sheet on a phone, download elsewhere):
  * plain JSON, or an encrypted file when this device encrypts the backups
- * (docs/specs/backup-cifrati.md). Remembers when, for «Ultimo backup», unless the user
+ * (docs/specs/released/backup-cifrati.md). Remembers when, for «Ultimo backup», unless the user
  * closed the share sheet.
  */
 export async function exportBackup(): Promise<'done' | 'cancelled'> {

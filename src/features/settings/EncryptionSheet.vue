@@ -11,7 +11,7 @@ import TextField from '@/components/TextField.vue'
 import { useIntlLocale } from '@/i18n/locale'
 
 /**
- * Encryption of the backups in the Settings (docs/specs/backup-cifrati.md, "Interfaccia"):
+ * Encryption of the backups in the Settings (docs/specs/released/backup-cifrati.md, "Interfaccia"):
  * off, a passphrase typed twice turns it on; on, it can be changed or turned off.
  */
 const open = defineModel<boolean>('open', { required: true })

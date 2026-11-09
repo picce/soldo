@@ -7,7 +7,7 @@ import PinDots from '@/components/PinDots.vue'
 import PinPad from '@/components/PinPad.vue'
 
 /**
- * The lock screen (docs/specs/blocco-pin.md, "Schermata di blocco"): over everything until
+ * The lock screen (docs/specs/released/blocco-pin.md, "Schermata di blocco"): over everything until
  * the right PIN. The fourth digit checks it; a wrong one shakes the dots. «Hai dimenticato il
  * PIN?» can only erase the data of this device, after asking twice.
  */

@@ -27,7 +27,7 @@ listenForInstall()
 // Safari on iPhone shows the pressed state (:active) only on pages that listen to touches.
 document.addEventListener('touchstart', () => {}, { passive: true })
 
-// The lock screen, if the PIN lock is on, is the first thing shown (docs/specs/blocco-pin.md).
+// The lock screen, if the PIN lock is on, is the first thing shown (docs/specs/released/blocco-pin.md).
 startLock()
 
 // Before the router reads the address: it may carry the return from Google's sign-in

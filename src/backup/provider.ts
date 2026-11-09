@@ -12,7 +12,7 @@ export interface BackupSummary {
   accounts: number
   /** SHA-256 of the data, hex: the same data gives the same checksum. */
   checksum: string
-  /** The file is encrypted with a passphrase (docs/specs/backup-cifrati.md). */
+  /** The file is encrypted with a passphrase (docs/specs/released/backup-cifrati.md). */
   encrypted?: boolean
 }
 
@@ -62,7 +62,7 @@ export function errorCode(error: unknown): BackupErrorCode {
     : 'unavailable'
 }
 
-/** One file per day: compressed JSON, or encrypted (docs/specs/backup-cifrati.md). */
+/** One file per day: compressed JSON, or encrypted (docs/specs/released/backup-cifrati.md). */
 export function backupName(day: string, encrypted = false): string {
   return encrypted
     ? `soldo-backup-${day}.soldo`

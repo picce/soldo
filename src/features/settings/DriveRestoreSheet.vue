@@ -14,7 +14,7 @@ import { useIntlLocale } from '@/i18n/locale'
 /**
  * The backups on the service connected, newest first (docs/specs/backup-google-drive.md): a tap
  * downloads one and hands it over for the confirmation of RestoreBackup, which first asks
- * the passphrase of an encrypted one (docs/specs/backup-cifrati.md).
+ * the passphrase of an encrypted one (docs/specs/released/backup-cifrati.md).
  */
 const emit = defineEmits<{
   chosen: [reading: OpenableReading, backup: RemoteBackup]

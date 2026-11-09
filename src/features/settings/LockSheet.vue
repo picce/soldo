@@ -10,7 +10,7 @@ import PinPad from '@/components/PinPad.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 
 /**
- * The PIN lock in the Settings (docs/specs/blocco-pin.md, "Impostazioni"): off, a PIN typed
+ * The PIN lock in the Settings (docs/specs/released/blocco-pin.md, "Impostazioni"): off, a PIN typed
  * twice turns it on; on, when it locks, a new PIN, or off.
  */
 const open = defineModel<boolean>('open', { required: true })

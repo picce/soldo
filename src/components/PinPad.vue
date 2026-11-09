@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/AppIcon.vue'
 
 /**
- * Keys of the PIN (docs/specs/blocco-pin.md, "Tastierino"): 1–9, 0 and delete, on the same
+ * Keys of the PIN (docs/specs/released/blocco-pin.md, "Tastierino"): 1–9, 0 and delete, on the same
  * sheet of thin lines as the calculator keypad. It only emits what was pressed.
  */
 const props = defineProps<{

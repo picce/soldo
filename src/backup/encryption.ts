@@ -5,7 +5,7 @@ import { createBackupKey } from './crypto'
 import { patchBackupState } from './state'
 
 /**
- * The encryption of the backups on this device (docs/specs/backup-cifrati.md, "Chiave sul
+ * The encryption of the backups on this device (docs/specs/released/backup-cifrati.md, "Chiave sul
  * telefono"). The key derived from the passphrase lives in localStorage, never the
  * passphrase: the automatic backup encrypts without asking. Not in the database, so it does
  * not travel inside the backups. Keeping it in clear on the device takes nothing away: the

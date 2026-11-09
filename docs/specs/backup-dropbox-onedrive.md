@@ -3,7 +3,7 @@
 > **Stato**: Parziale (implementata e provata con Dropbox e OneDrive finti; manca la prova con account veri, dopo la configurazione di `docs/dropbox-onedrive.md`)
 > **Data**: 2026-11-09
 > **Ambito**: Quarta parte della Fase 5. Il backup automatico, oggi solo su Google Drive, può andare anche su Dropbox o su OneDrive. Si usa un servizio alla volta; ognuno compare solo dove il Worker ha le sue credenziali.
-> **Spec collegate**: estende [`backup-google-drive.md`](./backup-google-drive.md) (motore, conservazione, ripristino, interfaccia); i file possono essere cifrati come in [`backup-cifrati.md`](./backup-cifrati.md).
+> **Spec collegate**: estende [`backup-google-drive.md`](./backup-google-drive.md) (motore, conservazione, ripristino, interfaccia); i file possono essere cifrati come in [`backup-cifrati.md`](./released/backup-cifrati.md).
 
 ## Panoramica
 

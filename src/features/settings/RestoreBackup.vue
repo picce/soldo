@@ -14,7 +14,7 @@ type ValidReading = Extract<BackupReading, { ok: true }>
  * opens the file chooser; a valid file shows what it holds and asks for confirmation,
  * because the data on the device is replaced. `show(reading)` asks the same for a backup
  * read elsewhere (Google Drive). An encrypted backup first asks its passphrase, in the same
- * window (docs/specs/backup-cifrati.md). Used by Settings and by the onboarding.
+ * window (docs/specs/released/backup-cifrati.md). Used by Settings and by the onboarding.
  */
 const emit = defineEmits<{
   restored: []

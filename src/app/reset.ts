@@ -4,7 +4,7 @@ import { db } from '@/db/database'
 import { ATTEMPTS_KEY, LOCK_KEY } from './lock'
 
 /**
- * Erases everything Soldo keeps on this device (docs/specs/blocco-pin.md, "Cancellare i
+ * Erases everything Soldo keeps on this device (docs/specs/released/blocco-pin.md, "Cancellare i
  * dati"): the database, the state of the automatic backup, the encryption key and the lock.
  * The language stays. Then the app starts again from the welcome, where a backup restores.
  */

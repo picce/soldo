@@ -83,7 +83,7 @@ export function packBackup(backup: BackupFile): Promise<Uint8Array<ArrayBuffer>>
 
 /**
  * The file as it leaves the device: compressed and, when this device encrypts the backups
- * (docs/specs/backup-cifrati.md), encrypted.
+ * (docs/specs/released/backup-cifrati.md), encrypted.
  */
 export async function sealBackup(backup: BackupFile): Promise<{ bytes: Uint8Array<ArrayBuffer>, encrypted: boolean }> {
   const packed = await packBackup(backup)

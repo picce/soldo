@@ -151,7 +151,7 @@ async function onRestored() {
     await markRestoredFromDrive(backup)
 }
 
-// Encryption of the backups (docs/specs/backup-cifrati.md): «Attiva dal 9 novembre».
+// Encryption of the backups (docs/specs/released/backup-cifrati.md): «Attiva dal 9 novembre».
 const encryptionOpen = ref(false)
 const encryptionDetail = computed(() => {
   const since = backupEncryption.value?.since
@@ -162,7 +162,7 @@ const encryptionDetail = computed(() => {
     : t('settings.security.off')
 })
 
-// PIN lock (docs/specs/blocco-pin.md): «Attivo · dopo 1 minuto».
+// PIN lock (docs/specs/released/blocco-pin.md): «Attivo · dopo 1 minuto».
 const lockOpen = ref(false)
 const lockDetail = computed(() => appLock.value
   ? t('settings.security.lockOn', {
