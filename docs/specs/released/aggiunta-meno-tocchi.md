@@ -1,9 +1,9 @@
 # Aggiunta in meno tocchi
 
-> **Stato**: Parziale (implementata e provata con i test; manca la prova a mano sul telefono, con la tastiera vera)
+> **Stato**: Rilasciata (versione 0.10.0, 2026-11-11)
 > **Data**: 2026-11-11
 > **Ambito**: Segnare una spesa richiede meno passaggi: «Uscita» si tocca da ogni scheda, Soldo può aprirsi già sul tastierino, e la nota si scrive nella schermata stessa, con le note più usate a un tocco.
-> **Spec collegate**: cambia la schermata di [`released/aggiunta-rapida.md`](./released/aggiunta-rapida.md); il pulsante compare nelle pagine di [`released/movimenti.md`](./released/movimenti.md), [`released/budget-mensili.md`](./released/budget-mensili.md) e [`released/statistiche.md`](./released/statistiche.md).
+> **Spec collegate**: cambia la schermata di [`released/aggiunta-rapida.md`](./aggiunta-rapida.md); il pulsante compare nelle pagine di [`released/movimenti.md`](./movimenti.md), [`released/budget-mensili.md`](./budget-mensili.md) e [`released/statistiche.md`](./statistiche.md).
 
 ## Panoramica
 

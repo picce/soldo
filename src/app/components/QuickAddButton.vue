@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import AppIcon from '@/components/AppIcon.vue'
 
 /**
- * «− Uscita» on the tabs that are not the Home (docs/specs/aggiunta-meno-tocchi.md): the new
+ * «− Uscita» on the tabs that are not the Home (docs/specs/released/aggiunta-meno-tocchi.md): the new
  * expense is one tap away from Movimenti, Budget and Statistiche too. The sign is the minus
  * of the Home's button: in Soldo the plus is an income. Above the navigation, and above the
  * action bar where a page has one (app.css moves the notices above it).

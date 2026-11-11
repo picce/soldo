@@ -11,6 +11,7 @@
 | 3 — Backup su Google Drive | Pubblicata con la versione 0.4.0 (2026-11-05), da attivare: serve la configurazione di Google ([docs/google-drive.md](google-drive.md)), poi la prova con un Drive vero chiude la [spec](specs/backup-google-drive.md) |
 | 4 — Conti, trasferimenti, budget, ricorrenze | Completata e pubblicata: [conti, pagamenti e trasferimenti](specs/released/conti-pagamenti-trasferimenti.md) con la versione 0.5.0 (2026-11-06), [budget](specs/released/budget-mensili.md) e [ricorrenze](specs/released/ricorrenze.md) con la versione 0.6.0 (2026-11-07). `design/soldo.figcraft` da allineare ai mockup in `docs/design/mockup-fase-4/` |
 | 5 — Statistiche, altri provider, rifiniture | Pubblicata: [statistiche](specs/released/statistiche.md) con la versione 0.8.0 (2026-11-07); [backup cifrati](specs/released/backup-cifrati.md), [blocco con PIN](specs/released/blocco-pin.md), [Dropbox e OneDrive](specs/backup-dropbox-onedrive.md) e [rifiniture](specs/rifiniture-fase-5.md) con la versione 0.9.0 (2026-11-09). Dropbox e OneDrive sono da attivare ([docs/dropbox-onedrive.md](dropbox-onedrive.md)); la passata con `de-slopify` resta da fare |
+| Dopo la Fase 5 | Pubblicata con la versione 0.10.0 (2026-11-11): [aggiunta in meno tocchi](specs/released/aggiunta-meno-tocchi.md), cioè «Uscita» da ogni scheda, apertura sul tastierino e nota nella schermata |
 | 6–7 | Da iniziare |
 
 ## Spec attive
@@ -22,7 +23,6 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
 | [Backup su Dropbox e OneDrive](specs/backup-dropbox-onedrive.md) | Fase 5 | da definire | Backup automatico su Google Drive | Parziale |
 | [Rifiniture della Fase 5](specs/rifiniture-fase-5.md) | Fase 5 | da definire | Nessuna | Parziale |
-| [Aggiunta in meno tocchi](specs/aggiunta-meno-tocchi.md) | Fuori fase | da definire | Nessuna | Parziale |
 
 ## Contesto
 

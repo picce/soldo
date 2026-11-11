@@ -2,7 +2,7 @@ import { normalizeText } from './search'
 
 /**
  * The notes used most often, for the note field of the quick add
- * (docs/specs/aggiunta-meno-tocchi.md): one tap instead of typing «Esselunga» again.
+ * (docs/specs/released/aggiunta-meno-tocchi.md): one tap instead of typing «Esselunga» again.
  */
 
 /**

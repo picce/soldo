@@ -2,7 +2,7 @@ import type { Router } from 'vue-router'
 import { readonly, ref } from 'vue'
 
 /**
- * What Soldo shows when it opens (docs/specs/aggiunta-meno-tocchi.md): the Home, or the new
+ * What Soldo shows when it opens (docs/specs/released/aggiunta-meno-tocchi.md): the Home, or the new
  * expense, so that an expense is the amount and a tap on the category. A preference of the
  * device, in localStorage like the language: it does not travel inside the backups.
  */

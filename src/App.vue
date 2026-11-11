@@ -12,7 +12,7 @@ import { dismissToast } from '@/app/toast'
 
 const route = useRoute()
 const fullscreen = computed(() => route.meta.fullscreen === true)
-/** «− Uscita» floats on the tabs that are not the Home (docs/specs/aggiunta-meno-tocchi.md). */
+/** «− Uscita» floats on the tabs that are not the Home (docs/specs/released/aggiunta-meno-tocchi.md). */
 const quickAdd = computed(() => route.meta.quickAdd === true)
 
 // A notice of the page left behind ("Salvato…") does not follow into a full-screen editor.

@@ -144,7 +144,7 @@ label {
 }
 
 /*
- * On pages with «− Uscita» floating above the navigation (docs/specs/aggiunta-meno-tocchi.md),
+ * On pages with «− Uscita» floating above the navigation (docs/specs/released/aggiunta-meno-tocchi.md),
  * notices sit above the button; where there is an action bar too, the button sits above it.
  */
 .app-shell:has(.quick-add) {

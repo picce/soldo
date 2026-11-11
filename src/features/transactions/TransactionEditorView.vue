@@ -42,7 +42,7 @@ import { useTransactionEditor } from './useTransactionEditor'
  * also says how it is paid, an income on which account, and a transfer between which two
  * (docs/specs/released/conti-pagamenti-trasferimenti.md). The same screen makes and edits a series
  * (docs/specs/released/ricorrenze.md): «Ripeti» in the date sheet, and on a transaction of a series a row
- * that leads to it. The note is written in the screen itself (docs/specs/aggiunta-meno-tocchi.md).
+ * that leads to it. The note is written in the screen itself (docs/specs/released/aggiunta-meno-tocchi.md).
  */
 const props = defineProps<{
   target: EditorTarget
@@ -635,7 +635,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
   flex-shrink: 1;
 }
 
-/* While the note is written its field takes the whole row (docs/specs/aggiunta-meno-tocchi.md). */
+/* While the note is written its field takes the whole row (docs/specs/released/aggiunta-meno-tocchi.md). */
 .editor__chips--note > :not(.editor__note-chip) {
   display: none;
 }

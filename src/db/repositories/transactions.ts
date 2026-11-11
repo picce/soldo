@@ -168,7 +168,7 @@ const NOTES_SAMPLE = 500
 
 /**
  * The notes of the latest transactions of a kind that have one, newest first, read from the
- * date index backwards (docs/specs/aggiunta-meno-tocchi.md).
+ * date index backwards (docs/specs/released/aggiunta-meno-tocchi.md).
  */
 export async function listRecentNotes(kind: Transaction['kind'], limit = NOTES_SAMPLE): Promise<string[]> {
   const rows = await db.transactions

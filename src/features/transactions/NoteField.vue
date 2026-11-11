@@ -8,7 +8,7 @@ import { listRecentNotes } from '@/db/repositories/transactions'
 import { frequentNotes } from '@/domain/notes'
 
 /**
- * Note of a transaction, written in the quick add itself (docs/specs/aggiunta-meno-tocchi.md):
+ * Note of a transaction, written in the quick add itself (docs/specs/released/aggiunta-meno-tocchi.md):
  * at rest the small «Nota» button; tapped, a one-line field in its place, with the notes used
  * most often below, one tap each. Enter or a tap elsewhere keeps what is written.
  *

@@ -279,7 +279,7 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 
 Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocchi possibile: si scrive l'importo, poi si tocca la categoria e il movimento è salvato. Non c'è un pulsante Salva. Chi vuole la trova già aperta all'avvio dell'app (Impostazioni, «All'apertura»).
 
-- **«Uscita» sulle altre schede** (dalla [spec](../specs/aggiunta-meno-tocchi.md), non è nei mockup): in Movimenti, Budget e Statistiche un pulsante a pillola alto 48 px, pieno in `biro` con il testo in `su-biro`, l'icona `minus` e «Uscita», in basso a destra sopra la barra di navigazione (sopra la barra di azioni, dove c'è). Un anello di 3 px in `carta` lo stacca dalle righe su cui passa; niente ombra. Usa il meno e non il più: in Soldo «+» è l'entrata. Gli avvisi salgono sopra il pulsante.
+- **«Uscita» sulle altre schede** (dalla [spec](../specs/released/aggiunta-meno-tocchi.md), non è nei mockup): in Movimenti, Budget e Statistiche un pulsante a pillola alto 48 px, pieno in `biro` con il testo in `su-biro`, l'icona `minus` e «Uscita», in basso a destra sopra la barra di navigazione (sopra la barra di azioni, dove c'è). Un anello di 3 px in `carta` lo stacca dalle righe su cui passa; niente ombra. Usa il meno e non il più: in Soldo «+» è l'entrata. Gli avvisi salgono sopra il pulsante.
 
 - **In alto**: Chiudi a sinistra e il selettore Uscita/Entrata al centro, con il segmento attivo pieno in `biro`.
 - **Importo**: in Mono 40, allineato a destra, con il segno; il simbolo € è in Mono 32 `testo-2`. Sopra c'è il calcolo in corso in Nota (es. «8,90 + 3,50»), sotto una riga in `inchiostro`.

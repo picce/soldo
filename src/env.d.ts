@@ -26,7 +26,7 @@ declare module 'vue-router' {
     depth?: number
     /** Page that opens over the others, from the bottom: quick add and transaction edit. */
     modal?: boolean
-    /** Tab with «− Uscita» floating above the navigation (docs/specs/aggiunta-meno-tocchi.md). */
+    /** Tab with «− Uscita» floating above the navigation (docs/specs/released/aggiunta-meno-tocchi.md). */
     quickAdd?: boolean
   }
 }

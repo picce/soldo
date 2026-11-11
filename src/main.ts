@@ -38,7 +38,7 @@ startBackup()
 // Until the first start is done, every page leads to the welcome (docs/specs/released/onboarding.md).
 const router = createAppRouter()
 requireOnboarding(router)
-// For who asked, the app opens on the new expense (docs/specs/aggiunta-meno-tocchi.md).
+// For who asked, the app opens on the new expense (docs/specs/released/aggiunta-meno-tocchi.md).
 openOnStart(router)
 // Pages slide, rise and fade into each other (docs/specs/released/sensazione-nativa.md).
 animatePageChanges(router)

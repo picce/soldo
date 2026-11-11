@@ -52,7 +52,7 @@ const localeOptions = computed<{ value: LocalePreference, label: string }[]>(() 
   },
 ])
 
-// What the app opens on (docs/specs/aggiunta-meno-tocchi.md).
+// What the app opens on (docs/specs/released/aggiunta-meno-tocchi.md).
 const startOptions = computed<{ value: StartPage, label: string }[]>(() => [
   {
     value: 'home',
