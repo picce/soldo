@@ -712,10 +712,10 @@
     "noEnd": "Nessuna fine",
     "clearEnd": "Togli la fine"
   },
-  "noteSheet": {
-    "title": "Nota",
-    "remove": "Rimuovi nota",
-    "done": "Fatto"
+  "noteField": {
+    "placeholder": "Scrivi una nota",
+    "clear": "Svuota la nota",
+    "frequent": "Note frequenti"
   },
   "keypad": {
     "label": "Tastierino",

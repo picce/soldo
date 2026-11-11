@@ -32,7 +32,7 @@ import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 import { describeEvery, describeShort } from '@/features/recurrences/describe'
 import { useIntlLocale } from '@/i18n/locale'
 import DateSheet from './DateSheet.vue'
-import NoteSheet from './NoteSheet.vue'
+import NoteField from './NoteField.vue'
 import { useTransactionEditor } from './useTransactionEditor'
 
 /**
@@ -41,7 +41,7 @@ import { useTransactionEditor } from './useTransactionEditor'
  * also says how it is paid, an income on which account, and a transfer between which two
  * (docs/specs/released/conti-pagamenti-trasferimenti.md). The same screen makes and edits a series
  * (docs/specs/released/ricorrenze.md): «Ripeti» in the date sheet, and on a transaction of a series a row
- * that leads to it.
+ * that leads to it. The note is written in the screen itself (docs/specs/aggiunta-meno-tocchi.md).
  */
 const props = defineProps<{
   target: EditorTarget
@@ -120,12 +120,13 @@ const repeatMode = computed(() => {
 })
 
 const dateOpen = ref(false)
-const noteOpen = ref(false)
+/** The note is being written in its field: the other buttons of the row make room. */
+const noteEditing = ref(false)
 const paymentOpen = ref(false)
 const accountOpen = ref(false)
 const fromOpen = ref(false)
 const toOpen = ref(false)
-const sheetOpen = computed(() => dateOpen.value || noteOpen.value || paymentOpen.value || accountOpen.value || fromOpen.value || toOpen.value)
+const sheetOpen = computed(() => dateOpen.value || paymentOpen.value || accountOpen.value || fromOpen.value || toOpen.value)
 
 // Next to «Da» and «A», only while a transfer is on screen: the balances read every transaction.
 const isTransfer = computed(() => kind.value === 'transfer')
@@ -297,7 +298,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
         </p>
       </section>
 
-      <div class="editor__chips">
+      <div class="editor__chips" :class="{ 'editor__chips--note': noteEditing }">
         <ActionChip
           :icon="repeat ? 'repeat' : 'calendar-blank'"
           class="editor__date-chip"
@@ -323,13 +324,7 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
           aria-haspopup="dialog"
           @click="accountOpen = true"
         />
-        <ActionChip
-          icon="note-pencil"
-          :label="note || t('editor.note')"
-          :aria-label="note ? t('editor.noteChip', { note }) : undefined"
-          class="editor__note-chip"
-          @click="noteOpen = true"
-        />
+        <NoteField v-model:note="note" v-model:editing="noteEditing" :kind="kind" class="editor__note-chip" />
         <ActionChip
           v-if="kind === 'transfer'"
           icon="arrows-down-up"
@@ -424,7 +419,6 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     </template>
 
     <DateSheet v-model:open="dateOpen" v-model:date="date" v-model:repeat="repeat" :repeat-mode="repeatMode" />
-    <NoteSheet v-model:open="noteOpen" v-model:note="note" />
     <PaymentMethodSheet
       v-model:open="paymentOpen"
       :methods="paymentChoices"
@@ -637,6 +631,11 @@ useEventListener(window, 'keydown', (event: KeyboardEvent) => {
 
 .editor__note-chip {
   flex-shrink: 1;
+}
+
+/* While the note is written its field takes the whole row (docs/specs/aggiunta-meno-tocchi.md). */
+.editor__chips--note > :not(.editor__note-chip) {
+  display: none;
 }
 
 .editor__money-chip {

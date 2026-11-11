@@ -712,10 +712,10 @@
     "noEnd": "No end",
     "clearEnd": "Remove the end"
   },
-  "noteSheet": {
-    "title": "Note",
-    "remove": "Remove note",
-    "done": "Done"
+  "noteField": {
+    "placeholder": "Write a note",
+    "clear": "Clear the note",
+    "frequent": "Frequent notes"
   },
   "keypad": {
     "label": "Keypad",

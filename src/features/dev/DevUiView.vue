@@ -469,7 +469,7 @@ function toast() {
       <RotateNotice preview />
     </section>
 
-    <BottomSheet v-model="sheetOpen" :title="t('noteSheet.title')">
+    <BottomSheet v-model="sheetOpen" :title="t('editor.note')">
       <p class="type-body">
         BottomSheet
       </p>
