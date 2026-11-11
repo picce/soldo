@@ -1,9 +1,10 @@
-import type { Account, Budget, Category, KeyValue, PaymentMethod, Recurrence, Transaction } from '@/db/schema'
+import type { Account, Budget, Category, ImportPreset, ImportRule, KeyValue, PaymentMethod, Recurrence, Transaction } from '@/db/schema'
 import { z } from 'zod'
 import {
   ACCOUNT_PRESETS,
   ACCOUNT_TYPES,
   CATEGORY_KINDS,
+  DATE_FORMATS,
   EXPENSE_PRESETS,
   INCOME_PRESETS,
   PAYMENT_PRESETS,
@@ -115,6 +116,38 @@ const recurrenceSchema: z.ZodType<Recurrence> = z.object({
   lastGeneratedDate: calendarDate.optional(),
 })
 
+const importRuleSchema: z.ZodType<ImportRule> = z.object({
+  ...baseRecord,
+  pattern: z.string().min(1),
+  kind: z.enum(['expense', 'income']),
+  categoryId: z.string(),
+})
+
+const column = z.number().int().nonnegative()
+
+const importPresetSchema: z.ZodType<ImportPreset> = z.object({
+  ...baseRecord,
+  signature: z.string(),
+  mapping: z.object({
+    date: column,
+    description: column,
+    description2: column.optional(),
+    amount: z.discriminatedUnion('kind', [
+      z.object({
+        kind: z.literal('single'),
+        column,
+      }),
+      z.object({
+        kind: z.literal('split'),
+        debit: column,
+        credit: column,
+      }),
+    ]),
+  }),
+  dateFormat: z.enum(DATE_FORMATS),
+  accountId: z.string(),
+})
+
 const keyValueSchema: z.ZodType<KeyValue> = z.object({
   key: z.string(),
   value: z.unknown(),
@@ -127,6 +160,9 @@ export const backupDataSchema = z.object({
   transactions: z.array(transactionSchema),
   budgets: z.array(budgetSchema),
   recurrences: z.array(recurrenceSchema),
+  // Format 4 (docs/specs/import-da-file.md): a file of format 3 has none.
+  importRules: z.array(importRuleSchema).default([]),
+  importPresets: z.array(importPresetSchema).default([]),
   settings: z.array(keyValueSchema),
   meta: z.array(keyValueSchema),
 })

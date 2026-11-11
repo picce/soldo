@@ -93,3 +93,29 @@ describe('upgrade to version 2', () => {
     expect(await upgraded().paymentMethods.count()).toBe(5)
   })
 })
+
+describe('upgrade to version 3', () => {
+  it('adds the empty tables of the import and keeps the data', async () => {
+    const old = new Dexie(NAME)
+    old.version(2).stores({
+      accounts: 'id, order',
+      categories: 'id, kind, order',
+      transactions: 'id, date, [kind+date], categoryId, accountId, updatedAt, externalId',
+      budgets: 'id, month, categoryId',
+      recurrences: 'id',
+      settings: 'key',
+      meta: 'key',
+      paymentMethods: 'id, order',
+    })
+    await old.open()
+    await old.table('accounts').add(account('bank', 0))
+    await old.table('meta').put({ key: 'schemaVersion', value: 2 })
+    old.close()
+
+    const db = upgraded()
+    expect(await db.accounts.count()).toBe(1)
+    expect(await db.importRules.count()).toBe(0)
+    expect(await db.importPresets.where('signature').equals('x').count()).toBe(0)
+    expect((await db.meta.get('schemaVersion'))?.value).toBe(SCHEMA_VERSION)
+  })
+})

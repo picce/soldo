@@ -1,9 +1,10 @@
 /**
  * Records stored in IndexedDB (docs/specs/released/dati-locali.md). Schema v1 holds the tables of
- * the roadmap; v2 adds the payment methods (docs/specs/released/conti-pagamenti-trasferimenti.md).
+ * the roadmap; v2 adds the payment methods (docs/specs/released/conti-pagamenti-trasferimenti.md);
+ * v3 the rules and presets of the import from a bank statement (docs/specs/import-da-file.md).
  */
 
-export const SCHEMA_VERSION = 2
+export const SCHEMA_VERSION = 3
 
 export const DEFAULT_CURRENCY = 'EUR'
 
@@ -167,6 +168,40 @@ export interface Recurrence extends BaseRecord {
   endDate?: string
   /** Date of the last transaction added: the next ones come after it. */
   lastGeneratedDate?: string
+}
+
+/** Longest keyword of an import rule, in characters. */
+export const MAX_RULE_PATTERN = 40
+
+/**
+ * «The description contains `pattern` → `categoryId`», for expenses or income
+ * (docs/specs/import-da-file.md). Case and accents of the keyword do not matter.
+ */
+export interface ImportRule extends BaseRecord {
+  pattern: string
+  kind: 'expense' | 'income'
+  categoryId: string
+}
+
+export const DATE_FORMATS = ['dmy', 'mdy', 'ymd'] as const
+
+/** Which columns of a sheet hold what, by index (src/import/types.ts). */
+export interface ImportColumnMapping {
+  date: number
+  description: number
+  description2?: number
+  amount:
+    | { kind: 'single', column: number }
+    | { kind: 'split', debit: number, credit: number }
+}
+
+/** How the statement of a bank is read, recognized by its column names. */
+export interface ImportPreset extends BaseRecord {
+  /** Column names, normalized and joined (src/import/columns.ts, signatureOf). */
+  signature: string
+  mapping: ImportColumnMapping
+  dateFormat: typeof DATE_FORMATS[number]
+  accountId: string
 }
 
 /** Rows of the `settings` and `meta` tables. */

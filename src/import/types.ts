@@ -1,3 +1,4 @@
+import type { DATE_FORMATS, ImportColumnMapping } from '@/db/schema'
 import type { IsoDate } from '@/domain/dates'
 
 /**
@@ -8,7 +9,7 @@ import type { IsoDate } from '@/domain/dates'
 export type Cell = string | number | null
 
 /** How the dates of a column are written. */
-export type DateFormat = 'dmy' | 'mdy' | 'ymd'
+export type DateFormat = typeof DATE_FORMATS[number]
 
 /** A movement read from the file, before it becomes a transaction. */
 export interface ImportedRow {
@@ -21,13 +22,5 @@ export interface ImportedRow {
   description: string
 }
 
-/** Which columns of a sheet hold what, by index. */
-export interface ColumnMapping {
-  date: number
-  description: number
-  /** A second column joined to the description, such as «Causale» next to «Descrizione». */
-  description2?: number
-  amount:
-    | { kind: 'single', column: number }
-    | { kind: 'split', debit: number, credit: number }
-}
+/** Which columns of a sheet hold what, by index; kept in the presets of the database. */
+export type ColumnMapping = ImportColumnMapping
