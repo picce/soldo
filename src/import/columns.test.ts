@@ -51,7 +51,8 @@ describe('a statement with Dare and Avere, a preamble and a total', () => {
       ['2026-03-07', -120],
       ['2026-03-10', -1299],
     ])
-    expect(rows[2]!.description).toBe('PAGAMENTO POS BAR SPORT CAFFÈ Pagamento POS')
+    expect(rows[2]!.description).toBe('PAGAMENTO POS BAR SPORT CAFFÈ')
+    expect(rows[4]!.description).toBe('ADDEBITO SDD NETFLIX.COM Addebito diretto')
     expect(rows[0]!.line).toBe(5)
   })
 

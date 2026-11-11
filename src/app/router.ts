@@ -152,6 +152,18 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/impostazioni/importa',
+    name: 'import',
+    component: () => import('@/features/import/ImportView.vue'),
+    meta: { titleKey: 'import.title', fullscreen: true, depth: 1 },
+  },
+  {
+    path: '/impostazioni/regole',
+    name: 'import-rules',
+    component: () => import('@/features/import/ImportRulesView.vue'),
+    meta: { titleKey: 'importRules.title', fullscreen: true, depth: 1 },
+  },
+  {
     path: '/nuovo/:kind(uscita|entrata|trasferimento)',
     name: 'transaction-new',
     component: () => import('@/features/transactions/TransactionEditorView.vue'),

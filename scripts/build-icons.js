@@ -96,6 +96,9 @@ const LIGHT = [
   'graduation-cap',
   'baby',
   'briefcase',
+  'file-arrow-down',
+  'tag',
+  'git-merge',
 ]
 
 /** Icons also used in the Regular weight (active navigation item, − and + signs, solid states). */

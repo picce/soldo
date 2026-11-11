@@ -229,10 +229,14 @@ export function rowsOf(table: readonly (readonly Cell[])[], layout: SheetLayout,
     }
     if (!date || !amountCents)
       continue
-    const parts = [mapping.description, mapping.description2]
-      .filter((column): column is number => column !== undefined)
-      .map(column => asText(row[column]).trim())
-      .filter(Boolean)
+    const main = asText(row[mapping.description]).trim()
+    const extra = mapping.description2 === undefined
+      ? ''
+      : asText(row[mapping.description2]).trim()
+    // «Pagamento POS» next to «PAGAMENTO POS ESSELUNGA» says nothing more.
+    const parts = extra && !normalizeText(main).includes(normalizeText(extra))
+      ? [main, extra]
+      : [main || extra]
     rows.push({
       line: index + 1,
       date,

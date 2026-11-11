@@ -17,6 +17,7 @@ import AppPage from '@/components/AppPage.vue'
 import SegmentedControl from '@/components/SegmentedControl.vue'
 import { listAccounts } from '@/db/repositories/accounts'
 import { listCategories } from '@/db/repositories/categories'
+import { listImportRules } from '@/db/repositories/import'
 import { getMeta } from '@/db/repositories/meta'
 import { listPaymentMethods } from '@/db/repositories/payment-methods'
 import { listRecurrences } from '@/db/repositories/recurrences'
@@ -97,6 +98,12 @@ const recurrenceCount = computed(() => {
   const current = today()
   return t('settings.recurrences.count', recurrences.value.filter(recurrence => !isFinished(recurrence, current)).length)
 })
+
+// Rules of the import from the bank (docs/specs/import-da-file.md): «5 regole».
+const { data: importRules } = useLiveQuery(() => listImportRules())
+const ruleCount = computed(() => importRules.value
+  ? t('settings.bank.rulesCount', importRules.value.length)
+  : '')
 
 // Backup: «ultimo: 3 giorni fa» from the last JSON export (or the restored file).
 const intlLocale = useIntlLocale()
@@ -270,6 +277,25 @@ const versionLine = computed(() =>
           :title="t('settings.categories.title')"
           :detail="categoryCount"
           :to="{ name: 'categories' }"
+        />
+      </div>
+    </section>
+    <section class="settings-section" aria-labelledby="settings-bank">
+      <h2 id="settings-bank" class="settings-section__title type-label">
+        {{ t('settings.bank.label') }}
+      </h2>
+      <div class="settings-section__card">
+        <SettingsRow
+          icon="file-arrow-down"
+          :title="t('settings.bank.import')"
+          :detail="t('settings.bank.importDetail')"
+          :to="{ name: 'import' }"
+        />
+        <SettingsRow
+          icon="tag"
+          :title="t('settings.bank.rules')"
+          :detail="ruleCount"
+          :to="{ name: 'import-rules' }"
         />
       </div>
     </section>

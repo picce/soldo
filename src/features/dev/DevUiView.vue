@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Account, Category, CategoryPreset, PaletteColor, PaymentMethod } from '@/db/schema'
+import type { Account, Category, CategoryPreset, PaletteColor, PaymentMethod, Transaction } from '@/db/schema'
 import type { Period } from '@/domain/periods'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -14,6 +14,7 @@ import BottomSheet from '@/components/BottomSheet.vue'
 import BudgetMeter from '@/components/BudgetMeter.vue'
 import CategoryBar from '@/components/CategoryBar.vue'
 import CategoryGrid from '@/components/CategoryGrid.vue'
+import CheckRow from '@/components/CheckRow.vue'
 import ChoiceList from '@/components/ChoiceList.vue'
 import ColorPicker from '@/components/ColorPicker.vue'
 import FilterChip from '@/components/FilterChip.vue'
@@ -34,6 +35,7 @@ import AccountSelector from '@/features/accounts/AccountSelector.vue'
 import AccountSheet from '@/features/accounts/AccountSheet.vue'
 import BudgetFlag from '@/features/budgets/BudgetFlag.vue'
 import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
+import ImportRow from '@/features/import/ImportRow.vue'
 import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 import EncryptionSheet from '@/features/settings/EncryptionSheet.vue'
 import LockSheet from '@/features/settings/LockSheet.vue'
@@ -207,6 +209,39 @@ const encryptionSheetOpen = ref(false)
 const lockSheetOpen = ref(false)
 const typedPin = ref('')
 const devNote = ref('')
+const devChecked = ref(true)
+const devRemember = ref(false)
+const devImportRow = {
+  key: 'imp1:a',
+  row: {
+    line: 1,
+    date: '2026-03-02',
+    amountCents: -4590,
+    description: 'PAGAMENTO POS ESSELUNGA MILANO',
+  },
+  kind: 'expense' as const,
+  categoryId: undefined,
+  manual: false,
+  include: true,
+  merge: false,
+}
+const devImportRows = [
+  devImportRow,
+  {
+    ...devImportRow,
+    key: 'imp1:b',
+    row: { ...devImportRow.row, amountCents: -120, description: 'PAGAMENTO POS BAR SPORT' },
+    duplicateOf: {
+      id: 'x',
+      kind: 'expense',
+      amountCents: 120,
+      date: '2026-03-01',
+      note: 'Caffè',
+    } as Transaction,
+    merge: true,
+  },
+  { ...devImportRow, key: 'imp1:c', include: false },
+]
 
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
@@ -474,6 +509,23 @@ function toast() {
       </div>
 
       <h3 class="dev-ui__name type-note">
+        CheckRow
+      </h3>
+      <div class="dev-ui__card">
+        <CheckRow v-model="devChecked" :label="t('import.row.include')" />
+        <CheckRow v-model="devRemember" :label="t('import.row.remember')" :hint="t('import.row.keywordHint')" />
+      </div>
+
+      <h3 class="dev-ui__name type-note">
+        ImportRow (a row of the import preview: to import, merged, left out)
+      </h3>
+      <ul class="dev-ui__card dev-ui__plain-list">
+        <li v-for="item in devImportRows" :key="item.key">
+          <ImportRow :item="item" :category="item.include && !item.merge ? categories[0] : undefined" />
+        </li>
+      </ul>
+
+      <h3 class="dev-ui__name type-note">
         QuickAddButton (fixed above the navigation: here in a box)
       </h3>
       <div class="dev-ui__quick-add">
@@ -548,6 +600,21 @@ function toast() {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
+}
+
+/* A card as in the pages, for rows that are drawn inside one. */
+.dev-ui__card {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: var(--rounded);
+}
+
+.dev-ui__plain-list > li + li {
+  border-top: 1px solid var(--color-line);
 }
 
 /* Room below for the frequent notes, which open over what follows. */
