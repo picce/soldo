@@ -118,11 +118,13 @@ test('«Uscita» is one tap away on the other tabs, and closing goes back to the
   const add = page.getByRole('link', { name: 'Nuova uscita' })
   // The Home has its two buttons, the Settings none.
   await expect(add).toHaveCount(0)
-  for (const tab of ['Budget', 'Statistiche', 'Movimenti']) {
+  // The button is on each of these pages: wait for the page, not for the button.
+  for (const [tab, path] of [['Budget', /\/budget$/], ['Statistiche', /\/statistiche$/], ['Movimenti', /\/movimenti$/]] as const) {
     await nav.getByRole('link', { name: tab }).click()
+    await expect(page).toHaveURL(path)
     await expect(add).toBeVisible()
+    await pageSettled(page)
   }
-  await pageSettled(page)
   await add.click()
   await expect(page.getByRole('group', { name: 'Tastierino' })).toBeVisible()
   // In the page: the notice «pronta per l'uso offline» has a «Chiudi» too.
