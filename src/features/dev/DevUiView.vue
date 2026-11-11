@@ -3,6 +3,7 @@ import type { Account, Category, CategoryPreset, PaletteColor, PaymentMethod } f
 import type { Period } from '@/domain/periods'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import QuickAddButton from '@/app/components/QuickAddButton.vue'
 import RotateNotice from '@/app/components/RotateNotice.vue'
 import { showToast } from '@/app/toast'
 import ActionChip from '@/components/ActionChip.vue'
@@ -36,6 +37,7 @@ import { CATEGORY_ICONS, iconNameKey } from '@/features/categories/icons'
 import PaymentMethodSheet from '@/features/payments/PaymentMethodSheet.vue'
 import EncryptionSheet from '@/features/settings/EncryptionSheet.vue'
 import LockSheet from '@/features/settings/LockSheet.vue'
+import NoteField from '@/features/transactions/NoteField.vue'
 
 /**
  * Internal page, registered only in development (/dev/ui): every app component, in the
@@ -204,6 +206,7 @@ const paymentSheetOpen = ref(false)
 const encryptionSheetOpen = ref(false)
 const lockSheetOpen = ref(false)
 const typedPin = ref('')
+const devNote = ref('')
 
 const kind = ref<'expense' | 'income'>('expense')
 const lastKey = ref('')
@@ -464,12 +467,26 @@ function toast() {
       </p>
 
       <h3 class="dev-ui__name type-note">
+        NoteField (frequent notes from the database)
+      </h3>
+      <div class="dev-ui__note">
+        <NoteField v-model:note="devNote" kind="expense" />
+      </div>
+
+      <h3 class="dev-ui__name type-note">
+        QuickAddButton (fixed above the navigation: here in a box)
+      </h3>
+      <div class="dev-ui__quick-add">
+        <QuickAddButton />
+      </div>
+
+      <h3 class="dev-ui__name type-note">
         RotateNotice
       </h3>
       <RotateNotice preview />
     </section>
 
-    <BottomSheet v-model="sheetOpen" :title="t('noteSheet.title')">
+    <BottomSheet v-model="sheetOpen" :title="t('editor.note')">
       <p class="type-body">
         BottomSheet
       </p>
@@ -531,5 +548,18 @@ function toast() {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
+}
+
+/* Room below for the frequent notes, which open over what follows. */
+.dev-ui__note {
+  display: flex;
+  min-height: 6rem;
+}
+
+/* The button is fixed to the page: a box with a transform keeps it inside. */
+.dev-ui__quick-add {
+  position: relative;
+  height: 5rem;
+  transform: translate(0);
 }
 </style>

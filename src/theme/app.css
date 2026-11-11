@@ -6,6 +6,8 @@
   --bottom-nav-height: 3.5rem;
   /* Action bar of the Home: a 52 px button with 12 px around it and a 1 px line. */
   --action-bar-height: 4.8125rem;
+  /* «− Uscita» on the tabs other than the Home. */
+  --quick-add-height: 3rem;
   --page-gutter: 1.25rem;
   --grid-step: 20px;
 }
@@ -139,6 +141,21 @@ label {
 /* On pages with the action bar (Home), notices sit above it. */
 .app-shell:has(.action-bar) {
   --toast-bottom: calc(var(--bottom-nav-height) + var(--action-bar-height) + env(safe-area-inset-bottom) + 0.75rem);
+}
+
+/*
+ * On pages with «− Uscita» floating above the navigation (docs/specs/released/aggiunta-meno-tocchi.md),
+ * notices sit above the button; where there is an action bar too, the button sits above it.
+ */
+.app-shell:has(.quick-add) {
+  --toast-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--quick-add-height) + 1.5rem);
+}
+
+.app-shell:has(.action-bar):has(.quick-add) {
+  --quick-add-lift: var(--action-bar-height);
+  --toast-bottom: calc(
+    var(--bottom-nav-height) + var(--action-bar-height) + env(safe-area-inset-bottom) + var(--quick-add-height) + 1.5rem
+  );
 }
 
 /* Text for screen readers only. */

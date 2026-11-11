@@ -2,6 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createMemoryHistory } from 'vue-router'
 import { createAppRouter } from '@/app/router'
+import { reloadStartPage, START_KEY } from '@/app/start'
 import { resetGoogleAuth } from '@/backup/google/auth'
 import { forgetDriveFolder } from '@/backup/google/drive'
 import { patchBackupState, resetBackupState } from '@/backup/state'
@@ -15,8 +16,8 @@ import { testPlugins } from '@/test/plugins'
 import SettingsView from './SettingsView.vue'
 
 // happy-dom has no ARIA reflection, so aria-pressed shows up only as the "pressed" class.
-function pressedLabel(wrapper: ReturnType<typeof mountSettings>) {
-  return wrapper.findAll('button').filter(button => button.classes('pressed')).map(button => button.text())
+function pressedLabel(wrapper: ReturnType<typeof mountSettings>, section = 'settings-language') {
+  return wrapper.get(`[aria-labelledby="${section}"]`).findAll('button').filter(button => button.classes('pressed')).map(button => button.text())
 }
 
 function mountSettings() {
@@ -39,6 +40,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   localStorage.clear()
+  reloadStartPage()
   applyLocale('it')
 })
 
@@ -55,6 +57,16 @@ describe('settingsView', () => {
     const labels = wrapper.get('[aria-labelledby="settings-language"]').findAll('button').map(button => button.text())
     expect(labels).toEqual(['Automatica', 'Italiano', 'English'])
     expect(pressedLabel(wrapper)).toEqual(['Automatica'])
+  })
+
+  it('chooses what the app opens on, and remembers it', async () => {
+    const wrapper = mountSettings()
+    const start = wrapper.get('[aria-labelledby="settings-start"]')
+    expect(start.findAll('button').map(button => button.text())).toEqual(['Home', 'Nuova uscita'])
+    expect(pressedLabel(wrapper, 'settings-start')).toEqual(['Home'])
+    await start.findAll('button')[1]!.trigger('click')
+    expect(pressedLabel(wrapper, 'settings-start')).toEqual(['Nuova uscita'])
+    expect(localStorage.getItem(START_KEY)).toBe('expense')
   })
 
   it('opens the categories, counting those in the quick add', async () => {

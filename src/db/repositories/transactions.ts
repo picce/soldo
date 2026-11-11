@@ -162,3 +162,20 @@ export async function listRecentTransactions(query: TransactionQuery, limit: num
   const cut = rows.at(-1)!.date
   return rows.filter(row => row.date !== cut).sort(newestFirst)
 }
+
+/** Transactions read for the frequent notes: enough to know them, few enough to be quick. */
+const NOTES_SAMPLE = 500
+
+/**
+ * The notes of the latest transactions of a kind that have one, newest first, read from the
+ * date index backwards (docs/specs/released/aggiunta-meno-tocchi.md).
+ */
+export async function listRecentNotes(kind: Transaction['kind'], limit = NOTES_SAMPLE): Promise<string[]> {
+  const rows = await db.transactions
+    .orderBy('date')
+    .reverse()
+    .filter(transaction => transaction.deletedAt === null && transaction.kind === kind && transaction.note !== '')
+    .limit(limit)
+    .toArray()
+  return rows.sort(newestFirst).map(row => row.note)
+}

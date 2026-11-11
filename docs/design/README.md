@@ -277,11 +277,14 @@ Phosphor (licenza MIT), peso **Light**. Il peso Regular si usa per la voce attiv
 
 ### Aggiunta rapida
 
-Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocchi possibile: si scrive l'importo, poi si tocca la categoria e il movimento è salvato. Non c'è un pulsante Salva.
+Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocchi possibile: si scrive l'importo, poi si tocca la categoria e il movimento è salvato. Non c'è un pulsante Salva. Chi vuole la trova già aperta all'avvio dell'app (Impostazioni, «All'apertura»).
+
+- **«Uscita» sulle altre schede** (dalla [spec](../specs/released/aggiunta-meno-tocchi.md), non è nei mockup): in Movimenti, Budget e Statistiche un pulsante a pillola alto 48 px, pieno in `biro` con il testo in `su-biro`, l'icona `minus` e «Uscita», in basso a destra sopra la barra di navigazione (sopra la barra di azioni, dove c'è). Un anello di 3 px in `carta` lo stacca dalle righe su cui passa; niente ombra. Usa il meno e non il più: in Soldo «+» è l'entrata. Gli avvisi salgono sopra il pulsante.
 
 - **In alto**: Chiudi a sinistra e il selettore Uscita/Entrata al centro, con il segmento attivo pieno in `biro`.
 - **Importo**: in Mono 40, allineato a destra, con il segno; il simbolo € è in Mono 32 `testo-2`. Sopra c'è il calcolo in corso in Nota (es. «8,90 + 3,50»), sotto una riga in `inchiostro`.
 - **Data, conto e nota**: pulsanti piccoli alti 36 px su `superficie`, da toccare solo se servono. Di base: oggi, il conto predefinito, nessuna nota.
+- **Nota**: toccando «Nota» il pulsante diventa un campo di una riga che prende tutta la riga dei pulsanti (alto 36 px come loro, bordo `biro`, testo da 16 px, `x` per svuotarlo); Data e Pagamento tornano all'uscita dal campo. Non c'è un foglio e non c'è «Fatto»: Invio, un tocco fuori o il tocco sulla categoria tengono quello che c'è scritto. Sotto il campo, sopra l'inizio delle categorie e senza spostarle, scorrono di lato le **note frequenti**: pillole alte 36 px su `superficie` con bordo `linea`, fino a 8, che si inseriscono con un tocco.
 - **Categorie**: griglia di 4 colonne. Ogni casella ha l'icona da 26 px nel colore della categoria e il nome in Didascalia. Sopra la griglia c'è l'indicazione «tocca per salvare».
 - **Tastierino**: una tabella a righe sottili, come un foglio di calcolo. Tasti alti 58 px, cifre in Mono 24 su `superficie`, operatori (÷ × − +) su `carta` in `testo-2`, `backspace` per cancellare l'ultima cifra. Il risultato si calcola mentre si scrive, quindi non serve il tasto =.
 - **Schermi bassi** (fino a 740 px di altezza, come un telefono nel browser): l'aggiunta rapida si stringe perché le categorie, che salvano, non finiscano sotto il tastierino. Tasti alti 46 px (mai sotto 44), importo in Mono 32, riquadri delle categorie alti 60 px, spazi più corti. Quando le categorie continuano sotto il tastierino, l'ultima riga sfuma: si capisce che si può scorrere.

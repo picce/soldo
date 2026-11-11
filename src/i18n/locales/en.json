@@ -128,6 +128,12 @@
       "en": "English",
       "hint": "Automatic uses the language of your device."
     },
+    "start": {
+      "label": "When it opens",
+      "home": "Home",
+      "expense": "New expense",
+      "hint": "With New expense Soldo opens on the keypad: type the amount and tap the category."
+    },
     "accounts": {
       "label": "Accounts and payments",
       "accounts": "Accounts",
@@ -712,10 +718,10 @@
     "noEnd": "No end",
     "clearEnd": "Remove the end"
   },
-  "noteSheet": {
-    "title": "Note",
-    "remove": "Remove note",
-    "done": "Done"
+  "noteField": {
+    "placeholder": "Write a note",
+    "clear": "Clear the note",
+    "frequent": "Frequent notes"
   },
   "keypad": {
     "label": "Keypad",
