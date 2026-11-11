@@ -119,7 +119,11 @@ test('«Uscita» is one tap away on the other tabs, and closing goes back to the
   // The Home has its two buttons, the Settings none.
   await expect(add).toHaveCount(0)
   // The button is on each of these pages: wait for the page, not for the button.
-  for (const [tab, path] of [['Budget', /\/budget$/], ['Statistiche', /\/statistiche$/], ['Movimenti', /\/movimenti$/]] as const) {
+  for (const [tab, path] of [
+    ['Budget', /\/budget$/],
+    ['Statistiche', /\/statistiche$/],
+    ['Movimenti', /\/movimenti$/],
+  ] as const) {
     await nav.getByRole('link', { name: tab }).click()
     await expect(page).toHaveURL(path)
     await expect(add).toBeVisible()
