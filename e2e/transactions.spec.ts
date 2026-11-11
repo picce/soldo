@@ -10,7 +10,6 @@ async function add(page: Page, kind: 'uscita' | 'entrata', keys: string[], categ
   if (note) {
     await page.getByRole('button', { name: 'Nota', exact: true }).click()
     await page.getByRole('textbox', { name: 'Nota' }).fill(note)
-    await page.getByRole('button', { name: 'Fatto' }).click()
   }
   await page.getByRole('button', { name: category, exact: true }).click()
   await expect(page.getByRole('status').filter({ hasText: 'Salvato' })).toBeVisible()

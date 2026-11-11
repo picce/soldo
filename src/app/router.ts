@@ -31,13 +31,13 @@ export const routes: RouteRecordRaw[] = [
     path: '/movimenti',
     name: 'transactions',
     component: () => import('@/features/transactions/TransactionsView.vue'),
-    meta: { titleKey: 'nav.transactions' },
+    meta: { titleKey: 'nav.transactions', quickAdd: true },
   },
   {
     path: '/budget',
     name: 'budget',
     component: () => import('@/features/budgets/BudgetView.vue'),
-    meta: { titleKey: 'nav.budget' },
+    meta: { titleKey: 'nav.budget', quickAdd: true },
   },
   {
     path: '/budget/:categoria',
@@ -59,7 +59,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/statistiche',
     name: 'stats',
     component: () => import('@/features/stats/StatsView.vue'),
-    meta: { titleKey: 'nav.stats' },
+    meta: { titleKey: 'nav.stats', quickAdd: true },
   },
   {
     path: '/statistiche/categoria/:id',

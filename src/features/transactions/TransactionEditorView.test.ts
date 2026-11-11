@@ -100,6 +100,19 @@ describe('new transaction', () => {
     await vi.waitFor(() => expect(router.currentRoute.value.name).toBe('home'))
   })
 
+  it('saves the note written in the screen, with the other buttons out of the way meanwhile', async () => {
+    const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
+    await press(wrapper, ['7'])
+    await wrapper.get('.note-field .action-chip').trigger('click')
+    expect(wrapper.get('.editor__chips').classes()).toContain('editor__chips--note')
+    await wrapper.get('.note-field__input').setValue('Pane e latte')
+
+    // No «Fatto»: the category saves what is written.
+    await tapCategory(wrapper, 'Spesa')
+    await vi.waitFor(async () => expect(await listTransactions()).toHaveLength(1))
+    expect((await listTransactions())[0]).toMatchObject({ amountCents: 700, note: 'Pane e latte' })
+  })
+
   it('asks for the amount first', async () => {
     const { wrapper } = await mountEditor({ mode: 'new', kind: 'expense' })
     await tapCategory(wrapper, 'Casa')

@@ -7,6 +7,7 @@ import {
   deleteTransaction,
   duplicateTransaction,
   getTransaction,
+  listRecentNotes,
   listRecentTransactions,
   listTransactions,
   restoreTransaction,
@@ -191,5 +192,26 @@ describe('recent transactions', () => {
     expect(await listRecentTransactions({}, 50)).toEqual(await listTransactions())
     // The same filters as the full list.
     expect(await listRecentTransactions({ from: '2026-11-01', to: '2026-11-03' }, 50)).toEqual(await listTransactions({ from: '2026-11-01', to: '2026-11-03' }))
+  })
+})
+
+describe('recent notes', () => {
+  it('reads the notes of a kind, newest first, without the empty and the deleted ones', async () => {
+    await addTransaction(expense({ date: '2026-11-01', note: 'Esselunga' }))
+    await addTransaction(expense({ date: '2026-11-03', note: 'Bar' }))
+    await addTransaction(expense({ date: '2026-11-03', note: '' }))
+    await addTransaction(expense({ date: '2026-11-02', note: 'Benzina' }))
+    await addTransaction(expense({
+      kind: 'income',
+      categoryId: 'salary',
+      date: '2026-11-04',
+      note: 'Stipendio',
+    }))
+    const deleted = await addTransaction(expense({ date: '2026-11-05', note: 'Errore' }))
+    await deleteTransaction(deleted.id)
+
+    expect(await listRecentNotes('expense')).toEqual(['Bar', 'Benzina', 'Esselunga'])
+    expect(await listRecentNotes('income')).toEqual(['Stipendio'])
+    expect(await listRecentNotes('expense', 2)).toEqual(['Bar', 'Benzina'])
   })
 })
