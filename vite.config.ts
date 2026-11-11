@@ -49,6 +49,37 @@ export default defineConfig({
         theme_color: '#f5f4ef',
         categories: ['finance', 'productivity'],
         // Long press on the app icon (docs/specs/released/aggiunta-rapida.md).
+        // «Condividi» from the app of the bank, on Android (docs/specs/import-da-file.md).
+        share_target: {
+          action: '/api/share-target',
+          method: 'POST',
+          enctype: 'multipart/form-data',
+          params: {
+            files: [
+              {
+                name: 'statement',
+                accept: [
+                  'text/csv',
+                  'text/comma-separated-values',
+                  'text/plain',
+                  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                  'application/x-ofx',
+                  'application/vnd.intu.qfx',
+                  'application/qif',
+                  'application/xml',
+                  'text/xml',
+                  '.csv',
+                  '.txt',
+                  '.xlsx',
+                  '.ofx',
+                  '.qfx',
+                  '.qif',
+                  '.xml',
+                ],
+              },
+            ],
+          },
+        },
         shortcuts: [
           {
             name: 'Nuova uscita',
@@ -66,6 +97,8 @@ export default defineConfig({
         // The API, and the privacy page: a static page outside the app.
         navigateFallbackDenylist: [/^\/api\//, /^\/privacy/],
         cleanupOutdatedCaches: true,
+        // Before the routes of Workbox: takes the files shared from other apps.
+        importScripts: ['/share-target.js'],
       },
     }),
     cloudflare(),

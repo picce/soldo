@@ -16,4 +16,10 @@ describe('worker', () => {
     const response = await call('/api/unknown')
     expect(response.status).toBe(404)
   })
+
+  it('sends a shared file back to the import page, without reading it', async () => {
+    const response = await worker.fetch(new Request('https://soldo.test/api/share-target', { method: 'POST', body: 'x' }), {} as Env)
+    expect(response.status).toBe(303)
+    expect(response.headers.get('Location')).toBe('https://soldo.test/impostazioni/importa?condiviso=1')
+  })
 })

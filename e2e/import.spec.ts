@@ -92,3 +92,31 @@ test('a file that is not a statement says so', async ({ page }) => {
   })
   await expect(page.getByRole('alert')).toHaveText(/Salva l'estratto conto in CSV o in Excel/)
 })
+
+test('a statement shared from another app opens the import with the file chosen', async ({ page }) => {
+  // The service worker takes the share: it must control the page first.
+  await page.evaluate(() => navigator.serviceWorker.ready)
+  await page.reload()
+  await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true)
+
+  // What the share sheet of Android does: a POST of the file to the share target.
+  await page.evaluate((text) => {
+    const form = document.createElement('form')
+    form.method = 'POST'
+    form.action = '/api/share-target'
+    form.enctype = 'multipart/form-data'
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.name = 'statement'
+    const files = new DataTransfer()
+    files.items.add(new File([text], 'marzo.csv', { type: 'text/csv' }))
+    input.files = files.files
+    form.append(input)
+    document.body.append(form)
+    form.submit()
+  }, STATEMENT)
+
+  await expect(page).toHaveURL(/\/impostazioni\/importa\?/)
+  await expect(page.getByRole('heading', { name: 'In quale conto vanno?' })).toBeVisible()
+  await expect(page.getByText(/marzo\.csv/)).toBeVisible()
+})

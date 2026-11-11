@@ -23,14 +23,24 @@ beforeEach(async () => {
 async function mountPage(component: typeof ImportView | typeof ImportRulesView, path: string) {
   const router = createAppRouter(createMemoryHistory())
   await router.push(path)
-  const wrapper = mount(component, { global: { plugins: testPlugins(router) }, attachTo: document.body })
+  const wrapper = mount(component, {
+    global: {
+      plugins: testPlugins(router),
+    },
+    attachTo: document.body,
+  })
   await flushPromises()
   return { wrapper, router }
 }
 
 async function chooseFile(wrapper: Awaited<ReturnType<typeof mountPage>>['wrapper'], text: string, name = 'marzo.csv') {
   const input = wrapper.find<HTMLInputElement>('input[type="file"]')
-  Object.defineProperty(input.element, 'files', { value: [new File([text], name, { type: 'text/csv' })], configurable: true })
+  Object.defineProperty(input.element, 'files', {
+    value: [
+      new File([text], name, { type: 'text/csv' }),
+    ],
+    configurable: true,
+  })
   await input.trigger('change')
 }
 
