@@ -13,7 +13,7 @@ const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
 /** Runs bytes through a (de)compression stream, without Blob or Response (portable in tests). */
-async function transform(bytes: Uint8Array<ArrayBuffer>, stream: CompressionStream | DecompressionStream): Promise<Uint8Array<ArrayBuffer>> {
+export async function transform(bytes: Uint8Array<ArrayBuffer>, stream: CompressionStream | DecompressionStream): Promise<Uint8Array<ArrayBuffer>> {
   const reader = new ReadableStream<Uint8Array<ArrayBuffer>>({
     start(controller) {
       controller.enqueue(bytes)
