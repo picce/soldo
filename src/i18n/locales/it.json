@@ -128,6 +128,12 @@
       "en": "English",
       "hint": "Automatica usa la lingua del dispositivo."
     },
+    "start": {
+      "label": "All'apertura",
+      "home": "Home",
+      "expense": "Nuova uscita",
+      "hint": "Con Nuova uscita Soldo si apre sul tastierino: scrivi l'importo e tocca la categoria."
+    },
     "accounts": {
       "label": "Conti e pagamenti",
       "accounts": "Conti",

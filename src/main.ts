@@ -5,6 +5,7 @@ import { listenForInstall } from '@/app/install'
 import { startLock } from '@/app/lock'
 import { animatePageChanges } from '@/app/page-transitions'
 import { createAppRouter, requireOnboarding } from '@/app/router'
+import { openOnStart } from '@/app/start'
 // Only the Phosphor icons the app uses (scripts/build-icons.js): nothing is fetched at runtime.
 import phIcons from '@/assets/icons/ph.json'
 import { startBackup } from '@/backup/start'
@@ -37,6 +38,8 @@ startBackup()
 // Until the first start is done, every page leads to the welcome (docs/specs/released/onboarding.md).
 const router = createAppRouter()
 requireOnboarding(router)
+// For who asked, the app opens on the new expense (docs/specs/aggiunta-meno-tocchi.md).
+openOnStart(router)
 // Pages slide, rise and fade into each other (docs/specs/released/sensazione-nativa.md).
 animatePageChanges(router)
 

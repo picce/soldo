@@ -1,6 +1,6 @@
 # Aggiunta in meno tocchi
 
-> **Stato**: Bozza (non implementata)
+> **Stato**: Parziale (implementata e provata con i test; manca la prova a mano sul telefono, con la tastiera vera)
 > **Data**: 2026-11-11
 > **Ambito**: Segnare una spesa richiede meno passaggi: «Uscita» si tocca da ogni scheda, Soldo può aprirsi già sul tastierino, e la nota si scrive nella schermata stessa, con le note più usate a un tocco.
 > **Spec collegate**: cambia la schermata di [`released/aggiunta-rapida.md`](./released/aggiunta-rapida.md); il pulsante compare nelle pagine di [`released/movimenti.md`](./released/movimenti.md), [`released/budget-mensili.md`](./released/budget-mensili.md) e [`released/statistiche.md`](./released/statistiche.md).
@@ -34,7 +34,7 @@ Il salvataggio al tocco della categoria resta com'è.
 
 - `src/app/components/QuickAddButton.vue` (nuovo): un pulsante a pillola, alto 48 px, pieno in `biro`, con l'icona `minus` e il testo «Uscita»; nome accessibile «Nuova uscita». Porta a `transaction-new` con `uscita`. In Soldo «+» è l'entrata, quindi il pulsante non usa il «+» delle altre app: l'entrata resta a un tocco, nel selettore in alto della schermata.
 - Sta in basso a destra, sopra la barra di navigazione; dove c'è una barra di azioni (Budget) sta sopra quella. Gli avvisi salgono sopra il pulsante.
-- `src/app/router.ts`: `meta.quickAdd` sulle pagine `transactions`, `budget` e `stats`; `src/App.vue` monta il pulsante dove c'è, e lascia in fondo alla pagina lo spazio perché l'ultima riga non resti sotto.
+- `src/app/router.ts`: `meta.quickAdd` sulle pagine `transactions`, `budget` e `stats` (dichiarato in `src/env.d.ts`); `src/App.vue` monta il pulsante dove c'è, dentro l'area principale così i lettori di schermo lo trovano con la pagina, e lascia in fondo alla pagina lo spazio perché l'ultima riga non resti sotto. Posizione e avvisi in `src/theme/app.css`.
 - La Home tiene i suoi due pulsanti; le Impostazioni e le pagine secondarie non lo hanno.
 - Chiudendo la schermata si torna alla scheda da cui si è partiti (è già così: `goBack`).
 
@@ -52,7 +52,7 @@ Il salvataggio al tocco della categoria resta com'è.
   - a riposo è il pulsante «Nota» di oggi, con la nota scritta se c'è;
   - toccato, diventa un campo di una riga (massimo 200 caratteri) che prende tutta la riga dei pulsanti: Data e Pagamento tornano quando si esce dal campo;
   - nel campo, una «x» svuota la nota; Invio o un tocco fuori chiudono la tastiera e tengono quello che c'è scritto; spazi doppi e a capo diventano uno spazio;
-  - sotto il campo, mentre è attivo, la riga «Note frequenti»: fino a 8 note, da scorrere di lato. Un tocco inserisce la nota e chiude la tastiera; poi si tocca la categoria. Mentre si scrive restano le note che contengono quel testo, senza badare a maiuscole e accenti.
+  - sotto il campo, mentre è attivo, la riga «Note frequenti», sopra l'inizio delle categorie e senza spostarle: fino a 8 note, da scorrere di lato. Un tocco inserisce la nota e chiude la tastiera; poi si tocca la categoria. Mentre si scrive restano le note che contengono quel testo, senza badare a maiuscole e accenti.
 - `src/domain/notes.ts` (nuovo, funzioni pure): `frequentNotes(notes, query, limit)`. Le note uguali a meno di maiuscole e accenti contano come una, mostrata com'è stata scritta l'ultima volta; in ordine dalla più usata, a parità dalla più recente.
 - `src/db/repositories/transactions.ts`: `listRecentNotes(kind)` legge dall'indice per data, all'indietro, le note degli ultimi 500 movimenti di quel tipo che ne hanno una. Si legge la prima volta che il campo si apre, non all'apertura della schermata.
 - `src/features/transactions/TransactionEditorView.vue`: `NoteField` nella riga dei pulsanti; gli altri pulsanti nascosti mentre si scrive la nota.
@@ -62,7 +62,7 @@ Il salvataggio al tocco della categoria resta com'è.
 - Testi in `src/i18n/locales/it.json` ed `en.json`; via quelli del foglio della nota.
 - `docs/design/README.md`: «Aggiunta rapida» descrive la nota nella schermata e il pulsante «Uscita» sulle altre schede. Nessun mockup nuovo: il pulsante usa lo stile del pulsante primario, il campo quello dei campi di testo e dei pulsanti piccoli.
 - `/dev/ui`: `QuickAddButton` e `NoteField`.
-- Unitari: `src/domain/notes.test.ts`, `listRecentNotes` in `src/db/repositories/transactions.test.ts`, `src/app/start.test.ts`, `src/features/transactions/NoteField.test.ts`, la nota in `TransactionEditorView.test.ts`.
+- Unitari: `src/domain/notes.test.ts`, `listRecentNotes` in `src/db/repositories/transactions.test.ts`, `src/app/start.test.ts`, `src/features/transactions/NoteField.test.ts`, la nota in `TransactionEditorView.test.ts`, l'impostazione in `src/features/settings/SettingsView.test.ts`.
 - e2e in `e2e/quick-add.spec.ts`: da Movimenti «Uscita» apre il tastierino e chiudendo si torna a Movimenti; con «All'apertura: Nuova uscita» l'app ricaricata in una sessione nuova mostra il tastierino e salvando arriva alla Home; una nota scritta una volta si ritrova tra le frequenti e si inserisce con un tocco.
 
 ## Fasi di rilascio

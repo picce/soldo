@@ -55,6 +55,11 @@ async function open(field: VueWrapper) {
   await vi.waitFor(() => expect(field.findAll('.note-field__suggestion').length).toBeGreaterThan(0))
 }
 
+/** The note and whether the field is open, as the parent sees them. */
+function state(field: VueWrapper) {
+  return field.props() as { note: string, editing?: boolean }
+}
+
 function suggestions(field: VueWrapper) {
   return field.findAll('.note-field__suggestion').map(item => item.text())
 }
@@ -85,14 +90,14 @@ describe('noteField', () => {
     const field = mountField()
     await open(field)
     await field.find('input').setValue('  ba  ')
-    expect(field.props('note')).toBe('ba')
+    expect(state(field).note).toBe('ba')
     expect(suggestions(field)).toEqual(['Bar'])
     await field.find('input').setValue('Pane  e   latte')
-    expect(field.props('note')).toBe('Pane e latte')
+    expect(state(field).note).toBe('Pane e latte')
     expect(suggestions(field)).toEqual([])
 
     await field.find('input').trigger('keydown', { key: 'Enter' })
-    expect(field.props('editing')).toBe(false)
+    expect(state(field).editing).toBe(false)
     expect(field.find('.action-chip').text()).toBe('Pane e latte')
   })
 
@@ -100,8 +105,8 @@ describe('noteField', () => {
     const field = mountField()
     await open(field)
     await field.findAll('.note-field__suggestion')[1]!.trigger('click')
-    expect(field.props('note')).toBe('Bar')
-    expect(field.props('editing')).toBe(false)
+    expect(state(field).note).toBe('Bar')
+    expect(state(field).editing).toBe(false)
     expect(field.find('.action-chip').text()).toBe('Bar')
   })
 
@@ -112,8 +117,8 @@ describe('noteField', () => {
     const clear = field.find('.note-field__clear')
     expect(clear.attributes('aria-label')).toBe('Svuota la nota')
     await clear.trigger('click')
-    expect(field.props('note')).toBe('')
-    expect(field.props('editing')).toBe(true)
+    expect(state(field).note).toBe('')
+    expect(state(field).editing).toBe(true)
     expect(field.find('.note-field__clear').exists()).toBe(false)
   })
 })

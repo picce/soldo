@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import { expect, test } from './fixtures'
+import { expect, pageSettled, test } from './fixtures'
 
 interface StoredTransaction {
   id: string
@@ -111,4 +111,76 @@ test('on a short screen every category is above the keypad, with keys still big 
   expect(lastCategory.y + lastCategory.height).toBeLessThanOrEqual(keys.y)
   const key = (await keypad.getByRole('button', { name: '7', exact: true }).boundingBox())!
   expect(key.height).toBeGreaterThanOrEqual(44)
+})
+
+test('«Uscita» is one tap away on the other tabs, and closing goes back to them', async ({ page }) => {
+  const nav = page.getByRole('navigation', { name: 'Navigazione principale' })
+  const add = page.getByRole('link', { name: 'Nuova uscita' })
+  // The Home has its two buttons, the Settings none.
+  await expect(add).toHaveCount(0)
+  for (const tab of ['Budget', 'Statistiche', 'Movimenti']) {
+    await nav.getByRole('link', { name: tab }).click()
+    await expect(add).toBeVisible()
+  }
+  await pageSettled(page)
+  await add.click()
+  await expect(page.getByRole('group', { name: 'Tastierino' })).toBeVisible()
+  // In the page: the notice «pronta per l'uso offline» has a «Chiudi» too.
+  await page.getByRole('main').getByRole('button', { name: 'Chiudi' }).click()
+  await expect(page).toHaveURL(/\/movimenti$/)
+
+  await add.click()
+  await typeAmount(page, ['4'])
+  await page.getByRole('button', { name: 'Spesa', exact: true }).click()
+  await expect(notice(page, /Salvato/)).toBeVisible()
+  await expect(page).toHaveURL(/\/movimenti$/)
+
+  await nav.getByRole('link', { name: 'Impostazioni' }).click()
+  await expect(add).toHaveCount(0)
+})
+
+test('opens on the keypad when asked, and on the Home after a reload', async ({ page, context }) => {
+  await page.goto('/impostazioni')
+  const start = page.getByRole('group', { name: 'All\'apertura' })
+  await expect(start.getByRole('button', { name: 'Home' })).toHaveAttribute('aria-pressed', 'true')
+  await start.getByRole('button', { name: 'Nuova uscita' }).click()
+
+  // The app is opened again: a new tab is a new session.
+  const opened = await context.newPage()
+  await opened.goto('/')
+  await expect(opened).toHaveURL(/\/nuovo\/uscita$/)
+  await typeAmount(opened, ['9'])
+  await opened.getByRole('button', { name: 'Casa', exact: true }).click()
+  await expect(notice(opened, /Salvato/)).toBeVisible()
+  await expect(opened.getByRole('tablist', { name: 'Periodo' })).toBeVisible()
+
+  await opened.reload()
+  await expect(opened.getByRole('tablist', { name: 'Periodo' })).toBeVisible()
+  await expect(opened).toHaveURL(/\/$/)
+})
+
+test('a note is written in the screen, and next time it is one tap away', async ({ page }) => {
+  await page.goto('/nuovo/uscita')
+  await typeAmount(page, ['3', '2'])
+  await page.getByRole('button', { name: 'Nota', exact: true }).click()
+  const field = page.getByRole('textbox', { name: 'Nota' })
+  await expect(field).toBeFocused()
+  // While the note is written the other buttons make room.
+  await expect(page.getByRole('button', { name: /^Data/ })).toBeHidden()
+  await field.fill('Esselunga')
+  // No «Fatto»: the category saves.
+  await page.getByRole('button', { name: 'Spesa', exact: true }).click()
+  await expect(notice(page, /Salvato/)).toBeVisible()
+
+  await page.goto('/nuovo/uscita')
+  await typeAmount(page, ['1', '8'])
+  await page.getByRole('button', { name: 'Nota', exact: true }).click()
+  await page.getByRole('group', { name: 'Note frequenti' }).getByRole('button', { name: 'Esselunga' }).click()
+  await expect(page.getByRole('button', { name: 'Nota: Esselunga' })).toBeVisible()
+  await expect(page.getByRole('button', { name: /^Data/ })).toBeVisible()
+  await page.getByRole('button', { name: 'Spesa', exact: true }).click()
+  await expect(notice(page, /Salvato/)).toBeVisible()
+
+  await page.goto('/movimenti')
+  await expect(page.getByText('Esselunga')).toHaveCount(2)
 })

@@ -22,7 +22,7 @@ Dal 2026-11-05 ogni lavoro parte da una spec in [docs/specs](specs/). Le spec co
 | [Backup automatico su Google Drive](specs/backup-google-drive.md) | Fase 3 | da definire | Nessuna | Parziale |
 | [Backup su Dropbox e OneDrive](specs/backup-dropbox-onedrive.md) | Fase 5 | da definire | Backup automatico su Google Drive | Parziale |
 | [Rifiniture della Fase 5](specs/rifiniture-fase-5.md) | Fase 5 | da definire | Nessuna | Parziale |
-| [Aggiunta in meno tocchi](specs/aggiunta-meno-tocchi.md) | Fuori fase | da definire | Nessuna | Bozza |
+| [Aggiunta in meno tocchi](specs/aggiunta-meno-tocchi.md) | Fuori fase | da definire | Nessuna | Parziale |
 
 ## Contesto
 

@@ -6,6 +6,7 @@ import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { needsEdgeSwipe, useEdgeSwipeBack } from '@/app/gestures'
+import { locked } from '@/app/lock'
 import { goBack } from '@/app/navigation'
 import ActionChip from '@/components/ActionChip.vue'
 import AmountText from '@/components/AmountText.vue'
@@ -229,7 +230,8 @@ const KEYBOARD_KEYS: Record<string, CalculatorKey> = {
 }
 
 useEventListener(window, 'keydown', (event: KeyboardEvent) => {
-  if (event.ctrlKey || event.metaKey || event.altKey || sheetOpen.value)
+  // Behind the lock screen the keys are the PIN's (docs/specs/released/blocco-pin.md).
+  if (event.ctrlKey || event.metaKey || event.altKey || sheetOpen.value || locked.value)
     return
   const element = event.target as HTMLElement | null
   if (element?.closest('input, textarea, dialog'))

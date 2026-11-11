@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { StartPage } from '@/app/start'
 import type { OpenableReading } from '@/backup/import'
 import type { RemoteBackup } from '@/backup/provider'
 import type { ServiceId } from '@/backup/services'
@@ -6,6 +7,7 @@ import type { LocalePreference } from '@/i18n/locale'
 import { computed, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { appLock, DELAY_NAMES } from '@/app/lock'
+import { setStartPage, startPage } from '@/app/start'
 import { showToast } from '@/app/toast'
 import { markRestoredFromDrive } from '@/backup/auto'
 import { backupEncryption } from '@/backup/encryption'
@@ -49,6 +51,22 @@ const localeOptions = computed<{ value: LocalePreference, label: string }[]>(() 
     label: t('settings.language.en'),
   },
 ])
+
+// What the app opens on (docs/specs/aggiunta-meno-tocchi.md).
+const startOptions = computed<{ value: StartPage, label: string }[]>(() => [
+  {
+    value: 'home',
+    label: t('settings.start.home'),
+  },
+  {
+    value: 'expense',
+    label: t('settings.start.expense'),
+  },
+])
+const startChoice = computed<StartPage>({
+  get: () => startPage.value,
+  set: setStartPage,
+})
 
 // Categories in the quick add, archived ones aside: «12 uscite · 4 entrate».
 const { data: categories } = useLiveQuery(() => listCategories())
@@ -194,6 +212,20 @@ const versionLine = computed(() =>
       />
       <p id="settings-language-hint" class="settings-section__hint type-small">
         {{ t('settings.language.hint') }}
+      </p>
+    </section>
+    <section class="settings-section" aria-labelledby="settings-start">
+      <h2 id="settings-start" class="settings-section__title type-label">
+        {{ t('settings.start.label') }}
+      </h2>
+      <SegmentedControl
+        v-model="startChoice"
+        :options="startOptions"
+        aria-labelledby="settings-start"
+        aria-describedby="settings-start-hint"
+      />
+      <p id="settings-start-hint" class="settings-section__hint type-small">
+        {{ t('settings.start.hint') }}
       </p>
     </section>
     <section class="settings-section" aria-labelledby="settings-accounts">
