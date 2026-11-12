@@ -18,13 +18,15 @@ import { BACKUP_FORMAT } from './version'
 /** Snapshot of every table, deleted rows included, read in one transaction. */
 export async function createBackup(): Promise<BackupFile> {
   return db.transaction('r', db.tables, async () => {
-    const [accounts, paymentMethods, categories, transactions, budgets, recurrences, settings, meta] = await Promise.all([
+    const [accounts, paymentMethods, categories, transactions, budgets, recurrences, importRules, importPresets, settings, meta] = await Promise.all([
       db.accounts.toArray(),
       db.paymentMethods.toArray(),
       db.categories.toArray(),
       db.transactions.toArray(),
       db.budgets.toArray(),
       db.recurrences.toArray(),
+      db.importRules.toArray(),
+      db.importPresets.toArray(),
       db.settings.toArray(),
       db.meta.toArray(),
     ])
@@ -41,6 +43,8 @@ export async function createBackup(): Promise<BackupFile> {
         transactions,
         budgets,
         recurrences,
+        importRules,
+        importPresets,
         settings,
         meta,
       },

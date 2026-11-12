@@ -47,7 +47,7 @@ npx wrangler secret put COOKIE_SECRET         # una stringa casuale lunga:
 # node -e "console.log(crypto.randomBytes(32).toString('base64url'))"
 ```
 
-I segreti valgono per il Worker `soldo`, quindi sia per la produzione sia per le anteprime di `develop`, e restano ai deploy successivi. Si possono mettere anche dalla dashboard di Cloudflare (Workers → soldo → Impostazioni → Variabili e segreti, tipo «Segreto»).
+I segreti valgono per il Worker `soldo` e restano ai deploy successivi. Ogni versione del Worker però tiene i segreti che c'erano quando è stata caricata: `wrangler secret put` crea subito una versione nuova della produzione, mentre un'anteprima (`develop` o un altro branch) li riceve solo al suo caricamento successivo, cioè al prossimo push su quel branch. Finché non succede, l'anteprima risponde `{"configured":false}`. Si possono mettere anche dalla dashboard di Cloudflare (Workers → soldo → Impostazioni → Variabili e segreti, tipo «Segreto»).
 
 Cambiare `COOKIE_SECRET` scollega tutti i dispositivi: i cookie già dati non si leggono più e l'app chiede di ricollegare Drive.
 
