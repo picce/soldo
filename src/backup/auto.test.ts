@@ -106,6 +106,9 @@ describe('automatic backup', () => {
     expect(backupState.value.lastBackupAt).toBe(first!.exportedAt)
 
     expect(await runBackup()).toBe('unchanged')
+    // «Esegui backup ora» uploads anyway, in today's file.
+    expect(await runBackup({ force: true })).toBe('uploaded')
+    expect(drive.backups()).toHaveLength(1)
 
     await spend(1240)
     expect(await runBackup()).toBe('uploaded')
