@@ -70,7 +70,7 @@ describe('backup', () => {
   it('reads its own export and previews what it holds', async () => {
     await addSome()
     const backup = await createBackup()
-    expect(backup).toMatchObject({ app: 'soldo', format: 3, schemaVersion: 2 })
+    expect(backup).toMatchObject({ app: 'soldo', format: 4, schemaVersion: 3 })
     expect(backup.data.transactions).toHaveLength(3)
 
     const reading = await readBackup(asFile(backup))
@@ -193,9 +193,21 @@ describe('backup', () => {
     }))
     expect(reading.ok).toBe(true)
     if (reading.ok) {
-      expect(reading.backup.format).toBe(3)
+      expect(reading.backup.format).toBe(4)
       expect(reading.backup.data.budgets).toHaveLength(1)
     }
+  })
+
+  it('reads a file of format 3, without rules and presets of the import', async () => {
+    await addSome()
+    const { data: { importRules: _, importPresets: __, ...data }, ...backup } = await createBackup()
+    const reading = await readBackup(asFile({
+      ...backup,
+      format: 3,
+      schemaVersion: 2,
+      data,
+    }))
+    expect(reading.ok && [reading.backup.data.importRules, reading.backup.data.importPresets]).toEqual([[], []])
   })
 
   describe('of format 1', () => {
@@ -231,7 +243,7 @@ describe('backup', () => {
       }))
       expect(reading.ok).toBe(true)
       if (reading.ok) {
-        expect(reading.backup.format).toBe(3)
+        expect(reading.backup.format).toBe(4)
         expect(reading.backup.data.paymentMethods.map(method => method.preset)).toEqual([
           'cash',
           'card',
@@ -281,7 +293,7 @@ describe('backup', () => {
 
   it('refuses a backup of a newer format', async () => {
     const backup = await createBackup()
-    expect(await readBackup(asFile({ ...backup, format: 4 }))).toEqual({ ok: false, error: 'newerFormat' })
+    expect(await readBackup(asFile({ ...backup, format: 5 }))).toEqual({ ok: false, error: 'newerFormat' })
   })
 
   it('refuses invalid records', async () => {

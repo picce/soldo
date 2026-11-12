@@ -1,5 +1,5 @@
 import type { EntityTable } from 'dexie'
-import type { Account, Budget, Category, KeyValue, PaymentMethod, Recurrence, Transaction } from './schema'
+import type { Account, Budget, Category, ImportPreset, ImportRule, KeyValue, PaymentMethod, Recurrence, Transaction } from './schema'
 import Dexie from 'dexie'
 import { defaultPaymentMethods, firstActiveAccount } from './payment-defaults'
 import { SCHEMA_VERSION } from './schema'
@@ -16,6 +16,8 @@ export class SoldoDatabase extends Dexie {
   declare transactions: EntityTable<Transaction, 'id'>
   declare budgets: EntityTable<Budget, 'id'>
   declare recurrences: EntityTable<Recurrence, 'id'>
+  declare importRules: EntityTable<ImportRule, 'id'>
+  declare importPresets: EntityTable<ImportPreset, 'id'>
   declare settings: EntityTable<KeyValue, 'key'>
   declare meta: EntityTable<KeyValue, 'key'>
 
@@ -40,6 +42,14 @@ export class SoldoDatabase extends Dexie {
         return
       await tx.table<PaymentMethod>('paymentMethods').bulkAdd(defaultPaymentMethods(account.id))
       await tx.table<KeyValue>('meta').put({ key: 'schemaVersion', value: SCHEMA_VERSION })
+    })
+    // The import from a bank statement (docs/specs/released/import-da-file.md): two empty tables.
+    this.version(3).stores({
+      importRules: 'id',
+      importPresets: 'id, signature',
+    }).upgrade(async (tx) => {
+      if (await tx.table<KeyValue>('meta').get('schemaVersion'))
+        await tx.table<KeyValue>('meta').put({ key: 'schemaVersion', value: SCHEMA_VERSION })
     })
   }
 }

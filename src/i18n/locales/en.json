@@ -147,6 +147,13 @@
       "expenses": "none for expenses | {n} for expenses | {n} for expenses",
       "income": "none for income | {n} for income | {n} for income"
     },
+    "bank": {
+      "label": "From your bank",
+      "import": "Import a bank statement",
+      "importDetail": "CSV, Excel, OFX, QIF or CAMT.053",
+      "rules": "Category rules",
+      "rulesCount": "no rules | {n} rule | {n} rules"
+    },
     "security": {
       "label": "Security",
       "encryption": "Backup encryption",
@@ -627,6 +634,109 @@
     "expense": "Expense",
     "income": "Income",
     "transfer": "Transfer"
+  },
+  "import": {
+    "title": "Import a bank statement",
+    "steps": {
+      "file": "File",
+      "account": "Account",
+      "columns": "Columns",
+      "preview": "Preview"
+    },
+    "file": {
+      "title": "From your bank to Soldo",
+      "text": "Download the statement from your online banking and open it here: Soldo reads CSV, Excel (.xlsx), OFX, QIF and CAMT.053. The file stays on your phone.",
+      "again": "Transactions already imported never come in twice: you can also open a statement that overlaps the last one.",
+      "choose": "Choose the file",
+      "reading": "Reading the file…",
+      "errors": {
+        "empty": "There are no transactions in this file.",
+        "unsupported": "This file can't be read. Save the statement as CSV or Excel (.xlsx) and try again.",
+        "unreadable": "The file looks damaged: download it again from your online banking.",
+        "noTable": "This file has no table with dates and amounts.",
+        "shared": "The shared file didn't arrive: share it again, or choose it here."
+      }
+    },
+    "account": {
+      "title": "Which account is it?",
+      "hint": "The transactions of the file go into this account.",
+      "continue": "Continue"
+    },
+    "columns": {
+      "title": "What the columns hold",
+      "hint": "Soldo picked the columns: check they're right. Next time a file from this bank comes in, it remembers them.",
+      "date": "Date",
+      "description": "Description",
+      "description2": "Other description",
+      "none": "None",
+      "amount": "Amount",
+      "debit": "Money out (debit)",
+      "credit": "Money in (credit)",
+      "amounts": "Amounts",
+      "single": "In one column",
+      "split": "Debit and credit",
+      "column": "Column {n}",
+      "missing": "To choose",
+      "choose": "Choose the column: {field}",
+      "dateFormat": {
+        "dmy": "Dates read as day/month/year.",
+        "mdy": "Dates read as month/day/year.",
+        "ymd": "Dates read as year-month-day."
+      },
+      "read": "No transactions read | One transaction read | {n} transactions read",
+      "continue": "Continue"
+    },
+    "preview": {
+      "title": "Preview",
+      "columns": "Change the columns",
+      "new": "no new transactions | one new transaction | {n} new transactions",
+      "imported": "none already imported | one already imported, it won't come in again | {n} already imported, they won't come in again",
+      "merge": "none to merge | one to merge with what you entered | {n} to merge with what you entered",
+      "hint": "Tap a transaction to change its category, merge it or leave it out.",
+      "nothing": "Nothing new: the transactions of this file are already in Soldo.",
+      "excluded": "Left out",
+      "merged": "Merges with: {what}",
+      "commit": "Import | Import one transaction | Import {n} transactions",
+      "busy": "Importing…",
+      "list": "Transactions of the file"
+    },
+    "row": {
+      "title": "Transaction of the file",
+      "category": "Category",
+      "remember": "Remember for descriptions containing",
+      "keyword": "Keyword",
+      "keywordHint": "It also applies to the other transactions of this file and to the next imports.",
+      "include": "Import it",
+      "duplicate": "Already in Soldo",
+      "merge": "Merge",
+      "importAnyway": "Import this too",
+      "mergeHint": "Merge keeps the transaction you entered and links it to this row of the file.",
+      "done": "Done"
+    },
+    "done": "No transactions imported | One transaction imported | {n} transactions imported",
+    "undone": "Import undone",
+    "failed": "The import didn't work: your data is as it was."
+  },
+  "importRules": {
+    "title": "Category rules",
+    "emptyTitle": "No rules yet",
+    "empty": "A rule gives imported transactions their category: “the description contains Tesco → Groceries”. It's made when you change the category of a transaction in the import preview, or here.",
+    "expense": "Expenses",
+    "income": "Income",
+    "new": "New rule",
+    "deleted": "Rule deleted",
+    "sheet": {
+      "new": "New rule",
+      "edit": "Edit rule",
+      "keyword": "The description contains",
+      "keywordHint": "Case and accents don't matter.",
+      "kind": "For",
+      "category": "Category",
+      "save": "Save",
+      "delete": "Delete",
+      "errorEmpty": "Write the word to look for.",
+      "errorLong": "40 characters at most."
+    }
   },
   "pwa": {
     "updateTitle": "New version available",

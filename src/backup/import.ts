@@ -61,8 +61,9 @@ const NOT_SOLDO: BackupReading = { ok: false, error: 'notSoldo' }
 /**
  * Format 1 had no payment methods: the file gets the default ones, on its first account, as the
  * database does when it upgrades. Format 2 needs nothing: format 3 only adds optional fields (the
- * end of a budget, the payment method of a recurrence). A file with broken data fails the check
- * that follows.
+ * end of a budget, the payment method of a recurrence); format 4 adds the import rules and
+ * presets, empty in an older file (format.ts). A file with broken data fails the check that
+ * follows.
  */
 function upgradeFormat1(raw: object): object {
   const data = (raw as { data?: { accounts?: unknown } }).data
@@ -173,6 +174,8 @@ export async function restoreBackup(backup: BackupFile, key?: BackupKey): Promis
       db.transactions.bulkAdd(data.transactions),
       db.budgets.bulkAdd(data.budgets),
       db.recurrences.bulkAdd(data.recurrences),
+      db.importRules.bulkAdd(data.importRules),
+      db.importPresets.bulkAdd(data.importPresets),
       db.settings.bulkAdd(data.settings),
       db.meta.bulkAdd(data.meta),
     ])

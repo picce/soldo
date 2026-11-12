@@ -35,8 +35,8 @@ La CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) gira sui push su `d
 src/
   app/          router (con la guardia del primo avvio), componenti della shell (BottomNav, ReloadPrompt, AppToast, RotateNotice: solo in verticale), avvisi (toast.ts: showToast), navigation.ts (goBack), onboarding.ts e install.ts; start.ts (cosa mostra l'app all'apertura) e QuickAddButton («Uscita» sulle schede diverse dalla Home); blocco con PIN: lock.ts, LockScreen e reset.ts (cancella i dati del dispositivo); movimento: page-transitions.ts (transizioni tra le pagine), gestures.ts (trascinare un foglio, tornare indietro dal bordo), scroll.ts, motion.ts
   assets/icons/ ph.json: le icone Phosphor usate, generate da scripts/build-icons.js
-  components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker, ChoiceList, SortableList, ArchivedSection, ActionBar, BudgetMeter, LineChart, BarChart, PinPad, PinDots); chart.ts (misure e lettura dei grafici), useRowOrder.ts (riordino delle righe), useMoreBelow.ts (una lista che continua sotto), list-motion.ts (righe che si aprono e si chiudono) e useTweenedNumber.ts (cifre che scorrono)
-  features/     una cartella per sezione: onboarding, home, transactions, categories, accounts, payments, budgets, recurrences, stats, settings; dev/ è la pagina /dev/ui (solo in sviluppo)
+  components/   componenti riusabili (AppPage, SubPage, AppIcon, IconButton, AppLogo, SegmentedControl, Keypad, CategoryGrid, AmountText, ActionChip, BottomSheet, PeriodSwitcher, CategoryBar, SearchField, FilterChip, SwipeRow, TextField, IconPicker, ColorPicker, ChoiceList, SortableList, ArchivedSection, ActionBar, BudgetMeter, LineChart, BarChart, PinPad, PinDots, CheckRow); chart.ts (misure e lettura dei grafici), useRowOrder.ts (riordino delle righe), useMoreBelow.ts (una lista che continua sotto), list-motion.ts (righe che si aprono e si chiudono) e useTweenedNumber.ts (cifre che scorrono)
+  features/     una cartella per sezione: onboarding, home, transactions, categories, accounts, payments, budgets, recurrences, stats, settings, import (estratto conto: passi, anteprima, regole; shared.ts prende il file condiviso da Android); dev/ è la pagina /dev/ui (solo in sviluppo)
   stores/       stato Pinia condiviso tra pagine (period.ts: il periodo della Home; account-filter.ts: il conto scelto in Home e Movimenti)
   i18n/         testi (locales/it.json, locales/en.json), setup vue-i18n e scelta della lingua (locale.ts)
   theme/        tokens.css (token Taccuino), fonts.css (IBM Plex), volver.css (design system in cascade layer), app.css, motion.css (transizioni tra le pagine)
@@ -44,13 +44,13 @@ src/
   domain/       funzioni pure: importi, date, periodi, riepiloghi, saldi, budget, ricorrenze, statistiche, calcolatrice, ricerca, giorni, note frequenti
   test/         supporto ai test: plugins.ts (Pinia, i18n e Volver con le icone locali), setup.ts (niente rete nei test unitari), fake-drive.ts (Google Drive in memoria, anche per gli e2e), fake-cloud.ts (Dropbox e OneDrive in memoria)
   backup/       file di backup: formato (Zod), esportazione, ripristino, CSV dei movimenti; cifratura con passphrase: crypto.ts (AES-GCM e PBKDF2), encryption.ts (la chiave sul dispositivo, in localStorage); backup automatico: provider.ts, oauth.ts (accesso tramite il Worker, per servizio), services.ts (Google Drive, Dropbox, OneDrive), google/ (Drive API), folder.ts (backup in una cartella con indice), dropbox/ e onedrive/ (le loro API), pack.ts (gzip e checksum), retention.ts, state.ts (stato del dispositivo in localStorage), auto.ts (il motore), start.ts (avvio da main.ts)
-  import/       arriva in Fase 6 (vedi roadmap)
+  import/       lettura degli estratti conto (Fase 6a), funzioni pure: CSV (csv.ts, text.ts), Excel (zip.ts, xlsx.ts, xml.ts), OFX, QIF, CAMT.053; read.ts riconosce il formato; columns.ts propone le colonne; values.ts importi e date; external-id.ts, duplicates.ts e rules.ts per doppioni e categorie; fixtures/ con estratti inventati
 scripts/        script di sviluppo (build-icons.js)
 worker/         Worker Cloudflare: /api/* (static assets per tutto il resto); oauth.ts (accesso ai servizi di backup), google.ts, dropbox.ts e onedrive.ts (la configurazione di ciascuno), cookies.ts (cookie cifrati)
 design/         file di design FigCraft (soldo.figcraft): fondamenta, schermate, identità
 docs/specs/     spec dei lavori, attive e in released/ o archived/
 docs/google-drive.md  come configurare Google (client OAuth e segreti del Worker); docs/dropbox-onedrive.md lo stesso per Dropbox e OneDrive
-public/         file statici: _headers (sicurezza e CSP), privacy.html (pagina /privacy)
+public/         file statici: _headers (sicurezza e CSP), privacy.html (pagina /privacy), share-target.js (nel service worker: il file condiviso da un'altra app, su Android)
 e2e/            test Playwright (fixtures.ts: la pagina che ha già fatto il primo avvio; drive.ts: Google e Drive finti)
 ```
 

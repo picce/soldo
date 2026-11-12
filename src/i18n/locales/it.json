@@ -147,6 +147,13 @@
       "expenses": "nessuna uscita | {n} uscita | {n} uscite",
       "income": "nessuna entrata | {n} entrata | {n} entrate"
     },
+    "bank": {
+      "label": "Dalla banca",
+      "import": "Importa estratto conto",
+      "importDetail": "CSV, Excel, OFX, QIF o CAMT.053",
+      "rules": "Regole delle categorie",
+      "rulesCount": "nessuna regola | {n} regola | {n} regole"
+    },
     "security": {
       "label": "Sicurezza",
       "encryption": "Cifratura dei backup",
@@ -627,6 +634,109 @@
     "expense": "Uscita",
     "income": "Entrata",
     "transfer": "Trasferimento"
+  },
+  "import": {
+    "title": "Importa estratto conto",
+    "steps": {
+      "file": "File",
+      "account": "Conto",
+      "columns": "Colonne",
+      "preview": "Anteprima"
+    },
+    "file": {
+      "title": "Dall'home banking a Soldo",
+      "text": "Scarica l'estratto conto dall'home banking e aprilo qui: Soldo legge CSV, Excel (.xlsx), OFX, QIF e CAMT.053. Il file resta sul telefono.",
+      "again": "I movimenti già importati non tornano due volte: puoi aprire anche un estratto che si sovrappone al precedente.",
+      "choose": "Scegli il file",
+      "reading": "Lettura del file…",
+      "errors": {
+        "empty": "Nel file non ci sono movimenti.",
+        "unsupported": "Questo file non si può leggere. Salva l'estratto conto in CSV o in Excel (.xlsx) e riprova.",
+        "unreadable": "Il file sembra rovinato: scaricalo di nuovo dall'home banking.",
+        "noTable": "In questo file non trovo una tabella con date e importi.",
+        "shared": "Il file condiviso non è arrivato: riprova da «Condividi» o sceglilo qui."
+      }
+    },
+    "account": {
+      "title": "In quale conto vanno?",
+      "hint": "I movimenti del file entrano in questo conto.",
+      "continue": "Continua"
+    },
+    "columns": {
+      "title": "Che cosa c'è nelle colonne",
+      "hint": "Soldo ha scelto le colonne: controlla che siano giuste. La prossima volta che arriva un file di questa banca le ricorda.",
+      "date": "Data",
+      "description": "Descrizione",
+      "description2": "Altra descrizione",
+      "none": "Nessuna",
+      "amount": "Importo",
+      "debit": "Uscite (Dare)",
+      "credit": "Entrate (Avere)",
+      "amounts": "Gli importi",
+      "single": "In una colonna",
+      "split": "Dare e Avere",
+      "column": "Colonna {n}",
+      "missing": "Da scegliere",
+      "choose": "Scegli la colonna: {field}",
+      "dateFormat": {
+        "dmy": "Date lette come giorno/mese/anno.",
+        "mdy": "Date lette come mese/giorno/anno.",
+        "ymd": "Date lette come anno-mese-giorno."
+      },
+      "read": "Nessun movimento letto | Un movimento letto | {n} movimenti letti",
+      "continue": "Continua"
+    },
+    "preview": {
+      "title": "Anteprima",
+      "columns": "Cambia le colonne",
+      "new": "nessun movimento nuovo | un movimento nuovo | {n} movimenti nuovi",
+      "imported": "nessuno già importato | uno già importato, non torna | {n} già importati, non tornano",
+      "merge": "nessuno da unire | uno da unire con quello che hai segnato | {n} da unire con quelli che hai segnato",
+      "hint": "Tocca un movimento per cambiarne la categoria, unirlo o escluderlo.",
+      "nothing": "Niente di nuovo: i movimenti di questo file sono già in Soldo.",
+      "excluded": "Non si importa",
+      "merged": "Si unisce a: {what}",
+      "commit": "Importa | Importa un movimento | Importa {n} movimenti",
+      "busy": "Importazione…",
+      "list": "Movimenti del file"
+    },
+    "row": {
+      "title": "Movimento del file",
+      "category": "Categoria",
+      "remember": "Ricorda per le descrizioni che contengono",
+      "keyword": "Parola chiave",
+      "keywordHint": "Vale anche per gli altri movimenti di questo file e per i prossimi import.",
+      "include": "Da importare",
+      "duplicate": "In Soldo c'è già",
+      "merge": "Unisci",
+      "importAnyway": "Importa anche questo",
+      "mergeHint": "Unisci tiene il movimento che hai segnato tu e lo collega a questa riga del file.",
+      "done": "Fatto"
+    },
+    "done": "Nessun movimento importato | Importato un movimento | Importati {n} movimenti",
+    "undone": "Import annullato",
+    "failed": "L'import non è riuscito: i dati sono come prima."
+  },
+  "importRules": {
+    "title": "Regole delle categorie",
+    "emptyTitle": "Nessuna regola per ora",
+    "empty": "Una regola dà la categoria ai movimenti importati: «la descrizione contiene Esselunga → Spesa». Nasce quando cambi la categoria di un movimento nell'anteprima dell'import, oppure da qui.",
+    "expense": "Uscite",
+    "income": "Entrate",
+    "new": "Nuova regola",
+    "deleted": "Regola eliminata",
+    "sheet": {
+      "new": "Nuova regola",
+      "edit": "Modifica regola",
+      "keyword": "La descrizione contiene",
+      "keywordHint": "Maiuscole e accenti non contano.",
+      "kind": "Per",
+      "category": "Categoria",
+      "save": "Salva",
+      "delete": "Elimina",
+      "errorEmpty": "Scrivi la parola da cercare.",
+      "errorLong": "Al massimo 40 caratteri."
+    }
   },
   "pwa": {
     "updateTitle": "Nuova versione disponibile",

@@ -82,6 +82,18 @@ Statistiche ([spec](../specs/released/statistiche.md)), del 2026-11-07, con lo s
 | Andamento di una categoria | <img src="render/andamento-categoria-chiaro.png" width="220" alt="Andamento di una categoria in chiaro"> | <img src="render/andamento-categoria-scuro.png" width="220" alt="Andamento di una categoria in scuro"> |
 | Statistiche vuote | <img src="render/statistiche-vuoto-chiaro.png" width="220" alt="Statistiche vuote in chiaro"> | <img src="render/statistiche-vuoto-scuro.png" width="220" alt="Statistiche vuote in scuro"> |
 
+### Fase 6
+
+Import da file ([spec](../specs/released/import-da-file.md)), del 2026-11-11: niente mockup, le schermate usano i componenti che ci sono già (pagina secondaria, foglio di scelta, griglia delle categorie, campi di testo). Immagini dall'app, a 390 px.
+
+| Schermata | Chiaro | Scuro |
+|---|---|---|
+| Import, file | <img src="render/import-file-chiaro.png" width="220" alt="Import, scelta del file in chiaro"> | <img src="render/import-file-scuro.png" width="220" alt="Import, scelta del file in scuro"> |
+| Import, colonne | <img src="render/import-colonne-chiaro.png" width="220" alt="Import, colonne in chiaro"> | <img src="render/import-colonne-scuro.png" width="220" alt="Import, colonne in scuro"> |
+| Import, anteprima | <img src="render/import-anteprima-chiaro.png" width="220" alt="Import, anteprima in chiaro"> | <img src="render/import-anteprima-scuro.png" width="220" alt="Import, anteprima in scuro"> |
+| Movimento del file | <img src="render/import-movimento-chiaro.png" width="220" alt="Movimento del file in chiaro"> | <img src="render/import-movimento-scuro.png" width="220" alt="Movimento del file in scuro"> |
+| Regole delle categorie | <img src="render/regole-chiaro.png" width="220" alt="Regole delle categorie in chiaro"> | <img src="render/regole-scuro.png" width="220" alt="Regole delle categorie in scuro"> |
+
 Logo e proposte di icona: [render/identita.png](render/identita.png). Fondamenta (colori, stili di testo, icone): [render/fondamenta.png](render/fondamenta.png).
 
 ## File di design
@@ -323,6 +335,14 @@ Si apre da «Uscita» o «Entrata» e serve a segnare un movimento con meno tocc
 - **Pagamento**: pulsante tra Data e Nota sulle uscite. Sotto il nome di un pagamento c'è il suo conto, salvo che i due nomi coincidano («Contanti»). Solo icone generiche, mai i loghi dei marchi.
 - **Saldo iniziale**: campo in Mono con accanto «In attivo / In rosso», perché il tastierino numerico dell'iPhone non ha il meno.
 - **Trasferimento**: terzo segmento del selettore in alto, con almeno due conti attivi. Righe «Da» e «A», «Scambia» accanto a Data e Nota, «Salva» sotto le righe. In Movimenti: icona `arrows-left-right` in `testo-2`, «Banca → Contanti» e importo senza segno in `inchiostro`.
+
+### Import da file
+
+- **Passi**: una pagina secondaria per volta (File, Conto, Colonne, Anteprima), con il titolo del passo in Titolo e una riga in `testo-2` che spiega. «Indietro» torna al passo prima.
+- **Colonne**: una riga per campo in una scheda: il nome del campo in piccolo, la colonna scelta, il primo valore in `testo-2` e `caret-down`; un tocco apre il foglio di scelta delle colonne. Sopra, «In una colonna / Dare e Avere» come controllo a segmenti.
+- **Anteprima**: le righe come in Movimenti, raggruppate per giorno, ma sono pulsanti che aprono il foglio «Movimento del file». Una riga da unire ha l'icona `git-merge` in `testo-2` e «Si unisce a: Caffè»; una esclusa ha testo e importo in `testo-2`, barrati.
+- **Casella** (`CheckRow`): riga intera toccabile, quadratino di 22 px con bordo `testo-2`, pieno in `biro` con `check` in `su-biro` quando è spuntato.
+- **Regole**: «parola chiave» tra caporali, sotto la categoria e il tipo; l'icona è quella della categoria nel suo colore. «Elimina» nel foglio è un'azione tranquilla in `errore`.
 
 ### Onboarding
 

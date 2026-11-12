@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+<BkToCstmrStmt><Stmt><Id>1</Id>
+<Ntry><Amt Ccy="EUR">45.90</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>BOOK</Sts><BookgDt><Dt>2026-03-02</Dt></BookgDt><ValDt><Dt>2026-03-01</Dt></ValDt>
+<NtryDtls><TxDtls><RltdPties><Cdtr><Nm>ESSELUNGA SPA</Nm></Cdtr></RltdPties><RmtInf><Ustrd>Spesa Milano</Ustrd></RmtInf></TxDtls></NtryDtls></Ntry>
+<Ntry><Amt Ccy="EUR">1850.00</Amt><CdtDbtInd>CRDT</CdtDbtInd><Sts>BOOK</Sts><BookgDt><DtTm>2026-03-05T09:00:00</DtTm></BookgDt>
+<NtryDtls><TxDtls><RltdPties><Dbtr><Nm>ACME SRL</Nm></Dbtr></RltdPties><RmtInf><Ustrd>Stipendio marzo</Ustrd></RmtInf></TxDtls></NtryDtls></Ntry>
+<Ntry><Amt Ccy="EUR">5.00</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>PDNG</Sts><BookgDt><Dt>2026-03-31</Dt></BookgDt><AddtlNtryInf>In attesa</AddtlNtryInf></Ntry>
+<Ntry><Amt Ccy="EUR">2.00</Amt><CdtDbtInd>DBIT</CdtDbtInd><Sts>BOOK</Sts><BookgDt><Dt>2026-03-20</Dt></BookgDt><AddtlNtryInf>Commissioni</AddtlNtryInf></Ntry>
+</Stmt></BkToCstmrStmt></Document>
