@@ -62,8 +62,9 @@ function report(outcome: BackupOutcome) {
   }
 }
 
+// Asked by hand: it uploads even when nothing changed, so the user sees it done.
 async function backUpNow() {
-  report(await runBackup())
+  report(await runBackup({ force: true }))
 }
 
 async function keepDevice() {

@@ -123,7 +123,7 @@ async function removeOldBackups(): Promise<void> {
   }
 }
 
-async function backUp(): Promise<BackupOutcome> {
+async function backUp(force: boolean): Promise<BackupOutcome> {
   // Never before the first start: an empty device must not go over the backups on Drive.
   if (!await getMeta('onboardedAt'))
     return 'skipped'
@@ -132,7 +132,7 @@ async function backUp(): Promise<BackupOutcome> {
   const summary = await summarize(backup)
   backupPending.value = false
   const state = backupState.value
-  if (summary.checksum === state.lastChecksum)
+  if (!force && summary.checksum === state.lastChecksum)
     return 'unchanged'
   if (!state.trusted && (await provider.list()).length) {
     patchBackupState({ choice: true })
@@ -160,8 +160,12 @@ async function backUp(): Promise<BackupOutcome> {
   return 'uploaded'
 }
 
-/** Backs up now, if Drive is connected and nothing stops it. */
-export async function runBackup(): Promise<BackupOutcome> {
+/**
+ * Backs up now, if Drive is connected and nothing stops it. Without changes since the last
+ * backup it uploads nothing, unless `force`: «Esegui backup ora» uploads anyway, replacing
+ * today's file (or making it again, if it was deleted on the service).
+ */
+export async function runBackup({ force = false }: { force?: boolean } = {}): Promise<BackupOutcome> {
   clearTimeout(timer)
   const state = backupState.value
   if (!state.connected || state.choice || state.error === 'auth')
@@ -177,7 +181,7 @@ export async function runBackup(): Promise<BackupOutcome> {
   backupRunning.value = true
   let outcome: BackupOutcome
   try {
-    outcome = await exclusively(backUp)
+    outcome = await exclusively(() => backUp(force))
   }
   catch (error) {
     backupPending.value = true

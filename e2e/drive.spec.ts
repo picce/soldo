@@ -69,6 +69,13 @@ test('connects Google Drive and backs up after a change', async ({ page }) => {
   await expect(page.getByRole('status').filter({ hasText: 'Backup su Google Drive fatto.' })).toBeVisible()
   // Still one file for today, now with the expense.
   expect(backedUpTransactions(drive)).toEqual([1])
+
+  // Asked again with nothing new: it goes all the same, in the same file.
+  const before = drive.backups()[0]!.appProperties.exportedAt
+  await driveSheet(page).getByRole('button', { name: 'Esegui backup ora' }).click()
+  await expect.poll(() => drive.backups()[0]!.appProperties.exportedAt).not.toBe(before)
+  await expect(page.getByRole('status').filter({ hasText: 'già aggiornato' })).toHaveCount(0)
+  expect(backedUpTransactions(drive)).toEqual([1])
 })
 
 test('restores the backup of another phone at the first start', async ({ page, browser, baseURL }) => {
