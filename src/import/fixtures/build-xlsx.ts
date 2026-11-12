@@ -1,7 +1,7 @@
 import { transform } from '@/backup/pack'
 
 /**
- * Builds a small `.xlsx` for the tests (docs/specs/import-da-file.md): shared strings, a
+ * Builds a small `.xlsx` for the tests (docs/specs/released/import-da-file.md): shared strings, a
  * number, a date styled as a date; files stored or compressed, as Excel does.
  */
 

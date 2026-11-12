@@ -1,5 +1,5 @@
 /**
- * From the bytes of a text file to its text (docs/specs/import-da-file.md): UTF-8, UTF-16 with
+ * From the bytes of a text file to its text (docs/specs/released/import-da-file.md): UTF-8, UTF-16 with
  * its mark, and otherwise Windows-1252, which is what an Italian home banking writes when it
  * does not write UTF-8 (`è` as a single byte).
  */

@@ -4,7 +4,7 @@ import { children, elements, parseXml } from './xml'
 import { readZip, ZipError } from './zip'
 
 /**
- * The first sheet of an Excel `.xlsx` (docs/specs/import-da-file.md), as rows of cells: text,
+ * The first sheet of an Excel `.xlsx` (docs/specs/released/import-da-file.md), as rows of cells: text,
  * numbers, and the cells formatted as dates turned into `YYYY-MM-DD`.
  */
 

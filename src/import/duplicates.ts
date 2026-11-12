@@ -3,7 +3,7 @@ import { fromIsoDate } from '@/domain/dates'
 
 /**
  * Movements of the statement that may already be in Soldo, typed by hand
- * (docs/specs/import-da-file.md): same kind and amount, at most 3 days apart. Each one
+ * (docs/specs/released/import-da-file.md): same kind and amount, at most 3 days apart. Each one
  * pairs with at most one row, the nearest by date.
  */
 

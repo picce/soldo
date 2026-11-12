@@ -16,7 +16,7 @@ import { useIntlLocale } from '@/i18n/locale'
 import { suggestKeyword } from '@/import/rules'
 
 /**
- * A row of the import preview, changed (docs/specs/import-da-file.md): its category, a rule
+ * A row of the import preview, changed (docs/specs/released/import-da-file.md): its category, a rule
  * for the descriptions that contain a keyword, whether it merges with what was typed by hand,
  * whether it goes in at all. «Fatto» applies; closing the sheet leaves the row as it was.
  */

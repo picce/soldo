@@ -1,7 +1,7 @@
 import { transform } from '@/backup/pack'
 
 /**
- * Just enough of the zip format to open an `.xlsx` (docs/specs/import-da-file.md): the
+ * Just enough of the zip format to open an `.xlsx` (docs/specs/released/import-da-file.md): the
  * central directory, and the files stored or compressed with deflate. No zip64, no
  * encryption: an Excel sheet of a bank statement needs neither.
  */

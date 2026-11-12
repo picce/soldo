@@ -10,7 +10,7 @@ import { formatAmount } from '@/domain/money'
 import { useIntlLocale } from '@/i18n/locale'
 
 /**
- * A row of the import preview (docs/specs/import-da-file.md): like a transaction of Movimenti,
+ * A row of the import preview (docs/specs/released/import-da-file.md): like a transaction of Movimenti,
  * the description of the bank and the category below; a row left out is dimmed, one that
  * merges says with what. A tap opens its sheet.
  */

@@ -84,7 +84,7 @@ Statistiche ([spec](../specs/released/statistiche.md)), del 2026-11-07, con lo s
 
 ### Fase 6
 
-Import da file ([spec](../specs/import-da-file.md)), del 2026-11-11: niente mockup, le schermate usano i componenti che ci sono già (pagina secondaria, foglio di scelta, griglia delle categorie, campi di testo). Immagini dall'app, a 390 px.
+Import da file ([spec](../specs/released/import-da-file.md)), del 2026-11-11: niente mockup, le schermate usano i componenti che ci sono già (pagina secondaria, foglio di scelta, griglia delle categorie, campi di testo). Immagini dall'app, a 390 px.
 
 | Schermata | Chiaro | Scuro |
 |---|---|---|

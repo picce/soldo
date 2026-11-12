@@ -1,5 +1,5 @@
 /**
- * CSV files of the banks (docs/specs/import-da-file.md): any separator among `;` `,` tab and
+ * CSV files of the banks (docs/specs/released/import-da-file.md): any separator among `;` `,` tab and
  * `|`, quoted cells with `""` inside, lines ending in `\n` or `\r\n`.
  */
 

@@ -4,7 +4,7 @@ import { isIsoDate, toIsoDate } from '@/domain/dates'
 import { parseAmount } from '@/domain/money'
 
 /**
- * Amounts and dates as the banks write them (docs/specs/import-da-file.md).
+ * Amounts and dates as the banks write them (docs/specs/released/import-da-file.md).
  */
 
 /**

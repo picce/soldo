@@ -49,7 +49,7 @@ export default defineConfig({
         theme_color: '#f5f4ef',
         categories: ['finance', 'productivity'],
         // Long press on the app icon (docs/specs/released/aggiunta-rapida.md).
-        // «Condividi» from the app of the bank, on Android (docs/specs/import-da-file.md).
+        // «Condividi» from the app of the bank, on Android (docs/specs/released/import-da-file.md).
         share_target: {
           action: '/api/share-target',
           method: 'POST',

@@ -9,7 +9,7 @@ import TextField from '@/components/TextField.vue'
 import { MAX_RULE_PATTERN } from '@/db/schema'
 
 /**
- * A category rule, new or changed (docs/specs/import-da-file.md, «Regole delle categorie»):
+ * A category rule, new or changed (docs/specs/released/import-da-file.md, «Regole delle categorie»):
  * the keyword, expenses or income, the category. Saving with the keyword of another rule
  * replaces that one.
  */

@@ -4,7 +4,7 @@ import { oneLine } from './text'
 import { detectDateFormat, looksLikeDate, parseDate, parseSignedAmount } from './values'
 
 /**
- * The columns of a CSV or Excel statement (docs/specs/import-da-file.md): where the data
+ * The columns of a CSV or Excel statement (docs/specs/released/import-da-file.md): where the data
  * starts, what each column holds, and the rows that come out of it.
  */
 

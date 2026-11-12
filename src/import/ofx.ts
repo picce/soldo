@@ -3,7 +3,7 @@ import { decodeEntities, oneLine } from './text'
 import { parseDate, parseSignedAmount } from './values'
 
 /**
- * OFX and QFX statements (docs/specs/import-da-file.md), version 1 (SGML, tags often left
+ * OFX and QFX statements (docs/specs/released/import-da-file.md), version 1 (SGML, tags often left
  * open) and 2 (XML): one movement per `STMTTRN`.
  */
 

@@ -5,7 +5,7 @@ import { normalizeText } from '@/domain/search'
 import { matchRule } from '@/import/rules'
 
 /**
- * The preview of the import (docs/specs/import-da-file.md, "Interfaccia"): each row of the
+ * The preview of the import (docs/specs/released/import-da-file.md, "Interfaccia"): each row of the
  * file with its category, whether it goes in, and the transaction it may merge with.
  */
 

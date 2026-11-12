@@ -1,5 +1,5 @@
 /**
- * A statement shared to Soldo from another app on Android (docs/specs/import-da-file.md,
+ * A statement shared to Soldo from another app on Android (docs/specs/released/import-da-file.md,
  * "Condividi verso Soldo"): public/share-target.js, in the service worker, puts it in this
  * cache and opens the import page. Read once, then deleted.
  */

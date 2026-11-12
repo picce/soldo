@@ -39,7 +39,7 @@ import { buildPreview, countPreview, recategorize, toPlan, withRule } from './pr
 import { takeSharedStatement } from './shared'
 
 /**
- * Import of a bank statement (docs/specs/import-da-file.md, "Interfaccia"): one step at a
+ * Import of a bank statement (docs/specs/released/import-da-file.md, "Interfaccia"): one step at a
  * time, written in the address (`?passo=`), so Indietro and the back gesture go to the step
  * before. File, account, columns (CSV and Excel only, skipped when the bank's file is known)
  * and preview; «Importa» adds everything at once and goes to Movimenti, with «Annulla».
@@ -378,7 +378,7 @@ watch(step, (current) => {
   }
 }, { immediate: true })
 
-// From «Condividi» on Android (docs/specs/import-da-file.md): the file is waiting.
+// From «Condividi» on Android (docs/specs/released/import-da-file.md): the file is waiting.
 onMounted(async () => {
   if (route.query.condiviso === undefined)
     return

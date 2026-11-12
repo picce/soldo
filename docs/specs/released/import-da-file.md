@@ -1,9 +1,9 @@
 # Import da file
 
-> **Stato**: Parziale (implementata e provata con estratti conto inventati; manca la prova con l'estratto conto vero di una banca, e su Android quella di «Condividi»)
+> **Stato**: Rilasciata (versione 0.11.0, 2026-11-12)
 > **Data**: 2026-11-11
 > **Ambito**: Fase 6a. I movimenti si importano dall'estratto conto scaricato dall'home banking (CSV, Excel `.xlsx`, OFX, QIF, CAMT.053): Soldo riconosce le colonne, ricorda come è fatto il file di ogni banca, salta i movimenti già importati, propone di unire quelli già segnati a mano e dà le categorie con regole che imparano dalle correzioni. Su Android il file arriva anche da «Condividi».
-> **Spec collegate**: usa il modello di [`released/dati-locali.md`](./released/dati-locali.md) (`source: 'import'`, `externalId`); i conti e i pagamenti di [`released/conti-pagamenti-trasferimenti.md`](./released/conti-pagamenti-trasferimenti.md); porta il formato di backup a 4, dopo il 3 di [`released/ricorrenze.md`](./released/ricorrenze.md).
+> **Spec collegate**: usa il modello di [`released/dati-locali.md`](./dati-locali.md) (`source: 'import'`, `externalId`); i conti e i pagamenti di [`released/conti-pagamenti-trasferimenti.md`](./conti-pagamenti-trasferimenti.md); porta il formato di backup a 4, dopo il 3 di [`released/ricorrenze.md`](./ricorrenze.md).
 
 ## Panoramica
 

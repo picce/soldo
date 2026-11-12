@@ -8,7 +8,7 @@ import { readXlsx } from './xlsx'
 import { isZip } from './zip'
 
 /**
- * Opens a bank statement (docs/specs/import-da-file.md) and tells what it is: a sheet whose
+ * Opens a bank statement (docs/specs/released/import-da-file.md) and tells what it is: a sheet whose
  * columns are still to be chosen (CSV, Excel), or movements already read (OFX, QIF, CAMT.053).
  */
 

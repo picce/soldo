@@ -11,7 +11,7 @@ import SegmentedControl from '@/components/SegmentedControl.vue'
 import { sampleOf } from '@/import/columns'
 
 /**
- * The columns of a CSV or Excel statement (docs/specs/import-da-file.md, «Colonne»): a row
+ * The columns of a CSV or Excel statement (docs/specs/released/import-da-file.md, «Colonne»): a row
  * for each field with the column chosen and its first value; a tap opens the list of
  * columns. The amounts are in one column, or in two (Dare and Avere).
  */

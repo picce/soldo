@@ -3,7 +3,7 @@ import { useId } from 'vue'
 import AppIcon from './AppIcon.vue'
 
 /**
- * A yes or no on one row (import preview, docs/specs/import-da-file.md): the label, an
+ * A yes or no on one row (import preview, docs/specs/released/import-da-file.md): the label, an
  * optional hint below, and a box on the right, filled in `biro` when ticked. The input is a
  * native checkbox, out of sight: the box is drawn, so it looks the same everywhere.
  */

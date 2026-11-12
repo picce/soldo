@@ -1,7 +1,7 @@
 /**
  * Records stored in IndexedDB (docs/specs/released/dati-locali.md). Schema v1 holds the tables of
  * the roadmap; v2 adds the payment methods (docs/specs/released/conti-pagamenti-trasferimenti.md);
- * v3 the rules and presets of the import from a bank statement (docs/specs/import-da-file.md).
+ * v3 the rules and presets of the import from a bank statement (docs/specs/released/import-da-file.md).
  */
 
 export const SCHEMA_VERSION = 3
@@ -175,7 +175,7 @@ export const MAX_RULE_PATTERN = 40
 
 /**
  * «The description contains `pattern` → `categoryId`», for expenses or income
- * (docs/specs/import-da-file.md). Case and accents of the keyword do not matter.
+ * (docs/specs/released/import-da-file.md). Case and accents of the keyword do not matter.
  */
 export interface ImportRule extends BaseRecord {
   pattern: string

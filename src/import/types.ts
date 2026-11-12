@@ -2,7 +2,7 @@ import type { DATE_FORMATS, ImportColumnMapping } from '@/db/schema'
 import type { IsoDate } from '@/domain/dates'
 
 /**
- * Shared shapes of the import from a bank statement (docs/specs/import-da-file.md).
+ * Shared shapes of the import from a bank statement (docs/specs/released/import-da-file.md).
  */
 
 /** A cell of a CSV or Excel sheet: text, a number (Excel), or nothing. */

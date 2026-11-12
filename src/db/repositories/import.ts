@@ -9,7 +9,7 @@ import { newRecord, now } from '../records'
 import { DEFAULT_CURRENCY, MAX_RULE_PATTERN } from '../schema'
 
 /**
- * The import from a bank statement in the database (docs/specs/import-da-file.md, "Dati"):
+ * The import from a bank statement in the database (docs/specs/released/import-da-file.md, "Dati"):
  * category rules, how each bank's file is read, the checks before importing and the import
  * itself, all or nothing, with its undo.
  */

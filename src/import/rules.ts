@@ -1,7 +1,7 @@
 import { normalizeText } from '@/domain/search'
 
 /**
- * Category rules of the import (docs/specs/import-da-file.md): «the description contains X
+ * Category rules of the import (docs/specs/released/import-da-file.md): «the description contains X
  * → category Y», for expenses or for income. Case and accents do not matter.
  */
 

@@ -160,7 +160,7 @@ export const backupDataSchema = z.object({
   transactions: z.array(transactionSchema),
   budgets: z.array(budgetSchema),
   recurrences: z.array(recurrenceSchema),
-  // Format 4 (docs/specs/import-da-file.md): a file of format 3 has none.
+  // Format 4 (docs/specs/released/import-da-file.md): a file of format 3 has none.
   importRules: z.array(importRuleSchema).default([]),
   importPresets: z.array(importPresetSchema).default([]),
   settings: z.array(keyValueSchema),

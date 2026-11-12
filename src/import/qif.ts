@@ -3,7 +3,7 @@ import { oneLine } from './text'
 import { detectDateFormat, parseDate, parseSignedAmount } from './values'
 
 /**
- * QIF statements (docs/specs/import-da-file.md): one field per line, a letter and its value,
+ * QIF statements (docs/specs/released/import-da-file.md): one field per line, a letter and its value,
  * movements closed by `^`. Dates in the format that reads them all.
  */
 

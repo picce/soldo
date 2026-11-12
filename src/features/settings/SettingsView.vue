@@ -99,7 +99,7 @@ const recurrenceCount = computed(() => {
   return t('settings.recurrences.count', recurrences.value.filter(recurrence => !isFinished(recurrence, current)).length)
 })
 
-// Rules of the import from the bank (docs/specs/import-da-file.md): «5 regole».
+// Rules of the import from the bank (docs/specs/released/import-da-file.md): «5 regole».
 const { data: importRules } = useLiveQuery(() => listImportRules())
 const ruleCount = computed(() => importRules.value
   ? t('settings.bank.rulesCount', importRules.value.length)

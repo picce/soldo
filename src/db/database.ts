@@ -43,7 +43,7 @@ export class SoldoDatabase extends Dexie {
       await tx.table<PaymentMethod>('paymentMethods').bulkAdd(defaultPaymentMethods(account.id))
       await tx.table<KeyValue>('meta').put({ key: 'schemaVersion', value: SCHEMA_VERSION })
     })
-    // The import from a bank statement (docs/specs/import-da-file.md): two empty tables.
+    // The import from a bank statement (docs/specs/released/import-da-file.md): two empty tables.
     this.version(3).stores({
       importRules: 'id',
       importPresets: 'id, signature',

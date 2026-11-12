@@ -1,5 +1,5 @@
 /**
- * A bank statement shared to Soldo from another app on Android (docs/specs/import-da-file.md,
+ * A bank statement shared to Soldo from another app on Android (docs/specs/released/import-da-file.md,
  * "Condividi verso Soldo"). The service worker loads this file with importScripts, before its
  * own routes: the POST of the share sheet never reaches the network. The file waits in a cache
  * until the import page takes it (src/features/import/shared.ts).

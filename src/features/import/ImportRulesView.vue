@@ -13,7 +13,7 @@ import { useLiveQuery } from '@/db/useLiveQuery'
 import ImportRuleSheet from './ImportRuleSheet.vue'
 
 /**
- * Category rules of the import (docs/specs/import-da-file.md, «Regole delle categorie»):
+ * Category rules of the import (docs/specs/released/import-da-file.md, «Regole delle categorie»):
  * «the description contains X → category Y», by keyword. A tap opens the rule; «Nuova
  * regola» adds one. Deleting offers «Annulla».
  */

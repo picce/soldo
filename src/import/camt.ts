@@ -4,7 +4,7 @@ import { parseDate, parseSignedAmount } from './values'
 import { element, elements, parseXml, text } from './xml'
 
 /**
- * CAMT.053 statements (ISO 20022, docs/specs/import-da-file.md): one movement per `Ntry`,
+ * CAMT.053 statements (ISO 20022, docs/specs/released/import-da-file.md): one movement per `Ntry`,
  * money out when `CdtDbtInd` is `DBIT`. Entries still pending are left out.
  */
 

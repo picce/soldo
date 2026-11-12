@@ -3,7 +3,7 @@ import { Buffer } from 'node:buffer'
 import { expect, pageSettled, test } from './fixtures'
 
 /**
- * Import of a bank statement (docs/specs/import-da-file.md): an invented CSV with Dare and
+ * Import of a bank statement (docs/specs/released/import-da-file.md): an invented CSV with Dare and
  * Avere, a preamble and a balance at the end.
  */
 const STATEMENT = [
